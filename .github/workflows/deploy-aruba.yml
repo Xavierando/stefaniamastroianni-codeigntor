@@ -11,65 +11,65 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    # --- FRONTEND BUILD ---
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20' # Use your required Node version
+      # --- FRONTEND BUILD ---
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20" # Use your required Node version
 
-    - name: Install Frontend Dependencies
-      working-directory: ./frontend
-      run: npm install --legacy-peer-deps
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm install --legacy-peer-deps
 
-    - name: Build Frontend
-      working-directory: ./frontend
-      run: npm run build
+      - name: Build Frontend
+        working-directory: ./frontend
+        run: npm run build
 
-    # --- BACKEND BUILD ---
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2' # Use your required PHP version
-        tools: composer
+      # --- BACKEND BUILD ---
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2" # Use your required PHP version
+          tools: composer
 
-    - name: Install Backend Dependencies
-      working-directory: ./backend
-      run: composer install --no-dev --optimize-autoloader || true
+      - name: Install Backend Dependencies
+        working-directory: ./backend
+        run: composer install --no-dev --optimize-autoloader || true
 
-    # --- PACKAGE DEPLOYMENT FOLDER ---
-    - name: Prepare Deployment Folder
-      run: |
-        mkdir -p aruba_deploy
-        
-        # 1. Frontend
-        cp -r frontend/dist/* aruba_deploy/
-        
-        # 2. Backend
-        mkdir -p aruba_deploy/api
-        cp -r backend/app aruba_deploy/api/
-        cp -r backend/public aruba_deploy/api/
-        cp -r backend/vendor aruba_deploy/api/ || true
-        cp -r backend/writable aruba_deploy/api/ || true
-        cp backend/spark aruba_deploy/api/ || true
-        
-        # NOTE: We specifically DO NOT copy the .env file nor generate .htaccess
-        # to ensure your live config remains exactly as you manually set it on Aruba.
+      # --- PACKAGE DEPLOYMENT FOLDER ---
+      - name: Prepare Deployment Folder
+        run: |
+          mkdir -p aruba_deploy
 
-    # --- FTP UPLOAD ---
-    - name: Sync files to Aruba FTP Server
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.3
-      with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./aruba_deploy/ # The trailing slash is required
-        state-name: .github-ftp-sync-state.json
-        exclude: |
-          **/.git*
-          **/.git*/**
-          **/.env
-          **/.env.example
-          **/.htaccess
+          # 1. Frontend
+          cp -r frontend/dist/* aruba_deploy/
+
+          # 2. Backend
+          mkdir -p aruba_deploy/api
+          cp -r backend/app aruba_deploy/api/
+          cp -r backend/public aruba_deploy/api/
+          cp -r backend/vendor aruba_deploy/api/ || true
+          cp -r backend/writable aruba_deploy/api/ || true
+          cp backend/spark aruba_deploy/api/ || true
+
+          # NOTE: We specifically DO NOT copy the .env file nor generate .htaccess
+          # to ensure your live config remains exactly as you manually set it on Aruba.
+
+      # --- FTP UPLOAD ---
+      - name: Sync files to Aruba FTP Server
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.3
+        with:
+          server: ${{ vars.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./aruba_deploy/ # The trailing slash is required
+          state-name: .github-ftp-sync-state.json
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.env
+            **/.env.example
+            **/.htaccess
