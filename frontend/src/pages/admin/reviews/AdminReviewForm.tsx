@@ -6,6 +6,8 @@ import { apiFetch } from "../../../lib/api";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../store";
 
+import { ImageOptimizer } from "../../../lib/imageOptimization";
+
 export function AdminReviewForm() {
   const { id } = useParams();
   const isEditing = Boolean(id);
@@ -74,7 +76,8 @@ export function AdminReviewForm() {
       });
       
       if (image) {
-        submitData.append("image", image);
+        const optimizedFile = await ImageOptimizer.optimizeImage(image, 500, 0.85);
+        submitData.append("image", optimizedFile);
       }
 
       await apiFetch(isEditing ? `reviews/${id}` : "reviews", {

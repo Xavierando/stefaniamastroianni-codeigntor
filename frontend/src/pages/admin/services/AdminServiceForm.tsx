@@ -7,6 +7,8 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../../../store";
 import { Category, CategoryLabels } from "../../../types";
 
+import { ImageOptimizer } from "../../../lib/imageOptimization";
+
 export function AdminServiceForm() {
   const { id } = useParams();
   const isEditing = Boolean(id);
@@ -86,7 +88,8 @@ export function AdminServiceForm() {
       submitData.append("isEvent", isEvent ? "1" : "0");
       
       if (image) {
-        submitData.append("image", image);
+        const optimizedFile = await ImageOptimizer.optimizeImage(image, 1920, 0.85);
+        submitData.append("image", optimizedFile);
       }
 
       await apiFetch(isEditing ? `services/${id}` : "services", {

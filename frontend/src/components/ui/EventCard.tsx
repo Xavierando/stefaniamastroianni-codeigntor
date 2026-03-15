@@ -9,6 +9,7 @@ export interface EventProps {
   date: string;
   location: string;
   description: string;
+  shortDescription?: string;
   isFull: boolean;
   category: string;
   imageSrc?: string;
@@ -56,8 +57,8 @@ export function EventCard({ event }: { event: EventProps }) {
           <CardTitle className="text-xl md:text-2xl text-brand-primary mb-4 leading-snug">
             {event.title}
           </CardTitle>
-          <p className="text-brand-contrast/80 text-sm mb-4">
-            {event.description}
+          <p className="text-brand-contrast/80 text-sm mb-4 line-clamp-3">
+            {event.shortDescription || event.description}
           </p>
           <div className="flex items-center text-sm text-brand-contrast/60 mb-6">
             <MapPin size={16} className="mr-2 flex-shrink-0" />

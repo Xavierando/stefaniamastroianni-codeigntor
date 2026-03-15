@@ -5,6 +5,8 @@ import { apiFetch } from "../../../lib/api";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../store";
 
+import { ImageOptimizer } from "../../../lib/imageOptimization";
+
 interface GalleryUploadFormProps {
   onSuccess: () => void;
 }
@@ -27,8 +29,10 @@ export function GalleryUploadForm({ onSuccess }: GalleryUploadFormProps) {
     setError("");
 
     try {
+      const optimizedFile = await ImageOptimizer.optimizeImage(file, 2600, 0.85);
+
       const submitData = new FormData();
-      submitData.append("image", file);
+      submitData.append("image", optimizedFile);
       submitData.append("alt", altText);
 
       await apiFetch("gallery", {

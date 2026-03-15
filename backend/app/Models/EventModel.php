@@ -13,7 +13,7 @@ class EventModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'title', 'description', 'slug', 'category', 'date', 
+        'title', 'description', 'shortDescription', 'slug', 'category', 'date', 
         'location', 'price', 'imageUrl'
     ];
 

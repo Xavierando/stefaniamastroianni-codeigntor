@@ -129,6 +129,7 @@ class MainSeeder extends Seeder
             [
                 'title' => 'Cerchio di Luna Nuova',
                 'slug' => 'cerchio-luna-nuova',
+                'shortDescription' => 'Celebriamo l\'energia della luna nuova con meditazione e condivisione.',
                 'description' => 'Un incontro speciale tra donne per celebrare l\'energia della luna nuova, condividere, meditare e piantare i semi delle nostre nuove intenzioni in un ambiente protetto e accogliente.',
                 'category' => 'TRATTAMENTI',
                 'price' => 25.00,
@@ -141,6 +142,7 @@ class MainSeeder extends Seeder
             [
                 'title' => 'Ritiro Yoga di Primavera',
                 'slug' => 'ritiro-yoga-primavera',
+                'shortDescription' => 'Un weekend nella natura per ritrovare l\'equilibrio con pratiche di yoga e meditazione.',
                 'description' => 'Un weekend immersi nella natura per risvegliare il corpo e la mente dopo l\'inverno. Pratiche di yoga, meditazione, passeggiate consapevoli e cibo sano.',
                 'category' => 'YOGA',
                 'price' => 250.00,
@@ -153,6 +155,7 @@ class MainSeeder extends Seeder
             [
                 'title' => 'Workshop: Il Massaggio del Neonato',
                 'slug' => 'workshop-massaggio-neonato',
+                'shortDescription' => 'Tecniche base di massaggio infantile per neo-genitori in un ambiente sereno.',
                 'description' => 'Un incontro pratico per neo-genitori per imparare le tecniche base del massaggio infantile, favorendo il rilassamento del bebè e rafforzando il legame affettivo.',
                 'category' => 'MATERNITA',
                 'price' => 40.00,
