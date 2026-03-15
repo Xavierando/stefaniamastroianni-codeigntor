@@ -56,6 +56,10 @@ jobs:
           cp -r backend/writable aruba_deploy/api/ || true
           cp backend/spark aruba_deploy/api/ || true
 
+          # 3. Patch Routes for Subfolder Deployment
+          # Aruba strips the /api/ folder from the REQUEST_URI, so CodeIgniter sees "gallery" instead of "api/gallery".
+          sed -i "s/\$routes->group('api'/\$routes->group(''/g" aruba_deploy/api/app/Config/Routes.php
+
           # NOTE: We specifically DO NOT copy the .env file nor generate .htaccess
           # to ensure your live config remains exactly as you manually set it on Aruba.
 

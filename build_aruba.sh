@@ -22,6 +22,9 @@ cp -r backend/vendor aruba_deploy/api/
 cp -r backend/writable aruba_deploy/api/
         cp backend/spark aruba_deploy/api/ || true
         
+        echo "Patching Routes for Subfolder Deployment..."
+        sed -i "s/\$routes->group('api'/\$routes->group(''/g" aruba_deploy/api/app/Config/Routes.php
+
         # NOTE: We specifically DO NOT copy the .env file nor generate .htaccess
         # to ensure your live config remains exactly as you manually set it on Aruba.
 
