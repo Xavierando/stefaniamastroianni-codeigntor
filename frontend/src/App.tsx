@@ -11,6 +11,10 @@ import { EventiPage } from "./pages/Eventi";
 import { PrivacyPolicyPage } from "./pages/PrivacyPolicy";
 import { CookiePolicyPage } from "./pages/CookiePolicy";
 
+import { AdminLayout } from "./components/admin/layout/AdminLayout";
+import { AdminLogin } from "./pages/admin/AdminLogin";
+import { AdminDashboardPage } from "./pages/admin/AdminDashboard";
+
 function App() {
   return (
     <Routes>
@@ -26,6 +30,11 @@ function App() {
         <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
         <Route path="cookie-policy" element={<CookiePolicyPage />} />
       </Route>
+
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<AdminDashboardPage />} />
+      </Route>
+      <Route path="/admin/login" element={<AdminLogin />} />
     </Routes>
   );
 }
