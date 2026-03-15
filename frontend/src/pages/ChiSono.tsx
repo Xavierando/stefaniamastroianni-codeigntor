@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Hero } from "@/components/ui/Hero";
 import { Leaf, Heart, ArrowRight, BookOpen, Sun, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
