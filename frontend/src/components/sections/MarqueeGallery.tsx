@@ -13,6 +13,12 @@ export function MarqueeGallery({ images }: { images: GalleryImageProps[] }) {
 
   if (!images || images.length === 0) return null;
 
+  // We repeat images enough times so one "set" fills large screens.
+  // The CSS translates by -50%, so we render two identical sets.
+  const multiplier = Math.max(1, Math.ceil(12 / images.length));
+  const singleSet = Array.from({ length: multiplier }).flatMap(() => images);
+  const displayImages = [...singleSet, ...singleSet];
+
   return (
     <section className="w-full bg-brand-base overflow-hidden py-16">
       <div className="container mx-auto px-4 mb-8 text-center">
@@ -29,8 +35,8 @@ export function MarqueeGallery({ images }: { images: GalleryImageProps[] }) {
           className="animate-marquee whitespace-nowrap flex gap-4 px-2 items-center"
           style={{ animationPlayState: isHovered ? 'paused' : 'running' }}
         >
-          {/* We render the array twice to create the seamless loop effect */}
-          {[...images, ...images].map((img, idx) => (
+          {/* Render the duplicated array to create the seamless -50% translation loop */}
+          {displayImages.map((img, idx) => (
             <div
               key={`${img.id}-${idx}`}
               className="relative w-[280px] md:w-[380px] aspect-[4/5] rounded-xl overflow-hidden cursor-pointer group/item flex-shrink-0 shadow-sm"
