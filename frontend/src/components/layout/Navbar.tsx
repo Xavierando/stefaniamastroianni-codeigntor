@@ -21,8 +21,11 @@ export function Navbar() {
   const pathname = location.pathname;
 
   return (
-    <header className="fixed top-0 z-50 w-full border-b border-brand-base/10 bg-brand-base/60 backdrop-blur-md transition-all">
-      <div className="container mx-auto flex h-20 items-center justify-between">
+    <header className="fixed top-0 z-50 w-full bg-brand-base/80 backdrop-blur-xl transition-all">
+      {/* Soft gradient fade at the bottom border */}
+      <div className="absolute -bottom-4 left-0 w-full h-4 bg-gradient-to-b from-brand-base/80 to-transparent pointer-events-none"></div>
+      
+      <div className="container mx-auto flex h-20 items-center justify-between relative">
         
         {/* Logo / Immagine */}
         <Link to="/" className="flex items-center gap-2 transition-transform hover:scale-105">
