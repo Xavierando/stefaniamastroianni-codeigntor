@@ -28,11 +28,31 @@ class ReviewController extends ResourceController
         return $this->respond($this->model->findAll());
     }
 
+    public function show($id = null)
+    {
+        $review = $this->model->find($id);
+        if (!$review) {
+            return $this->failNotFound('Review not found');
+        }
+        return $this->respond($review);
+    }
+
     public function create()
     {
         $data = $this->request->getPost();
         if (empty($data)) {
-            $data = json_decode($this->request->getBody(), true);
+            $data = json_decode($this->request->getBody(), true) ?? [];
+        }
+
+        if (empty($data['name']) || empty($data['description'])) {
+            return $this->failValidationErrors(['name' => 'Name and description are required']);
+        }
+
+        $image = $this->request->getFile('image');
+        if ($image && $image->isValid() && !$image->hasMoved()) {
+            $newName = $image->getRandomName();
+            $image->move(FCPATH . 'uploads/reviews', $newName);
+            $data['imageUrl'] = '/uploads/reviews/' . $newName;
         }
 
         if ($this->model->insert($data)) {
@@ -44,9 +64,19 @@ class ReviewController extends ResourceController
 
     public function update($id = null)
     {
-        $data = $this->request->getRawInput();
+        $data = $this->request->getPost();
         if (empty($data)) {
-            $data = json_decode($this->request->getBody(), true);
+            $data = $this->request->getRawInput();
+        }
+        if (empty($data)) {
+            $data = json_decode($this->request->getBody(), true) ?? [];
+        }
+
+        $image = $this->request->getFile('image');
+        if ($image && $image->isValid() && !$image->hasMoved()) {
+            $newName = $image->getRandomName();
+            $image->move(FCPATH . 'uploads/reviews', $newName);
+            $data['imageUrl'] = '/uploads/reviews/' . $newName;
         }
 
         if ($this->model->update($id, $data)) {

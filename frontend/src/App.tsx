@@ -16,6 +16,11 @@ import { AdminLogin } from "./pages/admin/AdminLogin";
 import { AdminDashboardPage } from "./pages/admin/AdminDashboard";
 import { AdminServicesPage } from "./pages/admin/services/AdminServices";
 import { AdminServiceForm } from "./pages/admin/services/AdminServiceForm";
+import { AdminGalleryPage } from "./pages/admin/gallery/AdminGallery";
+import { AdminReviewsPage } from "./pages/admin/reviews/AdminReviews";
+import { AdminReviewForm } from "./pages/admin/reviews/AdminReviewForm";
+import { AdminContactsPage } from "./pages/admin/contacts/AdminContacts";
+import { AdminNewsletterPage } from "./pages/admin/newsletter/AdminNewsletter";
 
 function App() {
   return (
@@ -38,6 +43,12 @@ function App() {
         <Route path="services" element={<AdminServicesPage />} />
         <Route path="services/new" element={<AdminServiceForm />} />
         <Route path="services/:id/edit" element={<AdminServiceForm />} />
+        <Route path="gallery" element={<AdminGalleryPage />} />
+        <Route path="reviews" element={<AdminReviewsPage />} />
+        <Route path="reviews/new" element={<AdminReviewForm />} />
+        <Route path="reviews/:id/edit" element={<AdminReviewForm />} />
+        <Route path="contacts" element={<AdminContactsPage />} />
+        <Route path="newsletter" element={<AdminNewsletterPage />} />
       </Route>
       <Route path="/admin/login" element={<AdminLogin />} />
     </Routes>
