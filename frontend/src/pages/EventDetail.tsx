@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { apiFetch } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
-import { Calendar, MapPin, ArrowLeft } from "lucide-react";
+import { Calendar, MapPin, ArrowLeft, Tag } from "lucide-react";
 
 export function EventDetail() {
   const { slug } = useParams();
@@ -25,6 +25,7 @@ export function EventDetail() {
             category: data.category,
             date: data.date ? new Date(data.date).toLocaleDateString("it-IT", { day: 'numeric', month: 'long', year: 'numeric' }) : "Da definire",
             location: data.location || "Studio Olistico Mastroianni",
+            price: data.price,
             isFull: data.isFull,
             imageSrc: data.imageUrl || undefined
           });
@@ -92,7 +93,7 @@ export function EventDetail() {
                 </span>
               )}
             </div>
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif text-brand-primary leading-tight shadow-sm max-w-4xl">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif text-brand-primary leading-tight shadow-sm max-w-5xl">
               {event.title}
             </h1>
           </div>
@@ -134,16 +135,28 @@ export function EventDetail() {
                 </div>
               </div>
 
+              {event.price && (
+                <div className="flex items-start mb-8">
+                  <div className="bg-brand-primary/5 p-3 rounded-full mr-4 text-brand-secondary">
+                    <Tag size={24} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-brand-contrast/50 uppercase tracking-wider mb-1">Quota di Partecipazione</p>
+                    <p className="text-brand-primary font-medium">€ {event.price}</p>
+                  </div>
+                </div>
+              )}
+
               <div className="pt-6 border-t border-brand-primary/10">
                 <Link to="/contatti" className="block w-full">
-                  <Button variant={event.isFull ? "outline" : "primary"} className="w-full py-6 text-lg">
+                  <Button variant={event.isFull ? "outline" : "primary"} className="w-full py-6 text-lg shadow-sm hover:translate-y-[-2px] transition-transform">
                     {event.isFull ? "Richiedi lista d'attesa" : "Prenota il tuo posto"}
                   </Button>
                 </Link>
                 {!event.isFull && (
-                  <p className="text-center text-sm text-brand-contrast/50 mt-4">
-                    I posti sono limitati per garantire la qualità dell'esperienza.
-                  </p>
+                    <p className="text-center text-sm text-brand-contrast/50 mt-4">
+                      La prenotazione non è vincolante ed è soggetta a conferma.
+                    </p>
                 )}
               </div>
             </div>
