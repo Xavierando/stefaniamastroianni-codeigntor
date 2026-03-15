@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Hero } from "@/components/ui/Hero";
 import { Leaf, Heart, ArrowRight, BookOpen, Sun, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/Button";
+import { useImagePreloader } from "@/hooks/useImagePreloader";
 
 const PRACTICES = [
   {
@@ -25,8 +27,18 @@ const PRACTICES = [
 ];
 
 export function ChiSono() {
+      const isHeroLoaded = useImagePreloader("/images/chi-sono/IMG_2028.webp");
+
+const isReady = isHeroLoaded;
+
   return (
-    <div className="flex flex-col min-h-screen">
+    <>
+      {!isReady && (
+        <div className="fixed inset-0 z-[100] flex flex-col bg-brand-base items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
+        </div>
+      )}
+      <div className={`flex flex-col min-h-screen transition-opacity duration-500 ${!isReady ? 'opacity-0 h-screen overflow-hidden' : 'opacity-100'}`}>
       
       {/* 1. Hero Section */}
       <Hero
@@ -150,6 +162,7 @@ export function ChiSono() {
         </div>
       </section>
 
-    </div>
+      </div>
+    </>
   );
 }

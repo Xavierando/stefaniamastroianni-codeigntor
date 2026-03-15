@@ -4,13 +4,14 @@ import { apiFetch } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
 import { Calendar, ArrowRight } from "lucide-react";
 import { Hero } from "@/components/ui/Hero";
+import { useImagePreloader } from "@/hooks/useImagePreloader";
 
 export function Blog() {
   const [posts, setPosts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+    useEffect(() => {
     async function fetchPosts() {
       try {
         setIsLoading(true);
@@ -27,8 +28,18 @@ export function Blog() {
     fetchPosts();
   }, []);
 
+    const isHeroLoaded = useImagePreloader("/images/home/slidehome1.webp");
+
+const isReady = !isLoading && isHeroLoaded;
+
   return (
-    <div className="flex flex-col min-h-screen bg-brand-base">
+    <>
+      {!isReady && (
+        <div className="fixed inset-0 z-[100] flex flex-col bg-brand-base items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
+        </div>
+      )}
+      <div className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? 'opacity-0 h-screen overflow-hidden' : 'opacity-100'}`}>
       <Hero
         imageSrc="/images/home/slidehome1.webp"
         gradientColorClass="from-brand-base"
@@ -107,6 +118,7 @@ export function Blog() {
           )}
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 }

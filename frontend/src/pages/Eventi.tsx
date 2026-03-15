@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { Hero } from "@/components/ui/Hero";
 import { EventCard } from "@/components/ui/EventCard";
 import { apiFetch } from "@/lib/api";
+import { useImagePreloader } from "@/hooks/useImagePreloader";
 
 export function EventiPage() {
   const [events, setEvents] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
+    useEffect(() => {
     async function fetchData() {
       try {
         const eventsRes = await apiFetch("/events");
@@ -35,16 +36,18 @@ export function EventiPage() {
     fetchData();
   }, []);
 
-  if (isLoading) {
-    return (
-      <div className="flex-col min-h-screen bg-brand-base flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
-      </div>
-    );
-  }
+    const isHeroLoaded = useImagePreloader("/images/eventi/intermediate-workshop-featured.webp");
+
+const isReady = !isLoading && isHeroLoaded;
 
   return (
-    <div className="flex flex-col min-h-screen bg-brand-base">
+    <>
+      {!isReady && (
+        <div className="fixed inset-0 z-[100] flex flex-col bg-brand-base items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
+        </div>
+      )}
+      <div className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? 'opacity-0 h-screen overflow-hidden' : 'opacity-100'}`}>
       <Hero
         imageSrc="/images/eventi/intermediate-workshop-featured.webp"
         gradientColorClass="from-brand-base"
@@ -66,6 +69,7 @@ export function EventiPage() {
           </div>
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 }

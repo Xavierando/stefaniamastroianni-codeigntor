@@ -5,14 +5,14 @@ import { ServiceOverview } from "@/components/sections/ServiceOverview";
 import { MarqueeGallery } from "@/components/sections/MarqueeGallery";
 import { TestimonialsCarousel } from "@/components/sections/TestimonialsCarousel";
 import { apiFetch } from "@/lib/api";
+import { useImagePreloader } from "@/hooks/useImagePreloader";
 
 export function Home() {
   const [eventsData, setEventsData] = useState([]);
   const [reviewsData, setReviewsData] = useState([]);
   const [galleryData, setGalleryData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
+    useEffect(() => {
     async function fetchHomeData() {
       try {
         const [eventsRes, reviewsRes, galleryRes] = await Promise.all([
@@ -47,22 +47,24 @@ export function Home() {
     fetchHomeData();
   }, []);
 
-  if (isLoading) {
-    return (
-      <div className="flex-col min-h-screen bg-brand-base flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
-      </div>
-    );
-  }
+    const isHeroLoaded = useImagePreloader("/images/home/home-hero-yoga.webp");
+
+const isReady = !isLoading && isHeroLoaded;
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <>
+      {!isReady && (
+        <div className="fixed inset-0 z-[100] flex flex-col bg-brand-base items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
+        </div>
+      )}
       
-      {/* 1. Hero Section */}
-      <Hero
-        imageSrc="/images/home/home-hero-yoga.webp"
-        gradientColorClass="from-brand-base"
-      />
+      <div className={`flex flex-col min-h-screen transition-opacity duration-500 ${!isReady ? 'opacity-0 h-screen overflow-hidden' : 'opacity-100'}`}>
+        {/* 1. Hero Section */}
+        <Hero
+          imageSrc="/images/home/home-hero-yoga.webp"
+          gradientColorClass="from-brand-base"
+        />
 
       {/* 2. Introduzione (Chi è e Cosa Fa) */}
       <section className="w-full py-24 px-4 bg-brand-base text-center border-b border-brand-contrast/5">
@@ -134,5 +136,6 @@ export function Home() {
       <MarqueeGallery images={galleryData} />
 
     </div>
+    </>
   );
 }

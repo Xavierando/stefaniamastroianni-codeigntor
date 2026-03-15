@@ -4,6 +4,7 @@ import { ServiceOverview } from "@/components/sections/ServiceOverview";
 import { EventCard } from "@/components/ui/EventCard";
 import { TestimonialsCarousel } from "@/components/sections/TestimonialsCarousel";
 import { apiFetch } from "@/lib/api";
+import { useImagePreloader } from "@/hooks/useImagePreloader";
 
 import { Category } from "../types";
 
@@ -12,7 +13,8 @@ export function TrattamentiPage() {
   const [events, setEvents] = useState<any[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
+
+    useEffect(() => {
     async function fetchData() {
       try {
         const [servicesRes, eventsRes, reviewsRes] = await Promise.all([
@@ -46,13 +48,9 @@ export function TrattamentiPage() {
     fetchData();
   }, []);
 
-  if (isLoading) {
-    return (
-      <div className="flex-col min-h-screen bg-brand-base flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
-      </div>
-    );
-  }
+    const isHeroLoaded = useImagePreloader("/images/trattamenti/trattamenti-olistici-1.webp");
+
+const isReady = !isLoading && isHeroLoaded;
 
   const reviewsBgClass = services.length % 2 !== 0 ? "bg-white" : "bg-brand-base";
   const eventsBgClass = reviews.length > 0 
@@ -60,7 +58,13 @@ export function TrattamentiPage() {
     : reviewsBgClass;
 
   return (
-    <div className="flex flex-col min-h-screen bg-brand-base">
+    <>
+      {!isReady && (
+        <div className="fixed inset-0 z-[100] flex flex-col bg-brand-base items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
+        </div>
+      )}
+      <div className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? 'opacity-0 h-screen overflow-hidden' : 'opacity-100'}`}>
       <Hero
         imageSrc="/images/trattamenti/trattamenti-olistici-1.webp"
         gradientColorClass="from-white"
@@ -121,6 +125,7 @@ export function TrattamentiPage() {
           </div>
         </section>
       )}
-    </div>
+      </div>
+    </>
   );
 }

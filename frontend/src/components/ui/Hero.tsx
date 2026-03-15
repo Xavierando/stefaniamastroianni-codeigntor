@@ -12,6 +12,7 @@ interface HeroProps {
   titleClassName?: string;
   subtitleClassName?: string;
   gradientColorClass?: string;
+  onImageLoad?: () => void;
 }
 
 export function Hero({
@@ -25,6 +26,7 @@ export function Hero({
   titleClassName = "text-white",
   subtitleClassName = "text-white/90",
   gradientColorClass = "from-brand-base",
+  onImageLoad,
 }: HeroProps) {
   return (
     <section className={cn("relative min-h-[60vh] md:min-h-[70vh] w-full flex items-center justify-center pt-20 overflow-hidden", className)}>
@@ -34,6 +36,8 @@ export function Hero({
           src={imageSrc}
           alt={imageAlt}
           className="w-full h-full object-cover opacity-80"
+          onLoad={onImageLoad}
+          onError={onImageLoad}
         />
         {/* Gradient Overlay */}
         <div className={`absolute inset-0 bg-gradient-to-t ${gradientColorClass} via-transparent to-transparent`} />
