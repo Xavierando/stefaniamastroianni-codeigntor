@@ -63,21 +63,16 @@ export function MaternitaPage() {
   return (
     <div className="flex flex-col min-h-screen bg-brand-base">
       <Hero
-        title="Maternità Consapevole"
-        subtitle="Sostegno emotivo, corporeo e pratico dal concepimento al puerperio. Un faro per navigare i cambiamenti della maternità sentendoti accolta e mai sola."
         imageSrc="/images/maternita/Servizi-maternita-2.webp"
         gradientColorClass="from-white"
       />
 
-      <section className="py-24 px-4 bg-white border-b border-brand-contrast/5">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="font-serif text-3xl md:text-4xl text-brand-primary mb-6">I Percorsi di Accompagnamento</h2>
-            <p className="text-lg text-brand-contrast/80 max-w-2xl mx-auto">
-              Ogni gravidanza è un viaggio unico. I miei servizi sono pensati per offrirti un sostegno su misura, rispettando i tuoi tempi e le tue scelte.
-            </p>
-          </div>
-
+      <section className="py-16 md:py-24 px-4 bg-white border-b border-brand-contrast/5">
+        <div className="container mx-auto max-w-4xl text-center mb-16">
+          <h1 className="font-serif text-4xl md:text-5xl text-brand-primary mb-6">Maternità Consapevole</h1>
+          <p className="text-xl text-brand-contrast/90 leading-relaxed font-light mb-12">
+            Sostegno emotivo, corporeo e pratico dal concepimento al puerperio. Un faro per navigare i cambiamenti della maternità sentendoti accolta e mai sola.
+          </p>
         </div>
       </section>
 

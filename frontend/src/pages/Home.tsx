@@ -60,11 +60,7 @@ export function Home() {
       
       {/* 1. Hero Section */}
       <Hero
-        title="Spazio per la Cura e il Benessere"
-        subtitle="Un luogo sicuro dove ritrovare l'equilibrio psicofisico, accompagnata con empatia in ogni fase della tua vita."
         imageSrc="/images/home/home-hero-yoga.webp"
-        ctaText="Scopri chi sono"
-        ctaHref="/chi-sono"
         gradientColorClass="from-brand-base"
       />
 

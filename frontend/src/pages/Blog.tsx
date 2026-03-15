@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { apiFetch } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
 import { Calendar, ArrowRight } from "lucide-react";
+import { Hero } from "@/components/ui/Hero";
+
 export function Blog() {
   const [posts, setPosts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,16 +28,21 @@ export function Blog() {
   }, []);
 
   return (
-    <div className="bg-brand-base min-h-screen py-24 pt-32">
-      <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto mb-16 text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-brand-primary mb-6">
-              Il Blog di Stefania
-            </h1>
-            <p className="text-brand-contrast/80 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
-              Riflessioni, approfondimenti e consigli sul benessere olistico, la maternità e la crescita personale.
-            </p>
-          </div>
+    <div className="flex flex-col min-h-screen bg-brand-base">
+      <Hero
+        imageSrc="/images/home/slidehome1.webp"
+        gradientColorClass="from-brand-base"
+      />
+
+      <section className="py-16 md:py-24 px-4">
+        <div className="container mx-auto max-w-4xl text-center mb-16">
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-brand-primary mb-6">Il Blog di Stefania</h1>
+          <p className="text-xl text-brand-contrast/90 leading-relaxed font-light mb-12">
+            Riflessioni, approfondimenti e consigli sul benessere olistico, la maternità e la crescita personale.
+          </p>
+        </div>
+
+        <div className="container mx-auto px-4">
 
           {isLoading ? (
             <div className="flex justify-center items-center py-20">
@@ -98,7 +105,8 @@ export function Blog() {
               ))}
             </div>
           )}
-      </div>
+        </div>
+      </section>
     </div>
   );
 }

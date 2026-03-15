@@ -30,14 +30,22 @@ export function ChiSono() {
       
       {/* 1. Hero Section */}
       <Hero
-        title="La Mia Storia"
-        subtitle="Un percorso intrecciato tra ascolto, cura e riconnessione profonda con i cicli della natura e della vita."
         imageSrc="/images/chi-sono/IMG_2028.webp"
         gradientColorClass="from-brand-base"
       />
 
+      {/* Sezione Testo Hero */}
+      <section className="w-full py-16 px-4 bg-brand-base text-center">
+        <div className="container mx-auto max-w-4xl">
+          <h1 className="font-serif text-4xl md:text-5xl text-brand-primary mb-6">La Mia Storia</h1>
+          <p className="text-xl text-brand-contrast/90 font-light leading-relaxed">
+            Un percorso intrecciato tra ascolto, cura e riconnessione profonda con i cicli della natura e della vita.
+          </p>
+        </div>
+      </section>
+
       {/* 2. Introduzione */}
-      <section className="w-full py-24 px-4 bg-brand-base">
+      <section className="w-full py-12 md:py-24 px-4 bg-brand-base">
         <div className="container mx-auto max-w-6xl flex flex-col md:flex-row gap-16 items-center">
           <div className="w-full md:w-1/2 relative aspect-square md:aspect-[4/5] rounded-tl-full rounded-br-full overflow-hidden shadow-xl border-4 border-white">
             <img

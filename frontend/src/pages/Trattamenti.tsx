@@ -62,21 +62,16 @@ export function TrattamentiPage() {
   return (
     <div className="flex flex-col min-h-screen bg-brand-base">
       <Hero
-        title="Trattamenti Olistici"
-        subtitle="Il tocco che cura. Massaggi e tecniche corporee per sciogliere le tensioni, stimolare le naturali capacità di autoguarigione e ritrovare leggerezza."
         imageSrc="/images/trattamenti/trattamenti-olistici-1.webp"
         gradientColorClass="from-white"
       />
 
-      <section className="py-24 px-4 bg-white border-b border-brand-contrast/5">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="font-serif text-3xl md:text-4xl text-brand-primary mb-6">Massaggi e Riequilibrio</h2>
-            <p className="text-lg text-brand-contrast/80 max-w-2xl mx-auto">
-              I trattamenti non sono pensati solo per sciogliere tensioni fisiche, ma come veri e propri momenti di riconnessione profonda con sé stessi.
-            </p>
-          </div>
-
+      <section className="py-16 md:py-24 px-4 bg-white border-b border-brand-contrast/5">
+        <div className="container mx-auto max-w-4xl text-center mb-16">
+          <h1 className="font-serif text-4xl md:text-5xl text-brand-primary mb-6">Trattamenti Olistici</h1>
+          <p className="text-xl text-brand-contrast/90 leading-relaxed font-light mb-12">
+            Il tocco che cura. Massaggi e tecniche corporee per sciogliere le tensioni, stimolare le naturali capacità di autoguarigione e ritrovare leggerezza.
+          </p>
         </div>
       </section>
 

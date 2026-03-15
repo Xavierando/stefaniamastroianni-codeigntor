@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 interface HeroProps {
-  title: string;
+  title?: string;
   subtitle?: string;
   imageSrc: string;
   imageAlt?: string;
@@ -40,24 +40,28 @@ export function Hero({
       </div>
 
       {/* Foreground Content */}
-      <div className="relative z-10 text-center text-brand-base px-4 max-w-4xl mx-auto flex flex-col items-center">
-        <h1 className={cn("text-4xl md:text-6xl font-serif mb-6 leading-tight drop-shadow-lg", titleClassName)}>
-          {title}
-        </h1>
-        {subtitle && (
-          <p className={cn("text-lg md:text-xl md:max-w-2xl mx-auto mb-8 drop-shadow-md", subtitleClassName)}>
-            {subtitle}
-          </p>
-        )}
-        {ctaText && ctaHref && (
-          <Link
-            to={ctaHref}
-            className="bg-brand-secondary hover:bg-brand-secondary/90 transition-colors text-white px-8 py-3 rounded-md text-base font-medium shadow-lg hover:shadow-xl"
-          >
-            {ctaText}
-          </Link>
-        )}
-      </div>
+      {(title || subtitle || ctaText) && (
+        <div className="relative z-10 text-center text-brand-base px-4 max-w-4xl mx-auto flex flex-col items-center">
+          {title && (
+            <h1 className={cn("text-4xl md:text-6xl font-serif mb-6 leading-tight drop-shadow-lg", titleClassName)}>
+              {title}
+            </h1>
+          )}
+          {subtitle && (
+            <p className={cn("text-lg md:text-xl md:max-w-2xl mx-auto mb-8 drop-shadow-md", subtitleClassName)}>
+              {subtitle}
+            </p>
+          )}
+          {ctaText && ctaHref && (
+            <Link
+              to={ctaHref}
+              className="bg-brand-secondary hover:bg-brand-secondary/90 transition-colors text-white px-8 py-3 rounded-md text-base font-medium shadow-lg hover:shadow-xl"
+            >
+              {ctaText}
+            </Link>
+          )}
+        </div>
+      )}
     </section>
   );
 }
