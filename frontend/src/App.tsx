@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { MainLayout } from "./components/layout/MainLayout";
 import { Home } from "./pages/Home";
@@ -26,6 +27,20 @@ import { AdminContactsPage } from "./pages/admin/contacts/AdminContacts";
 import { AdminNewsletterPage } from "./pages/admin/newsletter/AdminNewsletter";
 
 function App() {
+  useEffect(() => {
+    // Remove the initial HTML loader smoothly once React is mounted
+    const loader = document.getElementById("initial-loader");
+    if (loader) {
+      // Small timeout ensures paint has happened
+      setTimeout(() => {
+        loader.style.opacity = "0";
+        setTimeout(() => {
+          loader.remove();
+        }, 800); // Matches CSS transition duration
+      }, 100);
+    }
+  }, []);
+
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
