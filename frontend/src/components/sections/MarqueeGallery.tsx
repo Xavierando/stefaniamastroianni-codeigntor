@@ -64,14 +64,11 @@ export function MarqueeGallery({ images }: { images: GalleryImageProps[] }) {
           >
             <X size={32} />
           </button>
-          <div 
-            className="relative w-full h-[80vh] md:h-[90vh] max-w-7xl rounded-lg overflow-hidden flex items-center justify-center"
-            onClick={(e) => e.stopPropagation()} // Prevent bubbling to background
-          >
+          <div className="relative w-full h-[80vh] md:h-[90vh] max-w-7xl rounded-lg overflow-hidden flex items-center justify-center">
             <img
               src={selectedImage}
               alt="High resolution view"
-              className="max-w-full max-h-full object-contain"
+              className="max-w-full max-h-full object-contain cursor-pointer"
             />
           </div>
         </div>
