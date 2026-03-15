@@ -63,7 +63,7 @@ export function YogaPage() {
         imageSrc="/images/yoga/Pratiche-di-Yoga.webp"
       />
 
-      <section className="py-24 px-4 bg-accent-green/10 border-b border-brand-contrast/5">
+      <section className="py-24 px-4 bg-white border-b border-brand-contrast/5">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="font-serif text-3xl md:text-4xl text-brand-primary mb-6">Pratiche Individuali</h2>
@@ -90,7 +90,7 @@ export function YogaPage() {
             href="/contatti"
             ctaText="Richiedi informazioni"
             alternateBackground={index % 2 !== 0}
-            alternateColorClass="bg-accent-green/5"
+            alternateColorClass="bg-white"
           />
         ))}
       </div>
@@ -102,7 +102,7 @@ export function YogaPage() {
 
       {/* Sezione Eventi (Corsi di Gruppo) */}
       {events.length > 0 && (
-        <section className="py-24 px-4 bg-accent-green/10 border-t border-brand-contrast/10">
+        <section className="py-24 px-4 bg-white border-t border-brand-contrast/10">
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-16">
               <h2 className="font-serif text-3xl md:text-4xl text-brand-primary mb-6">Corsi e Seminari Caleidoscopici</h2>

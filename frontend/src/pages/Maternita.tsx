@@ -63,7 +63,7 @@ export function MaternitaPage() {
         imageSrc="/images/maternita/Servizi-maternita-2.webp"
       />
 
-      <section className="py-24 px-4 bg-accent-pink/10 border-b border-brand-contrast/5">
+      <section className="py-24 px-4 bg-white border-b border-brand-contrast/5">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="font-serif text-3xl md:text-4xl text-brand-primary mb-6">I Percorsi di Accompagnamento</h2>
@@ -90,7 +90,7 @@ export function MaternitaPage() {
             href="/contatti"
             ctaText="Richiedi informazioni"
             alternateBackground={index % 2 !== 0}
-            alternateColorClass="bg-accent-pink/5"
+            alternateColorClass="bg-white"
           />
         ))}
       </div>
@@ -102,7 +102,7 @@ export function MaternitaPage() {
 
       {/* Sezione Eventi (Se presenti) */}
       {events.length > 0 && (
-        <section className="py-24 px-4 bg-accent-pink/10 border-t border-brand-contrast/10">
+        <section className="py-24 px-4 bg-white border-t border-brand-contrast/10">
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-16">
               <h2 className="font-serif text-3xl md:text-4xl text-brand-primary mb-6">Prossimi Eventi di Maternità</h2>

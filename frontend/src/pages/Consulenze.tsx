@@ -63,7 +63,7 @@ export function ConsulenzePage() {
         imageSrc="/images/consulenze/consulenze-2.webp"
       />
 
-      <section className="py-24 px-4 bg-accent-dark/10 border-b border-brand-contrast/5">
+      <section className="py-24 px-4 bg-white border-b border-brand-contrast/5">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="font-serif text-3xl md:text-4xl text-brand-primary mb-6">Incontri Individualizzati</h2>
@@ -90,7 +90,7 @@ export function ConsulenzePage() {
             href="/contatti"
             ctaText="Richiedi informazioni"
             alternateBackground={index % 2 !== 0}
-            alternateColorClass="bg-accent-dark/5"
+            alternateColorClass="bg-white"
           />
         ))}
       </div>
@@ -102,7 +102,7 @@ export function ConsulenzePage() {
 
       {/* Sezione Eventi (Se presenti) */}
       {events.length > 0 && (
-        <section className="py-24 px-4 bg-accent-dark/10 border-t border-brand-contrast/10">
+        <section className="py-24 px-4 bg-white border-t border-brand-contrast/10">
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-16">
               <h2 className="font-serif text-3xl md:text-4xl text-brand-primary mb-6">Percorsi di Gruppo</h2>

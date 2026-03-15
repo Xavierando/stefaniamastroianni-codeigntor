@@ -62,7 +62,7 @@ export function TrattamentiPage() {
         imageSrc="/images/trattamenti/trattamenti-olistici-1.webp"
       />
 
-      <section className="py-24 px-4 bg-accent-orange/10 border-b border-brand-contrast/5">
+      <section className="py-24 px-4 bg-white border-b border-brand-contrast/5">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="font-serif text-3xl md:text-4xl text-brand-primary mb-6">Massaggi e Riequilibrio</h2>
@@ -89,7 +89,7 @@ export function TrattamentiPage() {
             href="/contatti"
             ctaText="Richiedi informazioni"
             alternateBackground={index % 2 !== 0}
-            alternateColorClass="bg-accent-orange/5"
+            alternateColorClass="bg-white"
           />
         ))}
       </div>
@@ -101,7 +101,7 @@ export function TrattamentiPage() {
 
       {/* Sezione Eventi (Se presenti) */}
       {events.length > 0 && (
-        <section className="py-24 px-4 bg-accent-orange/10 border-t border-brand-contrast/10">
+        <section className="py-24 px-4 bg-white border-t border-brand-contrast/10">
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-16">
               <h2 className="font-serif text-3xl md:text-4xl text-brand-primary mb-6">Prossimi Eventi di Trattamenti Olistici</h2>
