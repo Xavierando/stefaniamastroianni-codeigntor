@@ -67,6 +67,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./aruba_deploy/ # The trailing slash is required
+          server-dir: /www.arpelux.it/
           state-name: .github-ftp-sync-state.json
           exclude: |
             **/.git*
