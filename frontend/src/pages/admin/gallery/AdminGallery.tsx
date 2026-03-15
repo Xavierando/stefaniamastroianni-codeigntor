@@ -83,7 +83,7 @@ export function AdminGalleryPage() {
               {images.map((image) => (
                 <Card key={image.id} className="group relative overflow-hidden aspect-square border border-brand-primary/10">
                   <img 
-                    src={image.url.startsWith('http') ? image.url : `http://localhost:8081${image.url}`} 
+                    src={image.url}
                     alt={image.alt || "Galleria"} 
                     className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
                   />

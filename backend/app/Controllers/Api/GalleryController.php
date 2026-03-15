@@ -39,7 +39,7 @@ class GalleryController extends ResourceController
         $newName = $file->getRandomName();
         $file->move(FCPATH . 'uploads', $newName);
 
-        $url = base_url('uploads/' . $newName);
+        $url = '/uploads/' . $newName;
 
         $data = [
             'url' => $url,

@@ -100,7 +100,7 @@ export function AdminReviewsPage() {
                         {review.imageUrl ? (
                           <div className="w-10 h-10 rounded-full overflow-hidden relative hidden sm:block">
                             <img 
-                              src={review.imageUrl.startsWith('http') ? review.imageUrl : `http://localhost:8081${review.imageUrl}`} 
+                               src={review.imageUrl} 
                               alt={review.name}
                               className="object-cover w-full h-full"
                             />

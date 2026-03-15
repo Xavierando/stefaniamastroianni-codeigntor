@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.DEV ? 'http://localhost:8081/api' : '/api';
+const API_BASE_URL = '/api';
 
 export const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
   const url = `${API_BASE_URL}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;

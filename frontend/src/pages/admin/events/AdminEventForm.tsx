@@ -236,7 +236,7 @@ export function AdminEventForm() {
             </label>
             {currentImageUrl && (
               <div className="mb-2">
-                <img src={`http://localhost:8081/uploads/events/${currentImageUrl.split('/').pop()}`} alt="Current" className="h-24 object-cover rounded" />
+                <img src={currentImageUrl} alt="Current" className="h-24 object-cover rounded" />
               </div>
             )}
             <input

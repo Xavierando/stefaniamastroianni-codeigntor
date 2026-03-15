@@ -38,7 +38,7 @@ export function AdminReviewForm() {
           });
           
           if (review.imageUrl) {
-            setCurrentImageUrl(review.imageUrl.startsWith('http') ? review.imageUrl : `http://localhost:8081${review.imageUrl}`);
+            setCurrentImageUrl(review.imageUrl);
           }
         } catch (err) {
           setError("Errore nel caricamento della recensione.");
