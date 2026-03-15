@@ -16,6 +16,7 @@ export function AdminEventForm() {
   const [formData, setFormData] = useState({
     title: "",
     category: "",
+    shortDescription: "",
     description: "",
     price: "",
     date: "",
@@ -38,6 +39,7 @@ export function AdminEventForm() {
           setFormData({
             title: event.title || "",
             category: event.category || "",
+            shortDescription: event.shortDescription || "",
             description: event.description || "",
             price: event.price?.toString() || "",
             date: event.date ? event.date.substring(0, 16) : "", // Format for datetime-local
@@ -167,8 +169,25 @@ export function AdminEventForm() {
           </div>
 
           <div className="space-y-2">
+            <label htmlFor="shortDescription" className="block text-sm font-medium text-brand-contrast/80">
+              Descrizione Breve (per la card dell'evento) *
+            </label>
+            <textarea
+              id="shortDescription"
+              name="shortDescription"
+              value={formData.shortDescription}
+              onChange={handleChange}
+              required
+              rows={2}
+              maxLength={150}
+              className="w-full p-3 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50 resize-y"
+              placeholder="Un riassunto o introduzione (max 150 caratteri)..."
+            />
+          </div>
+
+          <div className="space-y-2">
             <label htmlFor="description" className="block text-sm font-medium text-brand-contrast/80">
-              Descrizione Completa *
+              Descrizione Completa (per la pagina dettaglio) *
             </label>
             <textarea
               id="description"
@@ -178,7 +197,7 @@ export function AdminEventForm() {
               required
               rows={5}
               className="w-full p-3 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50 resize-y"
-              placeholder="Descrivi di cosa si tratta..."
+              placeholder="Descrivi l'evento nel dettaglio..."
             />
           </div>
 
