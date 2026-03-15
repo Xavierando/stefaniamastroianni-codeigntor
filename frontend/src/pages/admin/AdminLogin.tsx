@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginSuccess } from "../../store/slices/authSlice";
 import { Button } from "../../components/admin/ui/Button";
+import { apiFetch } from "../../lib/api";
 
 export function AdminLogin() {
   const [username, setUsername] = useState("");
@@ -19,21 +20,17 @@ export function AdminLogin() {
     setError("");
 
     try {
-      // In a real app we would hit an endpoint in CodeIgniter, e.g. /api/auth/login
-      // For now we will mock the login simulating the `.env` credentials since CI4 doesn't have a login controller yet.
-      
-      if (username === "admin" && password === "password123") {
-        const fakeToken = "mock_jwt_token_" + Date.now();
-        dispatch(loginSuccess(fakeToken));
-        navigate("/admin");
-      } else if (username === "stefania_admin" && password === "") {
-         const fakeToken = "mock_jwt_token_prod_" + Date.now();
-         dispatch(loginSuccess(fakeToken));
-         navigate("/admin");
-      } else {
-        throw new Error("Credenziali non valide");
-      }
+      const response = await apiFetch("/auth/login", {
+        method: "POST",
+        body: { username, password } as any
+      });
 
+      if (response && response.token) {
+        dispatch(loginSuccess(response.token));
+        navigate("/admin");
+      } else {
+         throw new Error("Risposta del server non valida");
+      }
     } catch (err: any) {
       setError(err.message || "Errore di login");
     } finally {
