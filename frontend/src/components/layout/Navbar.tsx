@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { name: "Consulenze", href: "/consulenze" },
   { name: "Yoga", href: "/yoga-e-meditazione" },
   { name: "Eventi", href: "/laboratori-eventi" },
+  { name: "Blog", href: "/blog" },
   { name: "Contatti", href: "/contatti" },
 ];
 

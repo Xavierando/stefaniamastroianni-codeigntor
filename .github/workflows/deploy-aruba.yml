@@ -10,6 +10,8 @@ jobs:
     name: Build and Deploy to Aruba
     runs-on: ubuntu-latest
     environment: production
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout Code
@@ -79,3 +81,18 @@ jobs:
             **/.env
             **/.env.example
             **/.htaccess
+
+      # --- RUN DATABASE MIGRATIONS ---
+      - name: Run Database Migrations
+        run: |
+          echo "Triggering automated database migrations..."
+          RESPONSE=$(curl -s -X POST https://www.stefaniamastroianni.it/api/migrations/run \
+            -H "X-Migration-Token: ${{ secrets.MIGRATION_TOKEN }}" \
+            -H "Content-Type: application/json")
+          echo "Migration response: $RESPONSE"
+          if echo "$RESPONSE" | grep -q '"success":true'; then
+            echo "Migrations completed successfully."
+          else
+            echo "Migrations failed or returned unexpected response."
+            exit 1
+          fi

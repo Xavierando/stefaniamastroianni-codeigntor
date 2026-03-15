@@ -55,6 +55,14 @@ export function AdminLayout() {
             <Star size={20} />
             <span className="font-medium">Recensioni</span>
           </Link>
+          <Link to="/admin/blog" className="flex items-center gap-3 p-3 text-brand-contrast/80 hover:bg-brand-primary/5 hover:text-brand-primary rounded-md transition-colors">
+            <LayoutList size={20} />
+            <span className="font-medium">Blog</span>
+          </Link>
+          <Link to="/admin/comments" className="flex items-center gap-3 p-3 text-brand-contrast/80 hover:bg-brand-primary/5 hover:text-brand-primary rounded-md transition-colors">
+            <MessageSquare size={20} />
+            <span className="font-medium">Commenti Blog</span>
+          </Link>
           <Link to="/admin/contacts" className="flex items-center gap-3 p-3 text-brand-contrast/80 hover:bg-brand-primary/5 hover:text-brand-primary rounded-md transition-colors">
             <MessageSquare size={20} />
             <span className="font-medium">Messaggi</span>

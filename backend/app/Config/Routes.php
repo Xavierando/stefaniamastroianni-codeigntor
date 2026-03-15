@@ -25,4 +25,12 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->post('reviews/(:segment)', 'ReviewController::update/$1');
     $routes->resource('reviews', ['controller' => 'ReviewController']);
     $routes->resource('gallery', ['controller' => 'GalleryController', 'only' => ['index', 'create', 'delete']]);
+
+    // Blog feature
+    $routes->post('posts/(:segment)', 'PostController::update/$1');
+    $routes->resource('posts', ['controller' => 'PostController']);
+    $routes->resource('comments', ['controller' => 'CommentController']);
+
+    // Migrations
+    $routes->post('migrations/run', 'MigrationController::run');
 });

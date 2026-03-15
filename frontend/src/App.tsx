@@ -12,6 +12,8 @@ import { EventiPage } from "./pages/Eventi";
 import { PrivacyPolicyPage } from "./pages/PrivacyPolicy";
 import { CookiePolicyPage } from "./pages/CookiePolicy";
 import { EventDetail } from "./pages/EventDetail";
+import { Blog } from "./pages/Blog";
+import { BlogPost } from "./pages/BlogPost";
 
 import { AdminLayout } from "./components/admin/layout/AdminLayout";
 import { AdminLogin } from "./pages/admin/AdminLogin";
@@ -25,6 +27,9 @@ import { AdminReviewsPage } from "./pages/admin/reviews/AdminReviews";
 import { AdminReviewForm } from "./pages/admin/reviews/AdminReviewForm";
 import { AdminContactsPage } from "./pages/admin/contacts/AdminContacts";
 import { AdminNewsletterPage } from "./pages/admin/newsletter/AdminNewsletter";
+import { AdminPosts } from "./pages/admin/blog/AdminPosts";
+import { AdminPostForm } from "./pages/admin/blog/AdminPostForm";
+import { AdminComments } from "./pages/admin/comments/AdminComments";
 
 function App() {
   useEffect(() => {
@@ -52,6 +57,8 @@ function App() {
         <Route path="yoga-e-meditazione" element={<YogaPage />} />
         <Route path="laboratori-eventi" element={<EventiPage />} />
         <Route path="laboratori-eventi/:slug" element={<EventDetail />} />
+        <Route path="blog" element={<Blog />} />
+        <Route path="blog/:slug" element={<BlogPost />} />
         <Route path="contatti" element={<Contatti />} />
         <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
         <Route path="cookie-policy" element={<CookiePolicyPage />} />
@@ -69,6 +76,10 @@ function App() {
         <Route path="reviews" element={<AdminReviewsPage />} />
         <Route path="reviews/new" element={<AdminReviewForm />} />
         <Route path="reviews/:id/edit" element={<AdminReviewForm />} />
+        <Route path="blog" element={<AdminPosts />} />
+        <Route path="blog/new" element={<AdminPostForm />} />
+        <Route path="blog/:id/edit" element={<AdminPostForm />} />
+        <Route path="comments" element={<AdminComments />} />
         <Route path="contacts" element={<AdminContactsPage />} />
         <Route path="newsletter" element={<AdminNewsletterPage />} />
       </Route>
