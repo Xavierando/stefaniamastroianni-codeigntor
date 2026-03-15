@@ -54,6 +54,11 @@ export function TrattamentiPage() {
     );
   }
 
+  const reviewsBgClass = services.length % 2 !== 0 ? "bg-white" : "bg-brand-base";
+  const eventsBgClass = reviews.length > 0 
+    ? (services.length % 2 === 0 ? "bg-white" : "bg-brand-base")
+    : reviewsBgClass;
+
   return (
     <div className="flex flex-col min-h-screen bg-brand-base">
       <Hero
@@ -96,12 +101,12 @@ export function TrattamentiPage() {
 
       {/* Sezione Recensioni */}
       {reviews.length > 0 && (
-        <TestimonialsCarousel reviews={reviews} title="Voci da chi ha provato i trattamenti" />
+        <TestimonialsCarousel reviews={reviews} title="Voci da chi ha provato i trattamenti" className={reviewsBgClass} />
       )}
 
       {/* Sezione Eventi (Se presenti) */}
       {events.length > 0 && (
-        <section className="py-24 px-4 bg-white border-t border-brand-contrast/10">
+        <section className={`py-24 px-4 border-t border-brand-contrast/10 ${eventsBgClass}`}>
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-16">
               <h2 className="font-serif text-3xl md:text-4xl text-brand-primary mb-6">Prossimi Eventi di Trattamenti Olistici</h2>

@@ -55,6 +55,11 @@ export function YogaPage() {
     );
   }
 
+  const reviewsBgClass = services.length % 2 !== 0 ? "bg-white" : "bg-brand-base";
+  const eventsBgClass = reviews.length > 0 
+    ? (services.length % 2 === 0 ? "bg-white" : "bg-brand-base")
+    : reviewsBgClass;
+
   return (
     <div className="flex flex-col min-h-screen bg-brand-base">
       <Hero
@@ -97,12 +102,12 @@ export function YogaPage() {
 
       {/* Sezione Recensioni */}
       {reviews.length > 0 && (
-        <TestimonialsCarousel reviews={reviews} title="Cosa dicono gli allievi" />
+        <TestimonialsCarousel reviews={reviews} title="Cosa dicono gli allievi" className={reviewsBgClass} />
       )}
 
       {/* Sezione Eventi (Corsi di Gruppo) */}
       {events.length > 0 && (
-        <section className="py-24 px-4 bg-white border-t border-brand-contrast/10">
+        <section className={`py-24 px-4 border-t border-brand-contrast/10 ${eventsBgClass}`}>
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-16">
               <h2 className="font-serif text-3xl md:text-4xl text-brand-primary mb-6">Corsi e Seminari Caleidoscopici</h2>

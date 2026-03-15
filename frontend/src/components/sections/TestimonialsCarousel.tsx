@@ -4,7 +4,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ReviewCard, type ReviewProps } from "../ui/ReviewCard";
 
-export function TestimonialsCarousel({ reviews, title = "Dicono di me" }: { reviews: ReviewProps[], title?: string }) {
+export function TestimonialsCarousel({ reviews, title = "Dicono di me", className }: { reviews: ReviewProps[], title?: string, className?: string }) {
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: true, align: "start" },
     [Autoplay({ delay: 5000, stopOnMouseEnter: true, stopOnInteraction: false })]
@@ -21,7 +21,7 @@ export function TestimonialsCarousel({ reviews, title = "Dicono di me" }: { revi
   if (!reviews || reviews.length === 0) return null;
 
   return (
-    <section className="w-full bg-accent-cream py-24 border-t border-brand-primary/10">
+    <section className={`w-full py-24 border-t border-brand-contrast/10 ${className || 'bg-brand-base'}`}>
       <div className="container mx-auto px-4 max-w-6xl">
         <h2 className="font-serif text-3xl md:text-5xl text-center text-brand-primary mb-16">
           {title}
