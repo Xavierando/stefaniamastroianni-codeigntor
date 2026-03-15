@@ -10,12 +10,15 @@ import { YogaPage } from "./pages/YogaPage";
 import { EventiPage } from "./pages/Eventi";
 import { PrivacyPolicyPage } from "./pages/PrivacyPolicy";
 import { CookiePolicyPage } from "./pages/CookiePolicy";
+import { EventDetail } from "./pages/EventDetail";
 
 import { AdminLayout } from "./components/admin/layout/AdminLayout";
 import { AdminLogin } from "./pages/admin/AdminLogin";
 import { AdminDashboardPage } from "./pages/admin/AdminDashboard";
 import { AdminServicesPage } from "./pages/admin/services/AdminServices";
 import { AdminServiceForm } from "./pages/admin/services/AdminServiceForm";
+import { AdminEventsPage } from "./pages/admin/events/AdminEvents";
+import { AdminEventForm } from "./pages/admin/events/AdminEventForm";
 import { AdminGalleryPage } from "./pages/admin/gallery/AdminGallery";
 import { AdminReviewsPage } from "./pages/admin/reviews/AdminReviews";
 import { AdminReviewForm } from "./pages/admin/reviews/AdminReviewForm";
@@ -33,6 +36,7 @@ function App() {
         <Route path="consulenze" element={<ConsulenzePage />} />
         <Route path="yoga-e-meditazione" element={<YogaPage />} />
         <Route path="laboratori-eventi" element={<EventiPage />} />
+        <Route path="laboratori-eventi/:slug" element={<EventDetail />} />
         <Route path="contatti" element={<Contatti />} />
         <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
         <Route path="cookie-policy" element={<CookiePolicyPage />} />
@@ -43,6 +47,9 @@ function App() {
         <Route path="services" element={<AdminServicesPage />} />
         <Route path="services/new" element={<AdminServiceForm />} />
         <Route path="services/:id/edit" element={<AdminServiceForm />} />
+        <Route path="events" element={<AdminEventsPage />} />
+        <Route path="events/new" element={<AdminEventForm />} />
+        <Route path="events/:id/edit" element={<AdminEventForm />} />
         <Route path="gallery" element={<AdminGalleryPage />} />
         <Route path="reviews" element={<AdminReviewsPage />} />
         <Route path="reviews/new" element={<AdminReviewForm />} />

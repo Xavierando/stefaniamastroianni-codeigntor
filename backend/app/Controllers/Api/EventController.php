@@ -3,11 +3,11 @@
 namespace App\Controllers\Api;
 
 use CodeIgniter\RESTful\ResourceController;
-use App\Models\ServiceModel;
+use App\Models\EventModel;
 
-class ServiceController extends ResourceController
+class EventController extends ResourceController
 {
-    protected $modelName = ServiceModel::class;
+    protected $modelName = EventModel::class;
     protected $format    = 'json';
 
     public function index()
@@ -19,7 +19,7 @@ class ServiceController extends ResourceController
             $this->model->where('category', $category);
         }
 
-        $this->model->orderBy('createdAt', 'DESC');
+        $this->model->orderBy('date', 'ASC');
 
         if ($limit !== null && is_numeric($limit)) {
             return $this->respond($this->model->findAll((int)$limit));
@@ -30,17 +30,17 @@ class ServiceController extends ResourceController
 
     public function show($id = null)
     {
-        $service = $this->model->find($id);
-        if (!$service) {
+        $event = $this->model->find($id);
+        if (!$event) {
             // fallback to slug search
-            $service = $this->model->where('slug', $id)->first();
+            $event = $this->model->where('slug', $id)->first();
         }
 
-        if ($service) {
-            return $this->respond($service);
+        if ($event) {
+            return $this->respond($event);
         }
 
-        return $this->failNotFound('Service not found');
+        return $this->failNotFound('Event not found');
     }
 
     public function create()
@@ -59,8 +59,8 @@ class ServiceController extends ResourceController
         $image = $this->request->getFile('image');
         if ($image && $image->isValid() && !$image->hasMoved()) {
             $newName = $image->getRandomName();
-            $image->move(FCPATH . 'uploads/services', $newName);
-            $data['imageUrl'] = '/uploads/services/' . $newName;
+            $image->move(FCPATH . 'uploads/events', $newName);
+            $data['imageUrl'] = '/uploads/events/' . $newName;
         }
 
         if ($this->model->insert($data)) {
@@ -87,8 +87,8 @@ class ServiceController extends ResourceController
         $image = $this->request->getFile('image');
         if ($image && $image->isValid() && !$image->hasMoved()) {
             $newName = $image->getRandomName();
-            $image->move(FCPATH . 'uploads/services', $newName);
-            $data['imageUrl'] = '/uploads/services/' . $newName;
+            $image->move(FCPATH . 'uploads/events', $newName);
+            $data['imageUrl'] = '/uploads/events/' . $newName;
         }
 
         if ($this->model->update($id, $data)) {
@@ -104,6 +104,6 @@ class ServiceController extends ResourceController
             return $this->respondDeleted(['success' => true]);
         }
 
-        return $this->failNotFound('Service not found');
+        return $this->failNotFound('Event not found');
     }
 }

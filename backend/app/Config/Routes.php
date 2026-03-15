@@ -20,6 +20,8 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->resource('newsletter', ['controller' => 'NewsletterController', 'only' => ['index', 'create', 'delete']]);
     $routes->post('services/(:segment)', 'ServiceController::update/$1');
     $routes->resource('services', ['controller' => 'ServiceController']);
+    $routes->post('events/(:segment)', 'EventController::update/$1');
+    $routes->resource('events', ['controller' => 'EventController']);
     $routes->post('reviews/(:segment)', 'ReviewController::update/$1');
     $routes->resource('reviews', ['controller' => 'ReviewController']);
     $routes->resource('gallery', ['controller' => 'GalleryController', 'only' => ['index', 'create', 'delete']]);

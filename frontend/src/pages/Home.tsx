@@ -16,7 +16,7 @@ export function Home() {
     async function fetchHomeData() {
       try {
         const [eventsRes, reviewsRes, galleryRes] = await Promise.all([
-          apiFetch("/services?isEvent=1&limit=6"),
+          apiFetch("/events?limit=6"),
           apiFetch("/reviews?limit=8"),
           apiFetch("/gallery?limit=10")
         ]);
@@ -28,8 +28,8 @@ export function Home() {
           title: e.title,
           description: e.description,
           category: e.category,
-          date: e.eventDate ? new Date(e.eventDate).toLocaleDateString("it-IT", { day: 'numeric', month: 'long', year: 'numeric' }) : "Da definire",
-          location: e.eventLocation || "Studio Olistico Mastroianni",
+          date: e.date ? new Date(e.date).toLocaleDateString("it-IT", { day: 'numeric', month: 'long', year: 'numeric' }) : "Da definire",
+          location: e.location || "Studio Olistico Mastroianni",
           isFull: e.isFull,
           imageSrc: e.imageUrl || undefined
         }));

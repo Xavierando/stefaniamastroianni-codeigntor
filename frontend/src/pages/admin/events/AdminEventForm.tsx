@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../../../store";
 import { Category, CategoryLabels } from "../../../types";
 
-export function AdminServiceForm() {
+export function AdminEventForm() {
   const { id } = useParams();
   const isEditing = Boolean(id);
   const navigate = useNavigate();
@@ -18,12 +18,10 @@ export function AdminServiceForm() {
     category: "",
     description: "",
     price: "",
-    duration: "",
-    eventDate: "",
-    eventLocation: "",
+    date: "",
+    location: "",
   });
   
-  const [isEvent, setIsEvent] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
 
@@ -33,32 +31,30 @@ export function AdminServiceForm() {
 
   useEffect(() => {
     if (isEditing) {
-      const fetchService = async () => {
+      const fetchEvent = async () => {
         try {
-          const service = await apiFetch(`services/${id}`);
+          const event = await apiFetch(`events/${id}`);
           
           setFormData({
-            title: service.title || "",
-            category: service.category || "",
-            description: service.description || "",
-            price: service.price?.toString() || "",
-            duration: service.duration || "",
-            eventDate: service.eventDate ? service.eventDate.substring(0, 16) : "", // Format for datetime-local
-            eventLocation: service.eventLocation || "",
+            title: event.title || "",
+            category: event.category || "",
+            description: event.description || "",
+            price: event.price?.toString() || "",
+            date: event.date ? event.date.substring(0, 16) : "", // Format for datetime-local
+            location: event.location || "",
           });
-          setIsEvent(service.isEvent === 1 || service.isEvent === true);
           
-          if (service.imageUrl) {
-            setCurrentImageUrl(service.imageUrl);
+          if (event.imageUrl) {
+            setCurrentImageUrl(event.imageUrl);
           }
         } catch (err) {
-          setError("Errore nel caricamento del servizio.");
+          setError("Errore nel caricamento dell'evento.");
           console.error(err);
         } finally {
           setIsLoading(false);
         }
       };
-      fetchService();
+      fetchEvent();
     }
   }, [id, isEditing]);
 
@@ -83,22 +79,21 @@ export function AdminServiceForm() {
       Object.entries(formData).forEach(([key, value]) => {
         submitData.append(key, value);
       });
-      submitData.append("isEvent", isEvent ? "1" : "0");
       
       if (image) {
         submitData.append("image", image);
       }
 
-      await apiFetch(isEditing ? `services/${id}` : "services", {
-        method: isEditing ? "POST" : "POST", // CI4 uses POST with _method=PUT usually for multipart/form-data, but we will assume standard POST for now
+      await apiFetch(isEditing ? `events/${id}` : "events", {
+        method: "POST", // CI4 uses POST for multipart form submissions
         headers: {
           Authorization: `Bearer ${token}`
-          // Don't set Content-Type for FormData, the browser will do it
+          // Don't set Content-Type for FormData
         },
         body: submitData
       });
 
-      navigate("/admin/services");
+      navigate("/admin/events");
     } catch (err: any) {
       setError(err.message || "Errore sconosciuto durante il salvataggio.");
     } finally {
@@ -113,14 +108,14 @@ export function AdminServiceForm() {
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
       <div className="flex items-center gap-4">
-        <Link to="/admin/services" className="p-2 text-brand-contrast/50 hover:text-brand-primary hover:bg-brand-primary/5 rounded-full transition-colors">
+        <Link to="/admin/events" className="p-2 text-brand-contrast/50 hover:text-brand-primary hover:bg-brand-primary/5 rounded-full transition-colors">
           <ArrowLeft size={24} />
         </Link>
         <div>
           <h1 className="text-3xl font-serif text-brand-primary mb-2">
-            {isEditing ? "Modifica Servizio" : "Nuovo Servizio / Evento"}
+            {isEditing ? "Modifica Evento" : "Nuovo Evento"}
           </h1>
-          <p className="text-brand-contrast/60">Compila i campi per pubblicare un nuovo contenuto sul sito.</p>
+          <p className="text-brand-contrast/60">Compila i campi per pubblicare un nuovo evento o laboratorio.</p>
         </div>
       </div>
 
@@ -132,11 +127,10 @@ export function AdminServiceForm() {
             </div>
           )}
 
-          {/* Core Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label htmlFor="title" className="block text-sm font-medium text-brand-contrast/80">
-                Titolo *
+                Titolo Evento *
               </label>
               <input
                 type="text"
@@ -146,7 +140,7 @@ export function AdminServiceForm() {
                 onChange={handleChange}
                 required
                 className="w-full p-3 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-transparent transition-shadow"
-                placeholder="es. Massaggio Ayurvedico o Cerchio di Luna"
+                placeholder="es. Ritiro Yoga"
               />
             </div>
 
@@ -188,7 +182,38 @@ export function AdminServiceForm() {
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="space-y-2">
+              <label htmlFor="date" className="block text-sm font-medium text-brand-contrast/80">
+                Data e Ora Evento *
+              </label>
+              <input
+                type="datetime-local"
+                id="date"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+                required
+                className="w-full p-3 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="location" className="block text-sm font-medium text-brand-contrast/80">
+                Luogo Evento *
+              </label>
+              <input
+                type="text"
+                id="location"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                required
+                className="w-full p-3 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
+                placeholder="es. Studio Olistico"
+              />
+            </div>
+
             <div className="space-y-2">
               <label htmlFor="price" className="block text-sm font-medium text-brand-contrast/80">
                 Prezzo (opzionale)
@@ -203,20 +228,6 @@ export function AdminServiceForm() {
                 placeholder="es. 50"
               />
             </div>
-            <div className="space-y-2">
-              <label htmlFor="duration" className="block text-sm font-medium text-brand-contrast/80">
-                Durata (opzionale)
-              </label>
-              <input
-                type="text"
-                id="duration"
-                name="duration"
-                value={formData.duration}
-                onChange={handleChange}
-                className="w-full p-3 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
-                placeholder="es. 60 min"
-              />
-            </div>
           </div>
           
           <div className="space-y-2">
@@ -225,7 +236,7 @@ export function AdminServiceForm() {
             </label>
             {currentImageUrl && (
               <div className="mb-2">
-                <img src={`http://localhost:8081/uploads/services/${currentImageUrl.split('/').pop()}`} alt="Current" className="h-24 object-cover rounded" />
+                <img src={`http://localhost:8081/uploads/events/${currentImageUrl.split('/').pop()}`} alt="Current" className="h-24 object-cover rounded" />
               </div>
             )}
             <input
@@ -236,56 +247,6 @@ export function AdminServiceForm() {
               onChange={handleImageChange}
               className="w-full p-2 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-primary/10 file:text-brand-primary hover:file:bg-brand-primary/20"
             />
-          </div>
-
-          <hr className="border-brand-primary/10" />
-
-          {/* Event Toggle */}
-          <div className="bg-brand-primary/5 p-4 rounded-md border border-brand-primary/10">
-            <div className="flex items-center gap-3">
-              <input
-                type="checkbox"
-                id="isEventToggle"
-                checked={isEvent}
-                onChange={(e) => setIsEvent(e.target.checked)}
-                className="w-5 h-5 text-brand-primary border-brand-primary/20 rounded focus:ring-brand-primary"
-              />
-              <label htmlFor="isEventToggle" className="font-medium text-brand-primary">
-                Questo è un Evento / Laboratorio con data specifica
-              </label>
-            </div>
-
-            {isEvent && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 ml-8">
-                <div className="space-y-2">
-                  <label htmlFor="eventDate" className="block text-sm font-medium text-brand-contrast/80">
-                    Data e Ora Evento
-                  </label>
-                  <input
-                    type="datetime-local"
-                    id="eventDate"
-                    name="eventDate"
-                    value={formData.eventDate}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="eventLocation" className="block text-sm font-medium text-brand-contrast/80">
-                    Luogo Evento
-                  </label>
-                  <input
-                    type="text"
-                    id="eventLocation"
-                    name="eventLocation"
-                    value={formData.eventLocation}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
-                    placeholder="es. Studio, Online, Bosco..."
-                  />
-                </div>
-              </div>
-            )}
           </div>
 
           <div className="flex justify-end pt-4">
@@ -302,7 +263,7 @@ export function AdminServiceForm() {
               ) : (
                 <>
                   <Save size={20} />
-                  Salva Pubblicazione
+                  Salva Evento
                 </>
               )}
             </button>

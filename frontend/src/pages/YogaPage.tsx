@@ -5,6 +5,8 @@ import { EventCard } from "@/components/ui/EventCard";
 import { TestimonialsCarousel } from "@/components/sections/TestimonialsCarousel";
 import { apiFetch } from "@/lib/api";
 
+import { Category } from "../types";
+
 export function YogaPage() {
   const [services, setServices] = useState<any[]>([]);
   const [events, setEvents] = useState<any[]>([]);
@@ -15,13 +17,13 @@ export function YogaPage() {
     async function fetchData() {
       try {
         const [servicesRes, eventsRes, reviewsRes] = await Promise.all([
-          apiFetch("/services?category=YOGA&isEvent=0"),
-          apiFetch("/services?category=YOGA&isEvent=1"),
-          apiFetch("/reviews?category=YOGA")
+          apiFetch(`/services?category=${Category.YOGA}`),
+          apiFetch(`/events?category=${Category.YOGA}`),
+          apiFetch(`/reviews?category=${Category.YOGA}`),
         ]);
 
         setServices(servicesRes || []);
-        
+
         const formattedEvents = (eventsRes || []).map((e: any) => ({
           id: e.id,
           slug: e.slug || "",

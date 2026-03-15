@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class ServiceOfferingModel extends Model
+class ServiceModel extends Model
 {
-    protected $table            = 'ServiceOffering';
+    protected $table            = 'services';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = false;
     protected $returnType       = 'array';
@@ -14,7 +14,7 @@ class ServiceOfferingModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'id', 'slug', 'title', 'description', 'category', 'price', 
-        'duration', 'imageUrl', 'isEvent', 'eventDate', 'eventLocation', 'isFull'
+        'duration', 'imageUrl'
     ];
 
     protected bool $allowEmptyInserts = false;

@@ -10,7 +10,7 @@ export function EventiPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const eventsRes = await apiFetch("/services?isEvent=1");
+        const eventsRes = await apiFetch("/events");
         
         const formattedEvents = (eventsRes || []).map((e: any) => ({
           id: e.id,
@@ -18,8 +18,8 @@ export function EventiPage() {
           title: e.title,
           description: e.description,
           category: e.category,
-          date: e.eventDate ? new Date(e.eventDate).toLocaleDateString("it-IT", { day: 'numeric', month: 'long', year: 'numeric' }) : "Da definire",
-          location: e.eventLocation || "Studio Olistico Mastroianni",
+          date: e.date ? new Date(e.date).toLocaleDateString("it-IT", { day: 'numeric', month: 'long', year: 'numeric' }) : "Da definire",
+          location: e.location || "Studio Olistico Mastroianni",
           isFull: e.isFull,
           imageSrc: e.imageUrl || undefined
         }));

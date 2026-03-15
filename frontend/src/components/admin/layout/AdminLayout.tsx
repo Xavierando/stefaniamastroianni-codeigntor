@@ -1,9 +1,10 @@
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import { LogOut, LayoutDashboard, Calendar, Image as ImageIcon, MessageSquare, Star, Users } from "lucide-react";
+import { LogOut, LayoutDashboard, Calendar, LayoutList, Image as ImageIcon, MessageSquare, Star, Users } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../../store";
 import { logout } from "../../../store/slices/authSlice";
 import { useEffect } from "react";
+import { Navbar } from "../../layout/Navbar";
 
 export function AdminLayout() {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
@@ -24,8 +25,10 @@ export function AdminLayout() {
   if (!isAuthenticated) return null;
 
   return (
-    <div className="flex min-h-screen pt-20 bg-brand-primary/5">
-      {/* Sidebar */}
+    <>
+      <Navbar />
+      <div className="flex min-h-screen pt-20 bg-brand-primary/5">
+        {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-brand-primary/10 flex flex-col hidden md:flex">
         <div className="p-6 border-b border-brand-primary/10">
           <h2 className="font-serif text-2xl text-brand-primary">Mastroianni Admin</h2>
@@ -37,8 +40,12 @@ export function AdminLayout() {
             <span className="font-medium">Dashboard</span>
           </Link>
           <Link to="/admin/services" className="flex items-center gap-3 p-3 text-brand-contrast/80 hover:bg-brand-primary/5 hover:text-brand-primary rounded-md transition-colors">
+            <LayoutList size={20} />
+            <span className="font-medium">Servizi</span>
+          </Link>
+          <Link to="/admin/events" className="flex items-center gap-3 p-3 text-brand-contrast/80 hover:bg-brand-primary/5 hover:text-brand-primary rounded-md transition-colors">
             <Calendar size={20} />
-            <span className="font-medium">Servizi & Eventi</span>
+            <span className="font-medium">Eventi</span>
           </Link>
           <Link to="/admin/gallery" className="flex items-center gap-3 p-3 text-brand-contrast/80 hover:bg-brand-primary/5 hover:text-brand-primary rounded-md transition-colors">
             <ImageIcon size={20} />
@@ -79,5 +86,6 @@ export function AdminLayout() {
         </div>
       </main>
     </div>
+    </>
   );
 }

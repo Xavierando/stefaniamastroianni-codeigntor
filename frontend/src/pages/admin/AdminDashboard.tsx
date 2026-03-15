@@ -6,6 +6,7 @@ import { apiFetch } from "../../lib/api";
 export function AdminDashboardPage() {
   const [stats, setStats] = useState({
     services: 0,
+    events: 0,
     gallery: 0,
     reviews: 0,
     messages: 0,
@@ -16,8 +17,9 @@ export function AdminDashboardPage() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [services, gallery, reviews, contacts, newsletter] = await Promise.all([
+        const [services, events, gallery, reviews, contacts, newsletter] = await Promise.all([
           apiFetch("services"),
+          apiFetch("events"),
           apiFetch("gallery"),
           apiFetch("reviews"),
           apiFetch("contacts"),
@@ -26,6 +28,7 @@ export function AdminDashboardPage() {
 
         setStats({
           services: Array.isArray(services) ? services.length : 0,
+          events: Array.isArray(events) ? events.length : 0,
           gallery: Array.isArray(gallery) ? gallery.length : 0,
           reviews: Array.isArray(reviews) ? reviews.length : 0,
           messages: Array.isArray(contacts) ? contacts.length : 0,
@@ -54,10 +57,21 @@ export function AdminDashboardPage() {
             <div className="p-3 bg-brand-primary/10 rounded-full">
               <CalendarDays size={24} />
             </div>
-            <h3 className="font-bold text-lg">Eventi/Servizi</h3>
+            <h3 className="font-bold text-lg">Servizi</h3>
           </div>
           <p className="text-3xl font-bold">{loading ? "..." : stats.services}</p>
           <p className="text-sm text-brand-contrast/50">Attivi sul sito</p>
+        </Card>
+
+        <Card className="p-6 flex flex-col gap-4 bg-white border border-brand-primary/10">
+          <div className="flex items-center gap-3 text-brand-primary">
+            <div className="p-3 bg-brand-primary/10 rounded-full">
+              <CalendarDays size={24} />
+            </div>
+            <h3 className="font-bold text-lg">Eventi</h3>
+          </div>
+          <p className="text-3xl font-bold">{loading ? "..." : stats.events}</p>
+          <p className="text-sm text-brand-contrast/50">Programmati</p>
         </Card>
 
         <Card className="p-6 flex flex-col gap-4 bg-white border border-brand-primary/10">

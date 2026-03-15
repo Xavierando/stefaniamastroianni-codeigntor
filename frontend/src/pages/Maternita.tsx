@@ -5,6 +5,8 @@ import { EventCard } from "@/components/ui/EventCard";
 import { TestimonialsCarousel } from "@/components/sections/TestimonialsCarousel";
 import { apiFetch } from "@/lib/api";
 
+import { Category } from "../types";
+
 export function MaternitaPage() {
   const [services, setServices] = useState<any[]>([]);
   const [events, setEvents] = useState<any[]>([]);
@@ -15,9 +17,9 @@ export function MaternitaPage() {
     async function fetchData() {
       try {
         const [servicesRes, eventsRes, reviewsRes] = await Promise.all([
-          apiFetch("/services?category=MATERNITA&isEvent=0"),
-          apiFetch("/services?category=MATERNITA&isEvent=1"),
-          apiFetch("/reviews?category=MATERNITA")
+          apiFetch(`/services?category=${Category.MATERNITA}`),
+          apiFetch(`/events?category=${Category.MATERNITA}`),
+          apiFetch(`/reviews?category=${Category.MATERNITA}`)
         ]);
 
         setServices(servicesRes || []);
@@ -28,8 +30,8 @@ export function MaternitaPage() {
           title: e.title,
           description: e.description,
           category: e.category,
-          date: e.eventDate ? new Date(e.eventDate).toLocaleDateString("it-IT", { day: 'numeric', month: 'long', year: 'numeric' }) : "Da definire",
-          location: e.eventLocation || "Studio Olistico Mastroianni",
+          date: e.date ? new Date(e.date).toLocaleDateString("it-IT", { day: 'numeric', month: 'long', year: 'numeric' }) : "Da definire",
+          location: e.location || "Studio Olistico Mastroianni",
           isFull: e.isFull,
           imageSrc: e.imageUrl || undefined
         }));
