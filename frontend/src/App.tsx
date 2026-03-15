@@ -14,6 +14,8 @@ import { CookiePolicyPage } from "./pages/CookiePolicy";
 import { AdminLayout } from "./components/admin/layout/AdminLayout";
 import { AdminLogin } from "./pages/admin/AdminLogin";
 import { AdminDashboardPage } from "./pages/admin/AdminDashboard";
+import { AdminServicesPage } from "./pages/admin/services/AdminServices";
+import { AdminServiceForm } from "./pages/admin/services/AdminServiceForm";
 
 function App() {
   return (
@@ -33,6 +35,9 @@ function App() {
 
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<AdminDashboardPage />} />
+        <Route path="services" element={<AdminServicesPage />} />
+        <Route path="services/new" element={<AdminServiceForm />} />
+        <Route path="services/:id/edit" element={<AdminServiceForm />} />
       </Route>
       <Route path="/admin/login" element={<AdminLogin />} />
     </Routes>

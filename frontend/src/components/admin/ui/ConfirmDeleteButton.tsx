@@ -5,6 +5,7 @@ import type { ButtonProps } from "./Button";
 interface ConfirmDeleteButtonProps extends ButtonProps {
   confirmMessage?: string;
   isDeleting?: boolean;
+  onConfirm?: () => void;
 }
 
 export function ConfirmDeleteButton({ 
@@ -13,14 +14,15 @@ export function ConfirmDeleteButton({
   title,
   isDeleting = false,
   onClick,
+  onConfirm,
   ...props
 }: ConfirmDeleteButtonProps) {
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     if (window.confirm(confirmMessage)) {
+      if (onConfirm) onConfirm();
       if (onClick) onClick(e);
-    } else {
-      e.preventDefault();
     }
   };
 

@@ -51,7 +51,20 @@ class ServiceController extends ResourceController
     {
         $data = $this->request->getPost();
         if (empty($data)) {
-            $data = json_decode($this->request->getBody(), true);
+            $data = json_decode($this->request->getBody(), true) ?? [];
+        }
+
+        if (empty($data['title'])) {
+            return $this->failValidationErrors(['title' => 'Title is required']);
+        }
+
+        $data['slug'] = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $data['title'])));
+
+        $image = $this->request->getFile('image');
+        if ($image && $image->isValid() && !$image->hasMoved()) {
+            $newName = $image->getRandomName();
+            $image->move(FCPATH . 'uploads/services', $newName);
+            $data['imageUrl'] = '/uploads/services/' . $newName;
         }
 
         if ($this->model->insert($data)) {
@@ -63,9 +76,23 @@ class ServiceController extends ResourceController
 
     public function update($id = null)
     {
-        $data = $this->request->getRawInput();
+        $data = $this->request->getPost(); // Support multipart form data with _method=PUT from frontend
         if (empty($data)) {
-            $data = json_decode($this->request->getBody(), true);
+            $data = $this->request->getRawInput();
+        }
+        if (empty($data)) {
+            $data = json_decode($this->request->getBody(), true) ?? [];
+        }
+
+        if (isset($data['title'])) {
+            $data['slug'] = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $data['title'])));
+        }
+
+        $image = $this->request->getFile('image');
+        if ($image && $image->isValid() && !$image->hasMoved()) {
+            $newName = $image->getRandomName();
+            $image->move(FCPATH . 'uploads/services', $newName);
+            $data['imageUrl'] = '/uploads/services/' . $newName;
         }
 
         if ($this->model->update($id, $data)) {
