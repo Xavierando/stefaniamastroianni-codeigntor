@@ -27,7 +27,7 @@ export function Navbar() {
         <Link to="/" className="flex items-center gap-2 transition-transform hover:scale-105">
           <div className="relative w-16 h-16 md:w-20 md:h-20 flex-shrink-0">
             <img 
-              src="/images/logo.png" 
+              src="/images/logo.webp" 
               alt="Stefania Mastroianni Logo" 
               className="w-full h-full object-contain filter invert brightness-0 opacity-80"
             />

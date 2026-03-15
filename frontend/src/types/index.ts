@@ -1,11 +1,13 @@
-export enum Category {
-  MATERNITA = "MATERNITA",
-  TRATTAMENTI = "TRATTAMENTI",
-  CONSULENZE = "CONSULENZE",
-  YOGA = "YOGA",
-  EVENTI = "EVENTI",
-  ALTRI = "ALTRI",
-}
+export const Category = {
+  MATERNITA: "MATERNITA",
+  TRATTAMENTI: "TRATTAMENTI",
+  CONSULENZE: "CONSULENZE",
+  YOGA: "YOGA",
+  EVENTI: "EVENTI",
+  ALTRI: "ALTRI",
+} as const;
+
+export type Category = (typeof Category)[keyof typeof Category];
 
 export const CategoryLabels: Record<Category, string> = {
   [Category.MATERNITA]: "Maternità",

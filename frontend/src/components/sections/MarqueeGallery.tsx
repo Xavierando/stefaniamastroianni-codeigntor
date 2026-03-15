@@ -52,11 +52,11 @@ export function MarqueeGallery({ images }: { images: GalleryImageProps[] }) {
       {/* Fullscreen Dialog Modal */}
       {selectedImage && (
         <div 
-          className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200"
+          className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 md:p-8 animate-in fade-in duration-200"
           onClick={() => setSelectedImage(null)}
         >
           <button 
-            className="absolute top-6 right-6 text-white bg-black/50 p-2 rounded-full hover:bg-white/20 transition-colors"
+            className="absolute top-6 right-6 text-white bg-black/50 p-2 rounded-full hover:bg-white/20 transition-colors z-10"
             onClick={(e) => {
               e.stopPropagation();
               setSelectedImage(null);
@@ -65,13 +65,13 @@ export function MarqueeGallery({ images }: { images: GalleryImageProps[] }) {
             <X size={32} />
           </button>
           <div 
-            className="relative w-full max-w-5xl aspect-square md:aspect-video rounded-lg overflow-hidden"
+            className="relative w-full h-[80vh] md:h-[90vh] max-w-7xl rounded-lg overflow-hidden flex items-center justify-center"
             onClick={(e) => e.stopPropagation()} // Prevent bubbling to background
           >
             <img
               src={selectedImage}
               alt="High resolution view"
-              className="absolute inset-0 w-full h-full object-contain"
+              className="max-w-full max-h-full object-contain"
             />
           </div>
         </div>
