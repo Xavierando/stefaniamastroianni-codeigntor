@@ -23,6 +23,9 @@ cat << 'EOF' > aruba_deploy/.htaccess
   RewriteCond %{REQUEST_URI} ^/api/ [NC]
   RewriteRule ^ - [L]
 
+  # Map /uploads to /api/public/uploads
+  RewriteRule ^uploads/(.*)$ api/public/uploads/$1 [L]
+
   # React Router fallback
   RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
@@ -41,9 +44,8 @@ cp -r backend/writable aruba_deploy/api/
 cp backend/spark aruba_deploy/api/
 cp backend/.env aruba_deploy/api/
 
-echo "Adjusting CodeIgniter Routes for subfolder deployment..."
-sed -i "s/\$routes->group('api'/\$routes->group(''/g" aruba_deploy/api/app/Config/Routes.php
-
+echo "Keeping CodeIgniter Routes for subfolder deployment..."
+# The routes should remain in 'api' group because REQUEST_URI is still /api/gallery on Aruba.
 echo "Creating Backend routing .htaccess..."
 cat << 'EOF' > aruba_deploy/api/.htaccess
 <IfModule mod_rewrite.c>
@@ -58,16 +60,16 @@ sed -i 's|# RewriteBase /|RewriteBase /api/public/|g' aruba_deploy/api/public/.h
 
 echo "Updating CodeIgniter .env for production..."
 sed -i 's/CI_ENVIRONMENT = development/CI_ENVIRONMENT = production/' aruba_deploy/api/.env
-sed -i "s|# app.baseURL = ''|app.baseURL = 'https://arpelux.com/'|g" aruba_deploy/api/.env
+sed -i "s|# app.baseURL = ''|app.baseURL = 'https://arpelux.it/'|g" aruba_deploy/api/.env
 sed -i "s|# app.indexPage = 'index.php'|app.indexPage = ''|g" aruba_deploy/api/.env
-sed -i "s/ADMIN_USERNAME = admin/ADMIN_USERNAME = stefania_admin/g" aruba_deploy/api/.env
-sed -i 's/ADMIN_PASSWORD = password123/ADMIN_PASSWORD = ""/g' aruba_deploy/api/.env
+sed -i 's/^ADMIN_USERNAME = .*/ADMIN_USERNAME = "admin"/g' aruba_deploy/api/.env
+sed -i 's/^ADMIN_PASSWORD = .*/ADMIN_PASSWORD = "admin"/g' aruba_deploy/api/.env
 
 echo "Setting Database Credentials for Aruba..."
-sed -i "s/database.default.hostname = 127.0.0.1/database.default.hostname = 31.11.38.10/g" aruba_deploy/api/.env
-sed -i "s/database.default.database = stefaniamastroianni/database.default.database = Sql1900756_5/g" aruba_deploy/api/.env
-sed -i "s/database.default.username = devuser/database.default.username = Sql1900756/g" aruba_deploy/api/.env
-sed -i 's/database.default.password = devpassword/database.default.password = ""/g' aruba_deploy/api/.env
-sed -i "s/database.default.port = 3307/database.default.port = 3306/g" aruba_deploy/api/.env
+sed -i "s/^database.default.hostname = .*/database.default.hostname = 31.11.38.10/g" aruba_deploy/api/.env
+sed -i "s/^database.default.database = .*/database.default.database = Sql1900756_5/g" aruba_deploy/api/.env
+sed -i "s/^database.default.username = .*/database.default.username = Sql1900756/g" aruba_deploy/api/.env
+sed -i 's/^database.default.password = .*/database.default.password = ""/g' aruba_deploy/api/.env
+sed -i "s/^database.default.port = .*/database.default.port = 3306/g" aruba_deploy/api/.env
 
 echo "Done! The aruba_deploy folder is ready to be uploaded via FTP."
