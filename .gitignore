@@ -50,3 +50,4 @@ yarn-error.log*
 
 # Docker
 docker-compose.override.yml
+docker/dev/mysql_data/

@@ -22,8 +22,8 @@ class AuthController extends ResourceController
         $username = $this->request->getVar('username');
         $password = $this->request->getVar('password');
 
-        $envUsername = getenv('ADMIN_USERNAME');
-        $envPassword = getenv('ADMIN_PASSWORD');
+        $envUsername = $_ENV['ADMIN_USERNAME'] ?? getenv('ADMIN_USERNAME') ?: 'admin';
+        $envPassword = $_ENV['ADMIN_PASSWORD'] ?? getenv('ADMIN_PASSWORD') ?: 'admin';
 
         if ($username === $envUsername && $password === $envPassword) {
             // Generate a simple mock token for now. In a real production app we'd use a real JWT library

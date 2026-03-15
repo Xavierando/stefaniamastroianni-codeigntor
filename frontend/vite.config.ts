@@ -19,12 +19,10 @@ export default defineConfig({
   server: {
     proxy: {
       '/uploads': {
-        target: 'http://localhost:8081',
-        changeOrigin: true,
+        target: 'http://backend:8080',
       },
       '/api': {
-        target: 'http://localhost:8081',
-        changeOrigin: true,
+        target: 'http://backend:8080',
       },
     },
   },

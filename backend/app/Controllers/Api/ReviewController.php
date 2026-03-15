@@ -16,7 +16,7 @@ class ReviewController extends ResourceController
         $limit = $this->request->getGet('limit');
 
         if ($category !== null && $category !== '') {
-            $this->model->where('category', $category);
+            $this->model->where('category', (string) $category);
         }
 
         $this->model->orderBy('createdAt', 'DESC');

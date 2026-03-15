@@ -200,5 +200,12 @@ class Database extends Config
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
         }
+
+        // Dynamically override default connection from environment variables if present
+        $this->default['hostname'] = $_ENV['DEV_DB_HOST'] ?? getenv('DEV_DB_HOST') ?: $this->default['hostname'];
+        $this->default['username'] = $_ENV['DEV_DB_USER'] ?? getenv('DEV_DB_USER') ?: $this->default['username'];
+        $this->default['password'] = $_ENV['DEV_DB_PASSWORD'] ?? getenv('DEV_DB_PASSWORD') ?: $this->default['password'];
+        $this->default['database'] = $_ENV['DEV_DB_NAME'] ?? getenv('DEV_DB_NAME') ?: $this->default['database'];
+        $this->default['port']     = (int) ($_ENV['DEV_DB_PORT'] ?? getenv('DEV_DB_PORT') ?: $this->default['port']);
     }
 }

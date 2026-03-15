@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: stefaniamastroianni-mysql
+    restart: always
+    env_file:
+      - .env.docker
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: ${DEV_DB_NAME}
+      MYSQL_USER: ${DEV_DB_USER}
+      MYSQL_PASSWORD: ${DEV_DB_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  mailpit:
+    image: axllent/mailpit
+    container_name: stefaniamastroianni-mailpit
+    restart: always
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend.Dockerfile
+    container_name: stefaniamastroianni-backend
+    restart: always
+    env_file:
+      - .env.docker
+    environment:
+      database.default.hostname: ${DEV_DB_HOST}
+      database.default.database: ${DEV_DB_NAME}
+      database.default.username: ${DEV_DB_USER}
+      database.default.password: ${DEV_DB_PASSWORD}
+      database.default.port: 3306
+      email.protocol: smtp
+      email.SMTPHost: ${SMTP_HOST}
+      email.SMTPPort: ${SMTP_PORT}
+      email.SMTPCrypto: ""
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./../../backend:/var/www/html
+    depends_on:
+      - mysql
+      - mailpit
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend.Dockerfile
+    container_name: stefaniamastroianni-frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./../../frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
