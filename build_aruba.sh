@@ -60,6 +60,8 @@ echo "Updating CodeIgniter .env for production..."
 sed -i 's/CI_ENVIRONMENT = development/CI_ENVIRONMENT = production/' aruba_deploy/api/.env
 sed -i "s|# app.baseURL = ''|app.baseURL = 'https://arpelux.com/'|g" aruba_deploy/api/.env
 sed -i "s|# app.indexPage = 'index.php'|app.indexPage = ''|g" aruba_deploy/api/.env
+sed -i "s/ADMIN_USERNAME = admin/ADMIN_USERNAME = stefania_admin/g" aruba_deploy/api/.env
+sed -i 's/ADMIN_PASSWORD = password123/ADMIN_PASSWORD = ""/g' aruba_deploy/api/.env
 
 echo "Setting Database Credentials for Aruba..."
 sed -i "s/database.default.hostname = 127.0.0.1/database.default.hostname = 31.11.38.10/g" aruba_deploy/api/.env
