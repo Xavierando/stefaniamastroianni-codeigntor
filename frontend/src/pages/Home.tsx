@@ -65,6 +65,7 @@ export function Home() {
         imageSrc="/images/home/home-hero-yoga.webp"
         ctaText="Scopri chi sono"
         ctaHref="/chi-sono"
+        gradientColorClass="from-brand-base"
       />
 
       {/* 2. Introduzione (Chi è e Cosa Fa) */}

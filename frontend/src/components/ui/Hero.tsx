@@ -11,6 +11,7 @@ interface HeroProps {
   className?: string;
   titleClassName?: string;
   subtitleClassName?: string;
+  gradientColorClass?: string;
 }
 
 export function Hero({
@@ -23,18 +24,19 @@ export function Hero({
   className,
   titleClassName = "text-white",
   subtitleClassName = "text-white/90",
+  gradientColorClass = "from-brand-base",
 }: HeroProps) {
   return (
-    <section className={cn("relative min-h-[60vh] md:min-h-[70vh] w-full flex items-center justify-center pt-20", className)}>
+    <section className={cn("relative min-h-[60vh] md:min-h-[70vh] w-full flex items-center justify-center pt-20 overflow-hidden", className)}>
       {/* Background Image */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 bg-brand-primary">
         <img
           src={imageSrc}
           alt={imageAlt}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover opacity-80"
         />
-        {/* Dark/Warm Overlay */}
-        <div className="absolute inset-0 bg-brand-contrast/40 mix-blend-multiply" />
+        {/* Gradient Overlay */}
+        <div className={`absolute inset-0 bg-gradient-to-t ${gradientColorClass} via-transparent to-transparent`} />
       </div>
 
       {/* Foreground Content */}

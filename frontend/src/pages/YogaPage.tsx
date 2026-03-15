@@ -64,8 +64,9 @@ export function YogaPage() {
     <div className="flex flex-col min-h-screen bg-brand-base">
       <Hero
         title="Yoga e Meditazione"
-        subtitle="Un incontro con il corpo attraverso il respiro. Pratiche per risvegliare l'energia vitale, calmare la mente e ritrovare il proprio autentico centro."
-        imageSrc="/images/yoga/Pratiche-di-Yoga.webp"
+        subtitle="Riconnettersi al proprio respiro. Pratiche dolci e consapevoli per abitare il corpo con gentilezza, ritrovare fluidità e calmare la mente."
+        imageSrc="/images/yoga/DSC_0150.webp"
+        gradientColorClass="from-white"
       />
 
       <section className="py-24 px-4 bg-white border-b border-brand-contrast/5">

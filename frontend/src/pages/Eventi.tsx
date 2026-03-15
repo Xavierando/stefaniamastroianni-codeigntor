@@ -49,6 +49,7 @@ export function EventiPage() {
         title="Laboratori ed Eventi"
         subtitle="Spazi collettivi dove l'energia del gruppo amplifica l'esperienza individuale. Ritiri, seminari tematici e cerchi di condivisione."
         imageSrc="/images/eventi/intermediate-workshop-featured.webp"
+        gradientColorClass="from-brand-base"
       />
 
       <section className="py-24 px-4">

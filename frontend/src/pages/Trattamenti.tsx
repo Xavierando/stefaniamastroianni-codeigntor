@@ -63,8 +63,9 @@ export function TrattamentiPage() {
     <div className="flex flex-col min-h-screen bg-brand-base">
       <Hero
         title="Trattamenti Olistici"
-        subtitle="Spazi di silenzio e ascolto attraverso le mani. Tecniche antiche per riequilibrare corpo, mente ed energia vitale."
+        subtitle="Il tocco che cura. Massaggi e tecniche corporee per sciogliere le tensioni, stimolare le naturali capacità di autoguarigione e ritrovare leggerezza."
         imageSrc="/images/trattamenti/trattamenti-olistici-1.webp"
+        gradientColorClass="from-white"
       />
 
       <section className="py-24 px-4 bg-white border-b border-brand-contrast/5">

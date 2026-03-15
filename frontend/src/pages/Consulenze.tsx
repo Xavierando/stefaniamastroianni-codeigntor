@@ -66,6 +66,7 @@ export function ConsulenzePage() {
         title="Consulenze e Percorsi"
         subtitle="Spazi di parola e ascolto profondo. Insieme tracciamo la mappa per il tuo benessere psicofisico, rispettando i tuoi tempi e la tua unicità."
         imageSrc="/images/consulenze/consulenze-2.webp"
+        gradientColorClass="from-white"
       />
 
       <section className="py-24 px-4 bg-white border-b border-brand-contrast/5">

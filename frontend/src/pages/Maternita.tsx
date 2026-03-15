@@ -64,8 +64,9 @@ export function MaternitaPage() {
     <div className="flex flex-col min-h-screen bg-brand-base">
       <Hero
         title="Maternità Consapevole"
-        subtitle="Un accompagnamento dolce dal preconcepimento al post-parto. Ascolto, preparazione corporea ed emotiva per vivere la trasformazione della nascita in pienezza."
+        subtitle="Sostegno emotivo, corporeo e pratico dal concepimento al puerperio. Un faro per navigare i cambiamenti della maternità sentendoti accolta e mai sola."
         imageSrc="/images/maternita/Servizi-maternita-2.webp"
+        gradientColorClass="from-white"
       />
 
       <section className="py-24 px-4 bg-white border-b border-brand-contrast/5">

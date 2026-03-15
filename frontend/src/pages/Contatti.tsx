@@ -9,6 +9,7 @@ export function Contatti() {
         title="Mettiamoci in Contatto"
         subtitle="Ogni percorso inizia con una semplice conversazione. Sono qui per ascoltarti e rispondere a qualsiasi dubbio o domanda sui trattamenti e sui percorsi disponibili."
         imageSrc="/images/contatti/mt-sample-background.webp"
+        gradientColorClass="from-brand-base"
       />
 
       <section className="py-24 px-4 overflow-hidden relative">

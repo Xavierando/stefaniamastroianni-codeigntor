@@ -33,6 +33,7 @@ export function ChiSono() {
         title="La Mia Storia"
         subtitle="Un percorso intrecciato tra ascolto, cura e riconnessione profonda con i cicli della natura e della vita."
         imageSrc="/images/chi-sono/IMG_2028.webp"
+        gradientColorClass="from-brand-base"
       />
 
       {/* 2. Introduzione */}
