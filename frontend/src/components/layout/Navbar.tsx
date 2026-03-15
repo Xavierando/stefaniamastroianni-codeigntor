@@ -21,7 +21,12 @@ export function Navbar() {
   const pathname = location.pathname;
 
   return (
-    <header className="fixed top-0 z-50 w-full border-b border-brand-base/10 bg-brand-base/60 backdrop-blur-md transition-all">
+    <header className={cn(
+      "fixed top-0 z-50 w-full border-b transition-all",
+      isOpen
+        ? "bg-brand-base/98 backdrop-blur-md border-brand-contrast/10"
+        : "bg-transparent lg:bg-brand-base/60 backdrop-blur-none lg:backdrop-blur-md border-transparent lg:border-brand-base/10"
+    )}>
       <div className="container mx-auto flex h-20 items-center justify-between">
         
         {/* Logo / Immagine */}
