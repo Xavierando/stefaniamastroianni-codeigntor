@@ -72,7 +72,6 @@ class Filters extends BaseFilters
      */
     public array $globals = [
         'before' => [
-            'cors',
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
@@ -82,6 +81,13 @@ class Filters extends BaseFilters
             // 'secureheaders',
         ],
     ];
+
+    public function __construct()
+    {
+        if (ENVIRONMENT === 'development') {
+            $this->globals['before'][] = 'cors';
+        }
+    }
 
     /**
      * List of filter aliases that works on a
