@@ -93,7 +93,7 @@ export function EventDetail() {
                 </span>
               )}
             </div>
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif text-brand-primary leading-tight shadow-sm max-w-5xl">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif text-brand-primary leading-tight max-w-5xl">
               {event.title}
             </h1>
           </div>
