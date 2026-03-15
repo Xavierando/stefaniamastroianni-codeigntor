@@ -48,7 +48,7 @@ export function YogaPage() {
     fetchData();
   }, []);
 
-    const isHeroLoaded = useImagePreloader("/images/yoga/Pratiche-di-Yoga.webp");
+    const isHeroLoaded = useImagePreloader("/images/yoga/hero-yoga.webp");
 
 const isReady = !isLoading && isHeroLoaded;
 
@@ -66,7 +66,7 @@ const isReady = !isLoading && isHeroLoaded;
       )}
       <div className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? 'opacity-0 h-screen overflow-hidden' : 'opacity-100'}`}>
       <Hero
-        imageSrc="/images/yoga/Pratiche-di-Yoga.webp"
+        imageSrc="/images/yoga/hero-yoga.webp"
         gradientColorClass="from-white"
       />
 
