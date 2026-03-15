@@ -115,10 +115,14 @@ class SplitServicesAndEvents extends Migration
                 'type' => 'DATETIME',
                 'null' => true,
             ],
-            'location' => [
+            'eventLocation' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '255',
                 'null'       => true,
+            ],
+            'isFull' => [
+                'type' => 'BOOLEAN',
+                'default' => false,
             ],
         ]);
 
