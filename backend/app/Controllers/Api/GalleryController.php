@@ -12,7 +12,15 @@ class GalleryController extends ResourceController
 
     public function index()
     {
-        return $this->respond($this->model->orderBy('createdAt', 'DESC')->findAll());
+        $limit = $this->request->getGet('limit');
+
+        $this->model->orderBy('createdAt', 'DESC');
+
+        if ($limit !== null && is_numeric($limit)) {
+            return $this->respond($this->model->findAll((int)$limit));
+        }
+
+        return $this->respond($this->model->findAll());
     }
 
     public function create()
