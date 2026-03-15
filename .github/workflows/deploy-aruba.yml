@@ -9,6 +9,7 @@ jobs:
   web-deploy:
     name: Build and Deploy to Aruba
     runs-on: ubuntu-latest
+    environment: production
 
     steps:
       - name: Checkout Code
