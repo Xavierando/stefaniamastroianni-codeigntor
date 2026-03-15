@@ -1,0 +1,81 @@
+import { useState } from "react";
+import { X, ZoomIn } from "lucide-react";
+
+export interface GalleryImageProps {
+  id: string;
+  url: string;
+  alt: string | null;
+}
+
+export function MarqueeGallery({ images }: { images: GalleryImageProps[] }) {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isHovered, setIsHovered] = useState(false);
+
+  if (!images || images.length === 0) return null;
+
+  return (
+    <section className="w-full bg-brand-base overflow-hidden py-16">
+      <div className="container mx-auto px-4 mb-8 text-center">
+        <h2 className="font-serif text-3xl md:text-4xl text-brand-contrast">Un'occhiata a cosa faccio</h2>
+      </div>
+
+      {/* Infinite Marquee Loop */}
+      <div 
+        className="relative flex overflow-x-hidden"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div 
+          className="animate-marquee whitespace-nowrap flex gap-4 px-2 items-center"
+          style={{ animationPlayState: isHovered ? 'paused' : 'running' }}
+        >
+          {/* We render the array twice to create the seamless loop effect */}
+          {[...images, ...images].map((img, idx) => (
+            <div
+              key={`${img.id}-${idx}`}
+              className="relative w-[280px] md:w-[380px] aspect-[4/5] rounded-xl overflow-hidden cursor-pointer group/item flex-shrink-0 shadow-sm"
+              onClick={() => setSelectedImage(img.url)}
+            >
+              <img
+                src={img.url}
+                alt={img.alt || `Gallery visual ${idx}`}
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover/item:scale-110"
+              />
+              <div className="absolute inset-0 bg-brand-contrast/0 group-hover/item:bg-brand-contrast/30 transition-colors flex items-center justify-center">
+                <ZoomIn className="text-white opacity-0 group-hover/item:opacity-100 transition-opacity transform scale-50 group-hover/item:scale-100 duration-300" size={48} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Fullscreen Dialog Modal */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200"
+          onClick={() => setSelectedImage(null)}
+        >
+          <button 
+            className="absolute top-6 right-6 text-white bg-black/50 p-2 rounded-full hover:bg-white/20 transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedImage(null);
+            }}
+          >
+            <X size={32} />
+          </button>
+          <div 
+            className="relative w-full max-w-5xl aspect-square md:aspect-video rounded-lg overflow-hidden"
+            onClick={(e) => e.stopPropagation()} // Prevent bubbling to background
+          >
+            <img
+              src={selectedImage}
+              alt="High resolution view"
+              className="absolute inset-0 w-full h-full object-contain"
+            />
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}

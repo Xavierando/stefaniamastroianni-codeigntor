@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-base: #f1e5cb;
+  --color-brand-contrast: #6e4d47;
+  --color-brand-primary: #6e4d47;
+  --color-brand-secondary: #800e2b;
+  --color-brand-neutral: #f1e5cb;
+  
+  --color-accent-green: #8cb386;
+  --color-accent-green-dark: #5b8c54;
+  --color-accent-orange: #ff6b35;
+  --color-accent-dark: #6e4d47;
+  --color-accent-darker: #4a322e;
+  --color-accent-pink: #d9a0a0;
+
+  --color-background: var(--color-brand-base);
+  --color-foreground: var(--color-brand-contrast);
+
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+
+  --animate-marquee: marquee 35s linear infinite;
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    @apply font-sans antialiased selection:bg-brand-primary selection:text-brand-base;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif text-brand-contrast;
+  }
+}
