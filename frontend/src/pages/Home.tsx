@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Hero } from "@/components/ui/Hero";
 import { EventCarousel } from "@/components/sections/EventCarousel";
 import { ServiceOverview } from "@/components/sections/ServiceOverview";
@@ -68,13 +69,19 @@ const isReady = !isLoading && isHeroLoaded;
 
       {/* 2. Introduzione (Chi è e Cosa Fa) */}
       <section className="w-full py-24 px-4 bg-brand-base text-center border-b border-brand-contrast/5">
-        <div className="container mx-auto max-w-4xl">
+        <div className="container mx-auto max-w-4xl flex flex-col items-center">
           <h2 className="font-serif text-3xl md:text-5xl text-brand-primary mb-8 leading-tight">
             "Credo in un approccio olistico che abbraccia corpo, mente ed emozioni."
           </h2>
-          <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light">
+          <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-10">
             Ogni persona è unica e merita un ascolto profondo. Attraverso lo yoga, i trattamenti e uno spazio di ascolto autentico, ti accompagno nel tuo personale viaggio di trasformazione. Che tu stia cercando sollievo dallo stress, accompagnamento in gravidanza o semplicemente uno spazio per te.
           </p>
+          <Link
+            to="/chi-sono"
+            className="inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary bg-brand-primary text-brand-base hover:bg-brand-primary/90 h-12 px-8 text-lg"
+          >
+            Scopri di più su di me
+          </Link>
         </div>
       </section>
 
