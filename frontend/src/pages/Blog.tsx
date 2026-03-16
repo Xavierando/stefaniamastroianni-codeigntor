@@ -44,10 +44,10 @@ export function Blog() {
       >
         <Hero
           imageSrc="/images/home/slidehome1.webp"
-          gradientColorClass="from-white"
+          gradientColorClass="from-brand-base"
         />
 
-        <section className="py-16 md:py-24 px-4 bg-white">
+        <section className="py-16 md:py-24 px-4 bg-brand-base">
           <div className="container mx-auto max-w-4xl text-center mb-16">
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-brand-primary mb-6">
               Il Blog di Stefania
@@ -58,7 +58,7 @@ export function Blog() {
             </p>
           </div>
         </section>
-        <section className="py-24 px-4 overflow-hidden relative">
+        <section className="py-24 px-4 bg-white overflow-hidden relative">
           <div className="container mx-auto px-4">
             {isLoading ? (
               <div className="flex justify-center items-center py-20">

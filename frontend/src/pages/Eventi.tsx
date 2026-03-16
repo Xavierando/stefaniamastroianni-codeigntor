@@ -60,10 +60,10 @@ export function EventiPage() {
       >
         <Hero
           imageSrc="/images/eventi/intermediate-workshop-featured.webp"
-          gradientColorClass="from-white"
+          gradientColorClass="from-brand-base"
         />
 
-        <section className="py-24 px-4 bg-white">
+        <section className="py-24 px-4 bg-brand-base">
           <div className="container mx-auto max-w-4xl text-center mb-16">
             <h1 className="font-serif text-4xl md:text-5xl text-brand-primary mb-6">
               Laboratori ed Eventi
@@ -74,7 +74,7 @@ export function EventiPage() {
             </p>
           </div>
         </section>
-        <section className="py-24 px-4 overflow-hidden relative">
+        <section className="py-24 px-4 bg-white overflow-hidden relative">
           <div className="container mx-auto max-w-4xl text-center mb-16">
             <div className="flex flex-col gap-8 max-w-4xl mx-auto">
               {events.map((event) => (

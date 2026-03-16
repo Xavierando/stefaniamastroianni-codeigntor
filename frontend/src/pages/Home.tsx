@@ -13,15 +13,15 @@ export function Home() {
   const [reviewsData, setReviewsData] = useState([]);
   const [galleryData, setGalleryData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-    useEffect(() => {
+  useEffect(() => {
     async function fetchHomeData() {
       try {
         const [eventsRes, reviewsRes, galleryRes] = await Promise.all([
           apiFetch("/events?limit=6"),
           apiFetch("/reviews?limit=8"),
-          apiFetch("/gallery?limit=10")
+          apiFetch("/gallery?limit=10"),
         ]);
-        
+
         // Format events data
         const formattedEvents = (eventsRes || []).map((e: any) => ({
           id: e.id,
@@ -29,10 +29,16 @@ export function Home() {
           title: e.title,
           description: e.description,
           category: e.category,
-          date: e.date ? new Date(e.date).toLocaleDateString("it-IT", { day: 'numeric', month: 'long', year: 'numeric' }) : "Da definire",
+          date: e.date
+            ? new Date(e.date).toLocaleDateString("it-IT", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })
+            : "Da definire",
           location: e.location || "Studio Olistico Mastroianni",
           isFull: e.isFull,
-          imageSrc: e.imageUrl || undefined
+          imageSrc: e.imageUrl || undefined,
         }));
 
         setEventsData(formattedEvents);
@@ -48,9 +54,9 @@ export function Home() {
     fetchHomeData();
   }, []);
 
-    const isHeroLoaded = useImagePreloader("/images/home/home-hero-yoga.webp");
+  const isHeroLoaded = useImagePreloader("/images/home/home-hero-yoga.webp");
 
-const isReady = !isLoading && isHeroLoaded;
+  const isReady = !isLoading && isHeroLoaded;
 
   return (
     <>
@@ -59,88 +65,100 @@ const isReady = !isLoading && isHeroLoaded;
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
         </div>
       )}
-      
-      <div className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? 'opacity-0 h-screen overflow-hidden' : 'opacity-100'}`}>
+
+      <div
+        className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? "opacity-0 h-screen overflow-hidden" : "opacity-100"}`}
+      >
         {/* 1. Hero Section */}
         <Hero
           imageSrc="/images/home/home-hero-yoga.webp"
-          gradientColorClass="from-white"
+          gradientColorClass="from-brand-base"
         />
 
-      {/* 2. Introduzione (Chi è e Cosa Fa) */}
-      <section className="w-full py-24 px-4 bg-white text-center border-b border-brand-contrast/5">
-        <div className="container mx-auto max-w-4xl flex flex-col items-center">
-          <h2 className="font-serif text-3xl md:text-5xl text-brand-primary mb-8 leading-tight">
-            "Credo in un approccio olistico che abbraccia corpo, mente ed emozioni."
-          </h2>
-          <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-10">
-            Ogni persona è unica e merita un ascolto profondo. Attraverso lo yoga, i trattamenti e uno spazio di ascolto autentico, ti accompagno nel tuo personale viaggio di trasformazione. Che tu stia cercando sollievo dallo stress, accompagnamento in gravidanza o semplicemente uno spazio per te.
-          </p>
-          <Link
-            to="/chi-sono"
-            className="inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary bg-brand-primary text-brand-base hover:bg-brand-primary/90 h-12 px-8 text-lg"
-          >
-            Scopri di più su di me
-          </Link>
+        {/* 2. Introduzione (Chi è e Cosa Fa) */}
+        <section className="w-full py-24 px-4 bg-brand-base text-center border-b border-brand-contrast/5">
+          <div className="container mx-auto max-w-4xl flex flex-col items-center">
+            <h2 className="font-serif text-3xl md:text-5xl text-brand-primary mb-8 leading-tight">
+              "Credo in un approccio olistico che abbraccia corpo, mente ed
+              emozioni."
+            </h2>
+            <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-10">
+              Ogni persona è unica e merita un ascolto profondo. Attraverso lo
+              yoga, i trattamenti e uno spazio di ascolto autentico, ti
+              accompagno nel tuo personale viaggio di trasformazione. Che tu
+              stia cercando sollievo dallo stress, accompagnamento in gravidanza
+              o semplicemente uno spazio per te.
+            </p>
+            <Link
+              to="/chi-sono"
+              className="inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary bg-brand-primary text-brand-base hover:bg-brand-primary/90 h-12 px-8 text-lg"
+            >
+              Scopri di più su di me
+            </Link>
+          </div>
+        </section>
+
+        {/* 3. Carosello Eventi */}
+        <EventCarousel events={eventsData} className="bg-white" />
+
+        {/* 4. Panoramica Servizi */}
+        <div className="flex flex-col w-full">
+          <ServiceOverview
+            title="Maternità Consapevole"
+            description="Un accompagnamento dolce dal preconcepimento al post-parto. Spazi di condivisione, preparazione corporea ed emotiva per vivere la nascita in pienezza."
+            imageSrc="/images/home/Servizi-maternita-1.webp"
+            href="/maternita"
+            ctaText="Scopri i percorsi nascita"
+            imagePosition="left"
+            alternateBackground={false}
+            alternateColorClass="bg-white"
+            backgroundColorClass="bg-brand-base"
+          />
+
+          <ServiceOverview
+            title="Trattamenti Olistici"
+            description="Massaggi e tecniche manuali per sciogliere le tensioni profonde, riequilibrare il sistema nervoso e favorire il rilassamento rigenerante."
+            imageSrc="/images/home/trattamenti-olistici-1.webp"
+            href="/trattamenti"
+            ctaText="Scopri i trattamenti"
+            imagePosition="right"
+            alternateBackground={true}
+            alternateColorClass="bg-white"
+            backgroundColorClass="bg-brand-base"
+          />
+
+          <ServiceOverview
+            title="Yoga e Meditazione"
+            description="Pratiche corporee, del respiro e di concentrazione per coltivare la presenza, flessibilità e forza, adattate per ogni livello di esperienza."
+            imageSrc="/images/home/Pratiche-di-Yoga.webp"
+            href="/yoga-e-meditazione"
+            ctaText="Inizia a praticare"
+            imagePosition="left"
+            alternateBackground={false}
+            alternateColorClass="bg-white"
+            backgroundColorClass="bg-brand-base"
+          />
+
+          <ServiceOverview
+            title="Consulenze e Percorsi"
+            description="Percorsi individualizzati per attraversare momenti di passaggio, ritrovare la propria centratura e definire nuovi obiettivi di benessere."
+            imageSrc="/images/home/consulenze-2.webp"
+            href="/consulenze"
+            ctaText="Richiedi una consulenza"
+            imagePosition="right"
+            isLast={true}
+            alternateBackground={true}
+            alternateColorClass="bg-white"
+            backgroundColorClass="bg-brand-base"
+          />
         </div>
-      </section>
 
-      {/* 3. Carosello Eventi */}
-      <EventCarousel events={eventsData} className="bg-brand-base" />
+        {/* 5. Recensioni */}
+        <TestimonialsCarousel reviews={reviewsData} className="bg-brand-base" />
 
-      {/* 4. Panoramica Servizi */}
-      <div className="flex flex-col w-full">
-        <ServiceOverview
-          title="Maternità Consapevole"
-          description="Un accompagnamento dolce dal preconcepimento al post-parto. Spazi di condivisione, preparazione corporea ed emotiva per vivere la nascita in pienezza."
-          imageSrc="/images/home/Servizi-maternita-1.webp"
-          href="/maternita"
-          ctaText="Scopri i percorsi nascita"
-          imagePosition="left"
-          alternateBackground={true}
-          alternateColorClass="bg-white"
-        />
-        
-        <ServiceOverview
-          title="Trattamenti Olistici"
-          description="Massaggi e tecniche manuali per sciogliere le tensioni profonde, riequilibrare il sistema nervoso e favorire il rilassamento rigenerante."
-          imageSrc="/images/home/trattamenti-olistici-1.webp"
-          href="/trattamenti"
-          ctaText="Scopri i trattamenti"
-          imagePosition="right"
-          alternateBackground={false}
-        />
-
-        <ServiceOverview
-          title="Yoga e Meditazione"
-          description="Pratiche corporee, del respiro e di concentrazione per coltivare la presenza, flessibilità e forza, adattate per ogni livello di esperienza."
-          imageSrc="/images/home/Pratiche-di-Yoga.webp"
-          href="/yoga-e-meditazione"
-          ctaText="Inizia a praticare"
-          imagePosition="left"
-          alternateBackground={true}
-          alternateColorClass="bg-white"
-        />
-
-        <ServiceOverview
-          title="Consulenze e Percorsi"
-          description="Percorsi individualizzati per attraversare momenti di passaggio, ritrovare la propria centratura e definire nuovi obiettivi di benessere."
-          imageSrc="/images/home/consulenze-2.webp"
-          href="/consulenze"
-          ctaText="Richiedi una consulenza"
-          imagePosition="right"
-          isLast={true}
-          alternateBackground={false}
-        />
+        {/* 6. Galleria "Marquee" */}
+        <MarqueeGallery images={galleryData} className="bg-white" />
       </div>
-
-      {/* 5. Recensioni */}
-      <TestimonialsCarousel reviews={reviewsData} className="bg-white" />
-
-      {/* 6. Galleria "Marquee" */}
-      <MarqueeGallery images={galleryData} className="bg-brand-base" />
-
-    </div>
     </>
   );
 }

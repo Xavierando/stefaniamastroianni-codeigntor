@@ -46,11 +46,11 @@ export function ChiSono() {
         {/* 1. Hero Section */}
         <Hero
           imageSrc="/images/chi-sono/IMG_2028.webp"
-          gradientColorClass="from-white"
+          gradientColorClass="from-brand-base"
         />
 
         {/* Sezione Testo Hero */}
-        <section className="w-full py-16 px-4 bg-white text-center">
+        <section className="w-full py-16 px-4 bg-brand-base text-center">
           <div className="container mx-auto max-w-4xl">
             <h1 className="font-serif text-4xl md:text-5xl text-brand-primary mb-6">
               La Mia Storia
@@ -63,7 +63,7 @@ export function ChiSono() {
         </section>
 
         {/* 2. Introduzione */}
-        <section className="w-full py-12 md:py-24 px-4 bg-brand-base">
+        <section className="w-full py-12 md:py-24 px-4 bg-white">
           <div className="container mx-auto max-w-6xl flex flex-col md:flex-row gap-16 items-center">
             <div className="w-full md:w-1/2 relative aspect-square md:aspect-[4/5] rounded-tl-full rounded-br-full overflow-hidden shadow-xl border-4 border-white">
               <img
@@ -94,7 +94,7 @@ export function ChiSono() {
         </section>
 
         {/* 3. La Vocazione */}
-        <section className="w-full py-24 px-4 bg-white text-center text-brand-contrast">
+        <section className="w-full py-24 px-4 bg-brand-base text-center text-brand-contrast">
           <div className="container mx-auto max-w-4xl">
             <BookOpen
               className="text-accent-green mx-auto mb-6 opacity-60"
@@ -116,7 +116,7 @@ export function ChiSono() {
         </section>
 
         {/* 4. Il Percorso e la Formazione */}
-        <section className="w-full py-24 px-4 bg-brand-base">
+        <section className="w-full py-24 px-4 bg-white">
           <div className="container mx-auto max-w-6xl flex flex-col-reverse md:flex-row gap-16 items-center">
             <div className="w-full md:w-1/2 flex flex-col justify-center">
               <h2 className="font-serif text-3xl md:text-4xl text-brand-primary mb-8">
@@ -185,7 +185,7 @@ export function ChiSono() {
         </section>
 
         {/* 5. Pratiche e CTA */}
-        <section className="w-full py-24 px-4 bg-white border-t border-brand-contrast/5">
+        <section className="w-full py-24 px-4 bg-brand-base border-t border-brand-contrast/5">
           <div className="container mx-auto max-w-6xl text-center">
             <h2 className="font-serif text-3xl md:text-4xl text-brand-primary mb-16">
               Di cosa mi occupo
