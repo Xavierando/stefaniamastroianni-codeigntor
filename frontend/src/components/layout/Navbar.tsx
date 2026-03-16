@@ -21,20 +21,24 @@ export function Navbar() {
   const pathname = location.pathname;
 
   return (
-    <header className={cn(
-      "fixed top-0 z-50 w-full border-b transition-all",
-      isOpen
-        ? "bg-brand-base/98 backdrop-blur-md border-brand-contrast/10"
-        : "bg-transparent lg:bg-brand-base/60 backdrop-blur-none lg:backdrop-blur-md border-transparent lg:border-brand-base/10"
-    )}>
+    <header
+      className={cn(
+        "fixed top-0 z-50 w-full border-b transition-all",
+        isOpen
+          ? "bg-brand-base/98 backdrop-blur-lg border-brand-contrast/10"
+          : "bg-transparent lg:bg-brand-base/60 backdrop-blur-none lg:backdrop-blur-md border-transparent lg:border-brand-base/10",
+      )}
+    >
       <div className="container mx-auto flex h-20 items-center justify-between">
-        
         {/* Logo / Immagine */}
-        <Link to="/" className="flex items-center gap-2 transition-transform hover:scale-105">
+        <Link
+          to="/"
+          className="flex items-center gap-2 transition-transform hover:scale-105"
+        >
           <div className="relative w-16 h-16 md:w-20 md:h-20 flex-shrink-0">
-            <img 
-              src="/images/logo.webp" 
-              alt="Stefania Mastroianni Logo" 
+            <img
+              src="/images/logo.webp"
+              alt="Stefania Mastroianni Logo"
               className="w-full h-full object-contain filter invert brightness-0 opacity-80"
             />
           </div>
@@ -48,9 +52,9 @@ export function Navbar() {
               to={link.href}
               className={cn(
                 "h-full flex items-center px-4 text-base font-medium transition-colors duration-300",
-                pathname === link.href 
-                  ? "bg-brand-primary text-brand-base" 
-                  : "text-brand-contrast hover:bg-brand-primary/10 hover:text-brand-primary"
+                pathname === link.href
+                  ? "bg-brand-primary text-brand-base"
+                  : "text-brand-contrast hover:bg-brand-primary/10 hover:text-brand-primary",
               )}
             >
               {link.name}
@@ -78,9 +82,9 @@ export function Navbar() {
               onClick={() => setIsOpen(false)}
               className={cn(
                 "px-8 py-3 rounded-full text-xl font-medium transition-all duration-300",
-                pathname === link.href 
-                  ? "bg-brand-primary text-brand-base shadow-sm" 
-                  : "text-brand-contrast hover:bg-brand-primary/10 hover:text-brand-primary"
+                pathname === link.href
+                  ? "bg-brand-primary text-brand-base shadow-sm"
+                  : "text-brand-contrast hover:bg-brand-primary/10 hover:text-brand-primary",
               )}
             >
               {link.name}
