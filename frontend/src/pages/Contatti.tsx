@@ -13,7 +13,7 @@ export function Contatti() {
       <section className="py-24 px-4 overflow-hidden relative">
         <div className="container mx-auto max-w-4xl text-center mb-16">
           <h1 className="font-serif text-4xl md:text-5xl text-brand-primary mb-6">
-            Consulenze e Percorsi
+            Mettiamoci in Contatto
           </h1>
           <p className="text-xl text-brand-contrast/90 leading-relaxed font-light mb-12">
             Ogni percorso inizia con una semplice conversazione. Sono qui per
