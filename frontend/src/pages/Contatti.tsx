@@ -7,10 +7,10 @@ export function Contatti() {
     <div className="flex flex-col min-h-screen bg-brand-base">
       <Hero
         imageSrc="/images/contatti/mt-sample-background.webp"
-        gradientColorClass="from-brand-base"
+        gradientColorClass="from-white"
       />
 
-      <section className="py-24 px-4 overflow-hidden relative">
+      <section className="py-24 px-4 bg-white overflow-hidden relative">
         <div className="container mx-auto max-w-4xl text-center mb-16">
           <h1 className="font-serif text-4xl md:text-5xl text-brand-primary mb-6">
             Mettiamoci in Contatto
@@ -24,6 +24,8 @@ export function Contatti() {
             accompagnarti nel tuo momento attuale.
           </p>
         </div>
+      </section>
+      <section className="py-24 px-4 overflow-hidden relative">
         <div className="container mx-auto max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-16">
             {/* Contact Info Side */}

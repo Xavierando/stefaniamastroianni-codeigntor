@@ -60,15 +60,15 @@ const isReady = !isLoading && isHeroLoaded;
         </div>
       )}
       
-      <div className={`flex flex-col min-h-screen transition-opacity duration-500 ${!isReady ? 'opacity-0 h-screen overflow-hidden' : 'opacity-100'}`}>
+      <div className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? 'opacity-0 h-screen overflow-hidden' : 'opacity-100'}`}>
         {/* 1. Hero Section */}
         <Hero
           imageSrc="/images/home/home-hero-yoga.webp"
-          gradientColorClass="from-brand-base"
+          gradientColorClass="from-white"
         />
 
       {/* 2. Introduzione (Chi è e Cosa Fa) */}
-      <section className="w-full py-24 px-4 bg-brand-base text-center border-b border-brand-contrast/5">
+      <section className="w-full py-24 px-4 bg-white text-center border-b border-brand-contrast/5">
         <div className="container mx-auto max-w-4xl flex flex-col items-center">
           <h2 className="font-serif text-3xl md:text-5xl text-brand-primary mb-8 leading-tight">
             "Credo in un approccio olistico che abbraccia corpo, mente ed emozioni."
@@ -86,7 +86,7 @@ const isReady = !isLoading && isHeroLoaded;
       </section>
 
       {/* 3. Carosello Eventi */}
-      <EventCarousel events={eventsData} />
+      <EventCarousel events={eventsData} className="bg-brand-base" />
 
       {/* 4. Panoramica Servizi */}
       <div className="flex flex-col w-full">
@@ -98,7 +98,7 @@ const isReady = !isLoading && isHeroLoaded;
           ctaText="Scopri i percorsi nascita"
           imagePosition="left"
           alternateBackground={true}
-          alternateColorClass="bg-accent-pink/5"
+          alternateColorClass="bg-white"
         />
         
         <ServiceOverview
@@ -108,8 +108,7 @@ const isReady = !isLoading && isHeroLoaded;
           href="/trattamenti"
           ctaText="Scopri i trattamenti"
           imagePosition="right"
-          alternateBackground={true}
-          alternateColorClass="bg-accent-orange/5"
+          alternateBackground={false}
         />
 
         <ServiceOverview
@@ -120,7 +119,7 @@ const isReady = !isLoading && isHeroLoaded;
           ctaText="Inizia a praticare"
           imagePosition="left"
           alternateBackground={true}
-          alternateColorClass="bg-accent-green/5"
+          alternateColorClass="bg-white"
         />
 
         <ServiceOverview
@@ -131,16 +130,15 @@ const isReady = !isLoading && isHeroLoaded;
           ctaText="Richiedi una consulenza"
           imagePosition="right"
           isLast={true}
-          alternateBackground={true}
-          alternateColorClass="bg-accent-dark/5"
+          alternateBackground={false}
         />
       </div>
 
       {/* 5. Recensioni */}
-      <TestimonialsCarousel reviews={reviewsData} />
+      <TestimonialsCarousel reviews={reviewsData} className="bg-white" />
 
       {/* 6. Galleria "Marquee" */}
-      <MarqueeGallery images={galleryData} />
+      <MarqueeGallery images={galleryData} className="bg-brand-base" />
 
     </div>
     </>

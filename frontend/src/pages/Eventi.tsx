@@ -8,11 +8,11 @@ export function EventiPage() {
   const [events, setEvents] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
+  useEffect(() => {
     async function fetchData() {
       try {
         const eventsRes = await apiFetch("/events");
-        
+
         const formattedEvents = (eventsRes || []).map((e: any) => ({
           id: e.id,
           slug: e.slug || "",
@@ -20,12 +20,18 @@ export function EventiPage() {
           shortDescription: e.shortDescription,
           description: e.description,
           category: e.category,
-          date: e.date ? new Date(e.date).toLocaleDateString("it-IT", { day: 'numeric', month: 'long', year: 'numeric' }) : "Da definire",
+          date: e.date
+            ? new Date(e.date).toLocaleDateString("it-IT", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })
+            : "Da definire",
           location: e.location || "Studio Olistico Mastroianni",
           isFull: e.isFull,
-          imageSrc: e.imageUrl || undefined
+          imageSrc: e.imageUrl || undefined,
         }));
-        
+
         setEvents(formattedEvents);
       } catch (err) {
         console.error("Failed to fetch Eventi data:", err);
@@ -36,9 +42,11 @@ export function EventiPage() {
     fetchData();
   }, []);
 
-    const isHeroLoaded = useImagePreloader("/images/eventi/intermediate-workshop-featured.webp");
+  const isHeroLoaded = useImagePreloader(
+    "/images/eventi/intermediate-workshop-featured.webp",
+  );
 
-const isReady = !isLoading && isHeroLoaded;
+  const isReady = !isLoading && isHeroLoaded;
 
   return (
     <>
@@ -47,28 +55,34 @@ const isReady = !isLoading && isHeroLoaded;
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
         </div>
       )}
-      <div className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? 'opacity-0 h-screen overflow-hidden' : 'opacity-100'}`}>
-      <Hero
-        imageSrc="/images/eventi/intermediate-workshop-featured.webp"
-        gradientColorClass="from-brand-base"
-      />
+      <div
+        className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? "opacity-0 h-screen overflow-hidden" : "opacity-100"}`}
+      >
+        <Hero
+          imageSrc="/images/eventi/intermediate-workshop-featured.webp"
+          gradientColorClass="from-white"
+        />
 
-      <section className="py-24 px-4">
-        <div className="container mx-auto max-w-4xl text-center mb-16">
-          <h1 className="font-serif text-4xl md:text-5xl text-brand-primary mb-6">Laboratori ed Eventi</h1>
-          <p className="text-xl text-brand-contrast/90 leading-relaxed font-light mb-12">
-            Spazi collettivi dove l'energia del gruppo amplifica l'esperienza individuale. Ritiri, seminari tematici e cerchi di condivisione.
-          </p>
-          <div className="flex flex-col gap-8 max-w-4xl mx-auto">
-            {events.map((event) => (
-              <EventCard 
-                key={event.id} 
-                event={event} 
-              />
-            ))}
+        <section className="py-24 px-4 bg-white">
+          <div className="container mx-auto max-w-4xl text-center mb-16">
+            <h1 className="font-serif text-4xl md:text-5xl text-brand-primary mb-6">
+              Laboratori ed Eventi
+            </h1>
+            <p className="text-xl text-brand-contrast/90 leading-relaxed font-light mb-12">
+              Spazi collettivi dove l'energia del gruppo amplifica l'esperienza
+              individuale. Ritiri, seminari tematici e cerchi di condivisione.
+            </p>
           </div>
-        </div>
-      </section>
+        </section>
+        <section className="py-24 px-4 overflow-hidden relative">
+          <div className="container mx-auto max-w-4xl text-center mb-16">
+            <div className="flex flex-col gap-8 max-w-4xl mx-auto">
+              {events.map((event) => (
+                <EventCard key={event.id} event={event} />
+              ))}
+            </div>
+          </div>
+        </section>
       </div>
     </>
   );

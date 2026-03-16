@@ -4,7 +4,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { EventCard, type EventProps } from "../ui/EventCard";
 
-export function EventCarousel({ events }: { events: EventProps[] }) {
+export function EventCarousel({ events, className }: { events: EventProps[], className?: string }) {
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: true },
     [Autoplay({ delay: 4000, stopOnMouseEnter: true, stopOnInteraction: false })]
@@ -21,7 +21,7 @@ export function EventCarousel({ events }: { events: EventProps[] }) {
   if (!events || events.length === 0) return null;
 
   return (
-    <section className="w-full bg-brand-base py-24 border-y border-brand-primary/10">
+    <section className={`w-full py-24 border-y border-brand-primary/10 ${className || 'bg-brand-base'}`}>
       <div className="container mx-auto px-4 max-w-5xl">
         <h2 className="font-serif text-3xl md:text-5xl text-center text-brand-contrast mb-12">
           Prossimi Eventi e Laboratori

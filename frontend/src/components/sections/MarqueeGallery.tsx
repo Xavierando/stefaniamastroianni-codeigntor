@@ -7,7 +7,7 @@ export interface GalleryImageProps {
   alt: string | null;
 }
 
-export function MarqueeGallery({ images }: { images: GalleryImageProps[] }) {
+export function MarqueeGallery({ images, className }: { images: GalleryImageProps[], className?: string }) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -20,7 +20,7 @@ export function MarqueeGallery({ images }: { images: GalleryImageProps[] }) {
   const displayImages = [...singleSet, ...singleSet];
 
   return (
-    <section className="w-full bg-brand-base overflow-hidden py-16">
+    <section className={`w-full overflow-hidden py-16 ${className || 'bg-brand-base'}`}>
       <div className="container mx-auto px-4 mb-8 text-center">
         <h2 className="font-serif text-3xl md:text-4xl text-brand-contrast">Un'occhiata a cosa faccio</h2>
       </div>
