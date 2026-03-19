@@ -80,8 +80,9 @@ export function ConsulenzePage() {
         className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? "opacity-0 h-screen overflow-hidden" : "opacity-100"}`}
       >
         <Hero
-          imageSrc="/images/consulenze/consulenze-2.webp"
+          imageSrc="/images/consulenze/consulenze.webp"
           gradientColorClass="from-brand-base"
+          imagePosition="top"
         />
 
         <section className="py-16 md:py-24 px-4 bg-brand-base border-b border-brand-contrast/5">

@@ -45,6 +45,7 @@ export function Blog() {
         <Hero
           imageSrc="/images/home/slidehome1.webp"
           gradientColorClass="from-brand-base"
+          imagePosition="top"
         />
 
         <section className="py-16 md:py-24 px-4 bg-brand-base">

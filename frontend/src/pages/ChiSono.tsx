@@ -47,6 +47,7 @@ export function ChiSono() {
         <Hero
           imageSrc="/images/chi-sono/IMG_2028.webp"
           gradientColorClass="from-brand-base"
+          imagePosition="top"
         />
 
         {/* Sezione Testo Hero */}
