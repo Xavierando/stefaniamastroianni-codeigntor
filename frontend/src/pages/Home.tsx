@@ -73,6 +73,7 @@ export function Home() {
         <Hero
           imageSrc="/images/home/home-hero-yoga.webp"
           gradientColorClass="from-brand-base"
+          imagePosition="top"
         />
 
         {/* 2. Introduzione (Chi è e Cosa Fa) */}

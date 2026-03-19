@@ -12,6 +12,7 @@ interface HeroProps {
   titleClassName?: string;
   subtitleClassName?: string;
   gradientColorClass?: string;
+  imagePosition?: "top" | "bottom" | "center";
   onImageLoad?: () => void;
 }
 
@@ -26,19 +27,31 @@ export function Hero({
   titleClassName = "text-white",
   subtitleClassName = "text-white/90",
   gradientColorClass = "from-brand-base",
+  imagePosition = "center",
   onImageLoad,
 }: HeroProps) {
+  
+  // Determine object position class based on imagePosition prop
+  const getObjectPositionClass = () => {
+    switch (imagePosition) {
+      case "top": return "object-top";
+      case "bottom": return "object-bottom";
+      case "center":
+      default: return "object-center";
+    }
+  };
+
   return (
     <section className={cn("relative min-h-[60vh] md:min-h-[70vh] w-full flex items-center justify-center pt-20 overflow-hidden", className)}>
       {/* Background Image */}
       <div className="absolute inset-0 z-0 bg-brand-primary">
-        <img
-          src={imageSrc}
-          alt={imageAlt}
-          className="w-full h-full object-cover opacity-80"
-          onLoad={onImageLoad}
-          onError={onImageLoad}
-        />
+          <img
+            src={imageSrc}
+            alt={imageAlt}
+            className={`w-full h-full object-cover ${getObjectPositionClass()} opacity-80`}
+            onLoad={onImageLoad}
+            onError={onImageLoad}
+          />
         {/* Gradient Overlay */}
         <div className={`absolute inset-0 bg-gradient-to-t ${gradientColorClass} via-transparent to-transparent`} />
       </div>
