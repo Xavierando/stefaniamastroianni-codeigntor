@@ -44,11 +44,6 @@ export function ContentDetailLayout({
             </Link>
             {(category || isFull) && (
               <div className="flex items-center gap-3 mb-4">
-                {category && (
-                  <span className="bg-brand-secondary text-white text-xs px-3 py-1 rounded-full font-medium uppercase tracking-wider shadow-sm">
-                    {category}
-                  </span>
-                )}
                 {isFull && (
                   <span className="bg-red-500 text-white text-xs px-3 py-1 rounded-full font-medium shadow-sm">
                     Al Completo
