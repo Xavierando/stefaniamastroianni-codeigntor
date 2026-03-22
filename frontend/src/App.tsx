@@ -14,6 +14,7 @@ import { CookiePolicyPage } from "./pages/CookiePolicy";
 import { EventDetail } from "./pages/EventDetail";
 import { Blog } from "./pages/Blog";
 import { BlogPost } from "./pages/BlogPost";
+import { Unsubscribe } from "./pages/Unsubscribe";
 
 import { AdminLayout } from "./components/admin/layout/AdminLayout";
 import { AdminLogin } from "./pages/admin/AdminLogin";
@@ -27,6 +28,7 @@ import { AdminReviewsPage } from "./pages/admin/reviews/AdminReviews";
 import { AdminReviewForm } from "./pages/admin/reviews/AdminReviewForm";
 import { AdminContactsPage } from "./pages/admin/contacts/AdminContacts";
 import { AdminNewsletterPage } from "./pages/admin/newsletter/AdminNewsletter";
+import { AdminCampaignForm } from "./pages/admin/newsletter/AdminCampaignForm";
 import { AdminPosts } from "./pages/admin/blog/AdminPosts";
 import { AdminPostForm } from "./pages/admin/blog/AdminPostForm";
 import { AdminComments } from "./pages/admin/comments/AdminComments";
@@ -62,6 +64,7 @@ function App() {
         <Route path="contatti" element={<Contatti />} />
         <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
         <Route path="cookie-policy" element={<CookiePolicyPage />} />
+        <Route path="unsubscribe" element={<Unsubscribe />} />
       </Route>
 
       <Route path="/admin" element={<AdminLayout />}>
@@ -82,6 +85,8 @@ function App() {
         <Route path="comments" element={<AdminComments />} />
         <Route path="contacts" element={<AdminContactsPage />} />
         <Route path="newsletter" element={<AdminNewsletterPage />} />
+        <Route path="newsletter/campaigns/new" element={<AdminCampaignForm />} />
+        <Route path="newsletter/campaigns/:id/edit" element={<AdminCampaignForm />} />
       </Route>
       <Route path="/admin/login" element={<AdminLogin />} />
     </Routes>

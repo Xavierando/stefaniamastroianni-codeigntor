@@ -31,6 +31,22 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->resource('posts', ['controller' => 'PostController']);
     $routes->resource('comments', ['controller' => 'CommentController']);
 
+    // Admin Newsletter & Subscribers
+    $routes->group('admin', static function ($routes) {
+        $routes->get('subscribers', 'AdminNewsletterController::getSubscribers');
+        $routes->delete('subscribers/(:segment)', 'AdminNewsletterController::deleteSubscriber/$1');
+
+        $routes->get('newsletters', 'AdminNewsletterController::getNewsletters');
+        $routes->get('newsletters/(:num)', 'AdminNewsletterController::getNewsletter/$1');
+        $routes->post('newsletters', 'AdminNewsletterController::createNewsletter');
+        $routes->put('newsletters/(:num)', 'AdminNewsletterController::updateNewsletter/$1');
+        $routes->delete('newsletters/(:num)', 'AdminNewsletterController::deleteNewsletter/$1');
+
+        $routes->post('newsletters/start_sending/(:num)', 'AdminNewsletterController::startSending/$1');
+        $routes->post('newsletters/send_next/(:num)', 'AdminNewsletterController::sendNext/$1');
+        $routes->post('newsletters/test_send/(:num)', 'AdminNewsletterController::testSend/$1');
+    });
+
     // Migrations
     $routes->post('migrations/run', 'MigrationController::run');
 });
