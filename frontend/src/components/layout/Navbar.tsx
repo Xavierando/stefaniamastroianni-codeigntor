@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
@@ -17,16 +17,32 @@ const NAV_LINKS = [
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const pathname = location.pathname;
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <header
       className={cn(
-        "fixed top-0 z-50 w-full border-b transition-all",
+        "fixed top-0 z-50 w-full border-b transition-all duration-700 ease-in-out",
         isOpen
           ? "bg-brand-base/98 backdrop-blur-lg border-brand-contrast/10"
-          : "bg-transparent lg:bg-brand-base/60 backdrop-blur-none lg:backdrop-blur-md border-transparent lg:border-brand-base/10",
+          : scrolled
+            ? "bg-brand-base/60 backdrop-blur-md border-brand-base/10"
+            : "bg-transparent lg:bg-brand-base/60 backdrop-blur-none lg:backdrop-blur-md border-transparent lg:border-brand-base/10",
       )}
     >
       <div className="container mx-auto flex h-20 items-center justify-between">
