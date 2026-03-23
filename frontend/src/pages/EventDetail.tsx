@@ -128,7 +128,6 @@ export function EventDetail() {
       backLabel="Torna agli Eventi"
       sidebar={Sidebar}
     >
-      <h2 className="text-2xl font-serif mb-6 text-brand-primary">Dettagli dell'Evento</h2>
       <div className="whitespace-pre-wrap text-brand-contrast/90 text-lg leading-relaxed">
         {event.description}
       </div>

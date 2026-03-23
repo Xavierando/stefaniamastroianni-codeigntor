@@ -50,13 +50,13 @@ export function ContentDetailLayout({
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-brand-base via-transparent to-transparent" />
         
-        <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 mb-8">
+        <div className="absolute bottom-0 left-0 w-full  md:p-12">
           <div className="container mx-auto">
-            <Link to={backLink} className="inline-flex items-center text-brand-primary hover:text-brand-secondary transition-colors mb-6 bg-white/80 px-3 py-1 rounded-full text-sm font-medium">
+            <Link to={backLink} className="inline-flex items-center text-brand-primary hover:bg-primary transition-colors mb-2  rounded-full text-md font-medium">
               <ArrowLeft size={16} className="mr-2" />
               {backLabel}
             </Link>
-            {(category || isFull) && (
+            {(isFull) && (
               <div className="flex items-center gap-3 mb-4">
                 {isFull && (
                   <span className="bg-red-500 text-white text-xs px-3 py-1 rounded-full font-medium shadow-sm">
@@ -65,7 +65,7 @@ export function ContentDetailLayout({
                 )}
               </div>
             )}
-            <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-5xl font-serif text-brand-primary leading-tight max-w-5xl">
+            <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-5xl pl-3 font-serif text-brand-primary leading-tight max-w-5xl">
               {title}
             </h1>
           </div>
