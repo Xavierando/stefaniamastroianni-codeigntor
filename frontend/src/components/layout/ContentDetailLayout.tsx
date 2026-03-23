@@ -18,7 +18,6 @@ interface ContentDetailLayoutProps {
   title: string;
   imageSrc?: string;
   imagePosition?: string;
-  category?: string;
   isFull?: boolean;
   backLink: string;
   backLabel: string;
@@ -30,7 +29,6 @@ export function ContentDetailLayout({
   title,
   imageSrc,
   imagePosition,
-  category,
   isFull,
   backLink,
   backLabel,

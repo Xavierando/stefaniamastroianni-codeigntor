@@ -122,7 +122,6 @@ export function EventDetail() {
       title={event.title}
       imageSrc={event.imageSrc}
       imagePosition={event.imagePosition}
-      category={event.category}
       isFull={event.isFull}
       backLink="/laboratori-eventi"
       backLabel="Torna agli Eventi"
