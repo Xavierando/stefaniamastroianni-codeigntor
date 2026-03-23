@@ -23,6 +23,7 @@ export function AdminEventForm() {
     price: "",
     date: "",
     location: "",
+    imagePosition: "centrato",
   });
   
   const [image, setImage] = useState<File | null>(null);
@@ -46,6 +47,7 @@ export function AdminEventForm() {
             price: event.price?.toString() || "",
             date: event.date ? event.date.substring(0, 16) : "", // Format for datetime-local
             location: event.location || "",
+            imagePosition: event.imagePosition || "centrato",
           });
           
           if (event.imageUrl) {
@@ -252,23 +254,43 @@ export function AdminEventForm() {
             </div>
           </div>
           
-          <div className="space-y-2">
-            <label htmlFor="image" className="block text-sm font-medium text-brand-contrast/80">
-              Immagine di Copertina {isEditing ? "(Lascia vuoto per mantenere)" : "(opzionale)"}
-            </label>
-            {currentImageUrl && (
-              <div className="mb-2">
-                <img src={currentImageUrl} alt="Current" className="h-24 object-cover rounded" />
-              </div>
-            )}
-            <input
-              type="file"
-              id="image"
-              name="image"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="w-full p-2 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-primary/10 file:text-brand-primary hover:file:bg-brand-primary/20"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label htmlFor="image" className="block text-sm font-medium text-brand-contrast/80">
+                Immagine di Copertina {isEditing ? "(Lascia vuoto per mantenere)" : "(opzionale)"}
+              </label>
+              {currentImageUrl && (
+                <div className="mb-2">
+                  <img src={currentImageUrl} alt="Current" className="h-24 object-cover rounded" />
+                </div>
+              )}
+              <input
+                type="file"
+                id="image"
+                name="image"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="w-full p-2 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-primary/10 file:text-brand-primary hover:file:bg-brand-primary/20"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="imagePosition" className="block text-sm font-medium text-brand-contrast/80">
+                Posizione Immagine
+              </label>
+              <select
+                id="imagePosition"
+                name="imagePosition"
+                value={formData.imagePosition}
+                onChange={handleChange}
+                className="w-full p-3 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50 bg-white"
+              >
+                <option value="alto">Alto</option>
+                <option value="centrato">Centrato</option>
+                <option value="basso">Basso</option>
+              </select>
+              <p className="text-xs text-brand-contrast/50">Controlla la posizione verticale dell'immagine nella sezione hero</p>
+            </div>
           </div>
 
           <div className="flex justify-end pt-4">

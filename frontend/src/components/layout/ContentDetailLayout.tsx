@@ -2,9 +2,22 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
+function getObjectPositionClass(position?: string): string {
+  switch (position) {
+    case 'alto':
+      return 'object-top';
+    case 'basso':
+      return 'object-bottom';
+    case 'centrato':
+    default:
+      return 'object-center';
+  }
+}
+
 interface ContentDetailLayoutProps {
   title: string;
   imageSrc?: string;
+  imagePosition?: string;
   category?: string;
   isFull?: boolean;
   backLink: string;
@@ -16,6 +29,7 @@ interface ContentDetailLayoutProps {
 export function ContentDetailLayout({
   title,
   imageSrc,
+  imagePosition,
   category,
   isFull,
   backLink,
@@ -31,7 +45,7 @@ export function ContentDetailLayout({
           <img 
             src={imageSrc} 
             alt={title}
-            className="w-full h-full object-cover opacity-80"
+            className={`w-full h-full object-cover opacity-80 ${getObjectPositionClass(imagePosition)}`}
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-brand-base via-transparent to-transparent" />

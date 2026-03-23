@@ -28,7 +28,8 @@ export function EventDetail() {
             location: data.location || "Studio Olistico Mastroianni",
             price: data.price,
             isFull: data.isFull,
-            imageSrc: data.imageUrl || undefined
+            imageSrc: data.imageUrl || undefined,
+            imagePosition: data.imagePosition || 'centrato'
           });
         } else {
           setError("Evento non trovato");
@@ -120,6 +121,7 @@ export function EventDetail() {
     <ContentDetailLayout
       title={event.title}
       imageSrc={event.imageSrc}
+      imagePosition={event.imagePosition}
       category={event.category}
       isFull={event.isFull}
       backLink="/laboratori-eventi"
