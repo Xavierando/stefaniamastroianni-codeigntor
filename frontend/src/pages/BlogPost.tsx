@@ -106,7 +106,6 @@ export function BlogPost() {
     <ContentDetailLayout
       title={post.title}
       imageSrc={post.imageUrl}
-      category="Articolo"
       backLink="/blog"
       backLabel="Torna al Blog"
       sidebar={Sidebar}
