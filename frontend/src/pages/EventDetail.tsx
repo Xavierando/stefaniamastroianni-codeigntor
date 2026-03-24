@@ -126,10 +126,9 @@ export function EventDetail() {
       backLink="/laboratori-eventi"
       backLabel="Torna agli Eventi"
       sidebar={Sidebar}
+      isMarkdown
     >
-      <div className="whitespace-pre-wrap text-brand-contrast/90 text-lg leading-relaxed">
-        {event.description}
-      </div>
+      {event.description || ''}
     </ContentDetailLayout>
   );
 }
