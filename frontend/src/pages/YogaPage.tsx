@@ -29,16 +29,17 @@ export function YogaPage() {
           id: e.id,
           slug: e.slug || "",
           title: e.title,
+          shortDescription: e.shortDescription,
           description: e.description,
           category: e.category,
-          date: e.eventDate
-            ? new Date(e.eventDate).toLocaleDateString("it-IT", {
+          date: e.date
+            ? new Date(e.date).toLocaleDateString("it-IT", {
                 day: "numeric",
                 month: "long",
                 year: "numeric",
               })
             : "Da definire",
-          location: e.eventLocation || "Studio Olistico Mastroianni",
+          location: e.location || "Studio Olistico Mastroianni",
           isFull: e.isFull,
           imageSrc: e.imageUrl || undefined,
         }));
