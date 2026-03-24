@@ -27,6 +27,7 @@ export function Home() {
           id: e.id,
           slug: e.slug || "",
           title: e.title,
+          shortDescription: e.shortDescription,
           description: e.description,
           category: e.category,
           date: e.date
