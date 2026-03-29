@@ -76,7 +76,7 @@ export function AdminReviewForm() {
       });
       
       if (image) {
-        const optimizedFile = await ImageOptimizer.optimizeImage(image, 500, 0.85);
+        const optimizedFile = await ImageOptimizer.optimizeImage(image, 1024, 0.85);
         submitData.append("image", optimizedFile);
       }
 
