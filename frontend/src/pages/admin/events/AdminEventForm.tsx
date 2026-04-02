@@ -24,6 +24,8 @@ export function AdminEventForm() {
     date: "",
     location: "",
     imagePosition: "centrato",
+    max_capacity: "",
+    duration: "60",
   });
   
   const [image, setImage] = useState<File | null>(null);
@@ -48,6 +50,8 @@ export function AdminEventForm() {
             date: event.date ? event.date.substring(0, 16) : "", // Format for datetime-local
             location: event.location || "",
             imagePosition: event.imagePosition || "centrato",
+            max_capacity: event.max_capacity?.toString() || "",
+            duration: event.duration?.toString() || "60",
           });
           
           if (event.imageUrl) {
@@ -250,6 +254,39 @@ export function AdminEventForm() {
                 onChange={handleChange}
                 className="w-full p-3 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
                 placeholder="es. 50"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="max_capacity" className="block text-sm font-medium text-brand-contrast/80">
+                Capacità Massima (Posti)
+              </label>
+              <input
+                type="number"
+                id="max_capacity"
+                name="max_capacity"
+                value={formData.max_capacity}
+                onChange={handleChange}
+                min="0"
+                className="w-full p-3 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
+                placeholder="0 = illimitati"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="duration" className="block text-sm font-medium text-brand-contrast/80">
+                Durata (minuti) *
+              </label>
+              <input
+                type="number"
+                id="duration"
+                name="duration"
+                value={formData.duration}
+                onChange={handleChange}
+                required
+                min="1"
+                className="w-full p-3 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
+                placeholder="es. 60"
               />
             </div>
           </div>

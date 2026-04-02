@@ -71,6 +71,10 @@ export function AdminLayout() {
             <Users size={20} />
             <span className="font-medium">Newsletter</span>
           </Link>
+          <Link to="/admin/bookings" className="flex items-center gap-3 p-3 text-brand-contrast/80 hover:bg-brand-primary/5 hover:text-brand-primary rounded-md transition-colors">
+            <Calendar size={20} />
+            <span className="font-medium">Prenotazioni</span>
+          </Link>
         </nav>
 
         <div className="p-4 border-t border-brand-primary/10">

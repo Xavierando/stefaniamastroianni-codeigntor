@@ -4,13 +4,14 @@ import { Link } from "react-router-dom";
 import { Clock } from "lucide-react";
 
 interface ServiceCardProps {
+  id: string;
   title: string;
   description: string;
   durationMin?: number | null;
   price?: number | null;
 }
 
-export function ServiceCard({ title, description, durationMin, price }: ServiceCardProps) {
+export function ServiceCard({ id, title, description, durationMin, price }: ServiceCardProps) {
   return (
     <Card className="flex flex-col h-full hover:shadow-md transition-shadow">
       <CardHeader>
@@ -39,9 +40,9 @@ export function ServiceCard({ title, description, durationMin, price }: ServiceC
         )}
       </CardContent>
       <CardFooter>
-        <Link to="/contatti" className="w-full">
+        <Link to={`/prenota?service_id=${id}`} className="w-full">
           <Button variant="outline" className="w-full group">
-            Richiedi Informazioni
+            Prenota Ora
           </Button>
         </Link>
       </CardFooter>

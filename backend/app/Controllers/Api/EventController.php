@@ -4,6 +4,7 @@ namespace App\Controllers\Api;
 
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\EventModel;
+use App\Models\BookingModel;
 
 class EventController extends ResourceController
 {
@@ -22,10 +23,23 @@ class EventController extends ResourceController
         $this->model->orderBy('date', 'ASC');
 
         if ($limit !== null && is_numeric($limit)) {
-            return $this->respond($this->model->findAll((int)$limit));
+            $events = $this->model->findAll((int)$limit);
+        } else {
+            $events = $this->model->findAll();
         }
 
-        return $this->respond($this->model->findAll());
+        $bookingModel = new BookingModel();
+        foreach ($events as &$event) {
+            $event['bookings_count'] = $bookingModel->where('event_id', $event['id'])
+                                                    ->where('status', 'confirmed')
+                                                    ->countAllResults();
+            $max = (int)($event['max_capacity'] ?? 0);
+            $event['is_full'] = ($max > 0 && $event['bookings_count'] >= $max);
+            $event['remaining_capacity'] = $max > 0 ? max(0, $max - $event['bookings_count']) : null;
+            $event['is_past'] = (new \DateTime($event['date'])) < (new \DateTime());
+        }
+
+        return $this->respond($events);
     }
 
     public function show($id = null)
@@ -37,6 +51,15 @@ class EventController extends ResourceController
         }
 
         if ($event) {
+            $bookingModel = new BookingModel();
+            $event['bookings_count'] = $bookingModel->where('event_id', $event['id'])
+                                                    ->where('status', 'confirmed')
+                                                    ->countAllResults();
+            $max = (int)($event['max_capacity'] ?? 0);
+            $event['is_full'] = ($max > 0 && $event['bookings_count'] >= $max);
+            $event['remaining_capacity'] = $max > 0 ? max(0, $max - $event['bookings_count']) : null;
+            $event['is_past'] = (new \DateTime($event['date'])) < (new \DateTime());
+            
             return $this->respond($event);
         }
 

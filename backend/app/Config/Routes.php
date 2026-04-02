@@ -25,6 +25,12 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->post('reviews/(:segment)', 'ReviewController::update/$1');
     $routes->resource('reviews', ['controller' => 'ReviewController']);
     $routes->resource('gallery', ['controller' => 'GalleryController', 'only' => ['index', 'create', 'delete']]);
+    
+    // Booking System
+    $routes->get('bookings/available-slots', 'BookingController::availableSlots');
+    $routes->get('bookings/settings', 'BookingController::getPublicSettings');
+    $routes->post('bookings', 'BookingController::create');
+    $routes->get('bookings/cancel/(:segment)', 'BookingController::cancel/$1');
 
     // Blog feature
     $routes->post('posts/(:segment)', 'PostController::update/$1');
@@ -45,6 +51,13 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
         $routes->post('newsletters/start_sending/(:num)', 'AdminNewsletterController::startSending/$1');
         $routes->post('newsletters/send_next/(:num)', 'AdminNewsletterController::sendNext/$1');
         $routes->post('newsletters/test_send/(:num)', 'AdminNewsletterController::testSend/$1');
+
+        // Admin Booking System
+        $routes->get('bookings', 'AdminBookingController::index');
+        $routes->get('bookings/settings', 'AdminBookingController::getSettings');
+        $routes->post('bookings/settings', 'AdminBookingController::updateSettings');
+        $routes->get('bookings/google-auth', 'AdminBookingController::getGoogleAuthUrl');
+        $routes->get('bookings/google-callback', 'AdminBookingController::googleCallback');
     });
 
     // Migrations

@@ -28,7 +28,8 @@ export function EventiPage() {
               })
             : "Da definire",
           location: e.location || "Studio Olistico Mastroianni",
-          isFull: e.isFull,
+          isFull: e.is_full,
+          isPast: e.is_past,
           imageSrc: e.imageUrl || undefined,
         }));
 

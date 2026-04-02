@@ -27,7 +27,9 @@ export function EventDetail() {
             date: data.date ? new Date(data.date).toLocaleDateString("it-IT", { day: 'numeric', month: 'long', year: 'numeric' }) : "Da definire",
             location: data.location || "Studio Olistico Mastroianni",
             price: data.price,
-            isFull: data.isFull,
+            isFull: data.is_full,
+            isPast: data.is_past,
+            remainingCapacity: data.remaining_capacity,
             imageSrc: data.imageUrl || undefined,
             imagePosition: data.imagePosition || 'centrato'
           });
@@ -102,13 +104,19 @@ export function EventDetail() {
         </div>
       )}
 
+      {event.remainingCapacity !== null && event.remainingCapacity > 0 && event.remainingCapacity <= 5 && (
+        <div className="mb-6 p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-700 text-sm font-medium animate-pulse">
+            ⚠️ Ultimi {event.remainingCapacity} posti rimasti!
+        </div>
+      )}
+
       <div className="pt-6 border-t border-brand-primary/10">
-        <Link to="/contatti" className="block w-full">
-          <Button variant={event.isFull ? "outline" : "primary"} className="w-full py-6 text-lg shadow-sm hover:translate-y-[-2px] transition-transform">
-            {event.isFull ? "Richiedi lista d'attesa" : "Prenota il tuo posto"}
+        <Link to={event.isPast ? "/laboratori-eventi" : (event.isFull ? "/contatti" : `/prenota?event_id=${event.id}`)} className="block w-full">
+          <Button variant={event.isFull || event.isPast ? "outline" : "primary"} className="w-full py-6 text-lg shadow-sm hover:translate-y-[-2px] transition-transform">
+            {event.isPast ? "Evento Concluso" : (event.isFull ? "Richiedi lista d'attesa" : "Prenota il tuo posto")}
           </Button>
         </Link>
-        {!event.isFull && (
+        {!event.isFull && !event.isPast && (
             <p className="text-center text-sm text-brand-contrast/50 mt-4">
               La prenotazione non è vincolante ed è soggetta a conferma.
             </p>

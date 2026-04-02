@@ -110,8 +110,8 @@ export function YogaPage() {
               imagePosition={index % 2 === 0 ? "left" : "right"}
               isLast={index === services.length - 1}
               hideButton={false}
-              href="/contatti"
-              ctaText="Richiedi informazioni"
+              href={`/prenota?service_id=${service.id}`}
+              ctaText="Prenota ora"
               alternateBackground={index % 2 !== 0}
               alternateColorClass="bg-brand-base"
             />

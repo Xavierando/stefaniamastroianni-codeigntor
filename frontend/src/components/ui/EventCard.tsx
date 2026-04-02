@@ -14,11 +14,12 @@ export interface EventProps {
   category: string;
   imageSrc?: string;
   slug: string;
+  isPast: boolean;
 }
 
 export function EventCard({ event }: { event: EventProps }) {
   return (
-    <Card className="flex flex-col sm:flex-row hover:shadow-lg transition-shadow overflow-hidden group">
+    <Card className={`flex flex-col sm:flex-row hover:shadow-lg transition-all overflow-hidden group ${event.isPast ? 'grayscale-[0.5] opacity-80' : ''}`}>
       {/* Image / Date Side */}
       <div className="relative p-6 sm:w-1/3 flex flex-col justify-center items-center text-center overflow-hidden min-h-[200px] sm:min-h-full">
         {event.imageSrc ? (
@@ -48,9 +49,14 @@ export function EventCard({ event }: { event: EventProps }) {
             <span className="text-xs font-bold uppercase tracking-wider text-brand-secondary">
               {event.category}
             </span>
-            {event.isFull && (
+            {event.isFull && !event.isPast && (
               <span className="bg-brand-secondary/10 text-brand-secondary text-xs px-2 py-1 rounded-full font-medium">
                 Al Completo
+              </span>
+            )}
+            {event.isPast && (
+              <span className="bg-gray-100 text-gray-500 text-xs px-2 py-1 rounded-full font-medium">
+                Concluso
               </span>
             )}
           </div>
@@ -68,10 +74,10 @@ export function EventCard({ event }: { event: EventProps }) {
         
         <Link to={`/laboratori-eventi/${event.slug}`}>
           <Button 
-            variant={event.isFull ? "outline" : "primary"} 
+            variant={event.isFull || event.isPast ? "outline" : "primary"} 
             className="w-full sm:w-auto"
           >
-            {event.isFull ? "Al Completo - Scopri di più" : "Scopri di più"}
+            {event.isPast ? "Vedi dettagli" : (event.isFull ? "Al Completo - Scopri di più" : "Scopri di più")}
           </Button>
         </Link>
       </div>
