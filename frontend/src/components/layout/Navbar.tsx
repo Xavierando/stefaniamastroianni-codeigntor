@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { AnimatePresence, motion } from "framer-motion";
 
 const NAV_LINKS = [
   { name: "Home", href: "/" },
@@ -35,42 +36,66 @@ export function Navbar() {
   }, []);
 
   return (
-    <header
+      <header
       className={cn(
-        "fixed top-0 z-50 w-full border-b transition-all duration-700 ease-in-out",
-        isOpen
-          ? "bg-brand-base/98 backdrop-blur-lg border-brand-contrast/10"
-          : scrolled
-            ? "bg-brand-base/60 backdrop-blur-md border-brand-base/10"
-            : "bg-transparent lg:bg-brand-base/60 backdrop-blur-none lg:backdrop-blur-md border-transparent lg:border-brand-base/10",
+        "fixed z-50 left-0 right-0 mx-auto px-4 sm:px-6 w-full max-w-7xl transition-all duration-700 ease-in-out flex justify-end lg:justify-center",
+        scrolled ? "top-2" : "top-6"
       )}
     >
-      <div className="container mx-auto flex h-20 items-center justify-between">
-        {/* Logo / Immagine */}
+      <div
+        className={cn(
+          "relative flex items-center rounded-full transition-all duration-700 ease-in-out overflow-hidden shadow-soft h-14",
+          scrolled || isOpen
+            ? "w-full px-6 bg-brand-base/95 backdrop-blur-lg shadow-md border border-brand-contrast/5"
+            : "w-[56px] bg-brand-base/80 backdrop-blur-md border border-transparent lg:w-full lg:px-6 lg:py-2"
+        )}
+      >
+        {/* Logo / Wordmark (Expands behind the bolted hamburger) */}
         <Link
           to="/"
-          className="flex items-center gap-2 transition-transform hover:scale-105"
+          className={cn(
+            "flex items-center transition-all duration-700 ease-in-out hover:opacity-80 overflow-hidden shrink-0",
+            scrolled || isOpen 
+              ? "max-w-[400px] gap-3 md:gap-4 opacity-100 pr-12 lg:pr-0" 
+              : "max-w-0 gap-0 opacity-0 lg:max-w-[400px] lg:gap-3 lg:md:gap-4 lg:opacity-100"
+          )}
         >
-          <div className="relative w-16 h-16 md:w-20 md:h-20 flex-shrink-0">
-            <img
-              src="/images/logo.webp"
-              alt="Stefania Mastroianni Logo"
-              className="w-full h-full object-contain filter invert brightness-0 opacity-80"
-            />
+          {/* Logo icon */}
+          <div
+            className="w-10 h-10 md:w-11 md:h-11 flex-shrink-0 bg-brand-primary"
+            style={{
+              WebkitMaskImage: "url(/images/logo.webp)",
+              WebkitMaskSize: "contain",
+              WebkitMaskRepeat: "no-repeat",
+              WebkitMaskPosition: "center",
+              maskImage: "url(/images/logo.webp)",
+              maskSize: "contain",
+              maskRepeat: "no-repeat",
+              maskPosition: "center",
+            }}
+          />
+          {/* Wordmark */}
+          <div className="flex flex-col items-start justify-center flex-shrink-0">
+            <span className="font-serif text-[1.05rem] md:text-xl leading-none text-brand-primary tracking-wide">
+              Stefania
+            </span>
+            <span className="font-sans text-[0.6rem] md:text-xs leading-none text-brand-contrast/60 tracking-[0.25em] mt-1.5 uppercase font-medium">
+              Mastroianni
+            </span>
           </div>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center h-full">
+        <nav className="hidden lg:flex items-center gap-1">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               to={link.href}
               className={cn(
-                "h-full flex items-center px-4 text-base font-medium transition-colors duration-300",
+                "px-5 py-2.5 rounded-full text-[13px] uppercase tracking-wider font-bold transition-all duration-300",
                 pathname === link.href
-                  ? "bg-brand-primary text-brand-base"
-                  : "text-brand-contrast hover:bg-brand-primary/10 hover:text-brand-primary",
+                  ? "bg-white shadow-sm text-brand-primary"
+                  : "text-brand-contrast/60 hover:bg-white/50 hover:text-brand-contrast"
               )}
             >
               {link.name}
@@ -78,36 +103,44 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* Mobile menu toggle */}
+        {/* Mobile menu toggle (Calculated absolute center for 0px shift) */}
         <button
-          className="lg:hidden text-brand-contrast focus:outline-none hover:bg-brand-primary/10 p-2 rounded-full transition-colors"
+          className="absolute right-1 top-1 w-12 h-12 flex items-center justify-center text-brand-contrast focus:outline-none hover:bg-white/50 rounded-full transition-colors lg:hidden"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
         >
-          {isOpen ? <X size={28} /> : <Menu size={28} />}
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
-      {/* Mobile Navigation Drawer */}
-      {isOpen && (
-        <div className="lg:hidden bg-brand-base/98 backdrop-blur-md absolute top-20 left-0 w-full h-[calc(100vh-5rem)] border-t border-brand-contrast/10 flex flex-col items-center pt-8 gap-4 shadow-xl overflow-y-auto pb-12">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              to={link.href}
-              onClick={() => setIsOpen(false)}
-              className={cn(
-                "px-8 py-3 rounded-full text-xl font-medium transition-all duration-300",
-                pathname === link.href
-                  ? "bg-brand-primary text-brand-base shadow-sm"
-                  : "text-brand-contrast hover:bg-brand-primary/10 hover:text-brand-primary",
-              )}
-            >
-              {link.name}
-            </Link>
-          ))}
-        </div>
-      )}
+      {/* Mobile Navigation Drawer (Floating) */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0, marginTop: 0 }}
+            animate={{ opacity: 1, height: "auto", marginTop: 12 }}
+            exit={{ opacity: 0, height: 0, marginTop: 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            className="absolute top-full left-4 right-4 bg-brand-base/98 backdrop-blur-xl border border-brand-contrast/5 rounded-[2rem] p-6 shadow-xl flex flex-col items-center gap-2 z-50 overflow-hidden"
+          >
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                to={link.href}
+                onClick={() => setIsOpen(false)}
+                className={cn(
+                  "w-full text-center px-6 py-3 rounded-full text-lg font-bold transition-all duration-300",
+                  pathname === link.href
+                    ? "bg-white text-brand-primary shadow-sm"
+                    : "text-brand-contrast/70 hover:bg-white/50 hover:text-brand-contrast"
+                )}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

@@ -7,15 +7,15 @@ export function Contatti() {
     <div className="flex flex-col min-h-screen bg-brand-base">
       <Hero
         imageSrc="/images/contatti/mt-sample-background.webp"
-        gradientColorClass="from-brand-base"
+        
       />
 
       <section className="py-24 px-4 bg-brand-base">
         <div className="container mx-auto max-w-4xl text-center mb-16">
-          <h1 className="font-serif text-4xl md:text-5xl text-brand-primary mb-6">
+          <h1 className="font-serif text-4xl md:text-5xl text-brand-contrast mb-6">
             Mettiamoci in Contatto
           </h1>
-          <p className="text-xl text-brand-contrast/90 leading-relaxed font-light mb-12">
+          <p className="text-xl text-brand-contrast/80 leading-relaxed font-light mb-12">
             Ogni percorso inizia con una semplice conversazione. Sono qui per
             ascoltarti e rispondere a qualsiasi dubbio o domanda sui trattamenti
             e sui percorsi disponibili. Puoi utilizzare il modulo di contatto
@@ -85,7 +85,7 @@ export function Contatti() {
             </div>
 
             {/* Form Side */}
-            <div className="lg:col-span-3 bg-white/50 backdrop-blur-sm border border-brand-contrast/10 p-8 md:p-12 rounded-2xl shadow-xl relative">
+            <div className="lg:col-span-3 bg-brand-base p-8 md:p-12 rounded-[2rem] shadow-soft relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-accent-green/10 rounded-full blur-3xl -z-10 translate-x-1/3 -translate-y-1/3" />
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-secondary/5 rounded-full blur-3xl -z-10 -translate-x-1/3 translate-y-1/3" />
 

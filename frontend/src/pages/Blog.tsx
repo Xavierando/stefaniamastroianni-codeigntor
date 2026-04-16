@@ -44,22 +44,22 @@ export function Blog() {
       >
         <Hero
           imageSrc="/images/home/slidehome1.webp"
-          gradientColorClass="from-brand-base"
+          
           imagePosition="top"
         />
 
         <section className="py-16 md:py-24 px-4 bg-brand-base">
           <div className="container mx-auto max-w-4xl text-center mb-16">
-            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-brand-primary mb-6">
+            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-brand-contrast mb-6">
               Il Blog di Stefania
             </h1>
-            <p className="text-xl text-brand-contrast/90 leading-relaxed font-light mb-12">
+            <p className="text-xl text-brand-contrast/80 leading-relaxed font-light mb-12">
               Riflessioni, approfondimenti e consigli sul benessere olistico, la
               maternità e la crescita personale.
             </p>
           </div>
         </section>
-        <section className="py-24 px-4 bg-white overflow-hidden relative">
+        <section className="py-24 px-4 bg-brand-base overflow-hidden relative">
           <div className="container mx-auto px-4">
             {isLoading ? (
               <div className="flex justify-center items-center py-20">
@@ -83,7 +83,7 @@ export function Blog() {
                 {posts.map((post) => (
                   <article
                     key={post.id}
-                    className="bg-white rounded-2xl overflow-hidden shadow-sm border border-brand-primary/10 hover:shadow-md transition-all group flex flex-col h-full"
+                    className="bg-white rounded-[2rem] overflow-hidden shadow-none border-0 hover:shadow-soft transition-all duration-500 group flex flex-col h-full"
                   >
                     <Link
                       to={`/blog/${post.slug || post.id}`}

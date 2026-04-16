@@ -69,7 +69,7 @@ export function EventDetail() {
   }
 
   const Sidebar = (
-    <div className="bg-white p-8 rounded-2xl shadow-sm border border-brand-primary/10 sticky top-32">
+    <div className="bg-white p-8 rounded-[2rem] shadow-soft sticky top-32">
       <h3 className="text-xl font-serif text-brand-primary mb-6">Informazioni Pratiche</h3>
       
       <div className="flex items-start mb-6">

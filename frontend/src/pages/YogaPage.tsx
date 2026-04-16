@@ -80,15 +80,15 @@ export function YogaPage() {
       >
         <Hero
           imageSrc="/images/yoga/hero-yoga.webp"
-          gradientColorClass="from-brand-base"
+          
         />
 
-        <section className="py-16 md:py-24 px-4 bg-brand-base border-b border-brand-contrast/5">
+        <section className="py-16 md:py-24 px-4 bg-brand-base">
           <div className="container mx-auto max-w-4xl text-center mb-16">
-            <h1 className="font-serif text-4xl md:text-5xl text-brand-primary mb-6">
+            <h1 className="font-serif text-4xl md:text-5xl text-brand-contrast mb-6">
               Yoga e Meditazione
             </h1>
-            <p className="text-xl text-brand-contrast/90 leading-relaxed font-light mb-12">
+            <p className="text-xl text-brand-contrast/80 leading-relaxed font-light mb-12">
               Riconnettersi al proprio respiro. Pratiche dolci e consapevoli per
               abitare il corpo con gentilezza, ritrovare fluidità e calmare la
               mente.
@@ -108,12 +108,13 @@ export function YogaPage() {
               durationMin={service.duration ? parseInt(service.duration) : null}
               price={service.price ? parseInt(service.price) : null}
               imagePosition={index % 2 === 0 ? "left" : "right"}
-              isLast={index === services.length - 1}
+              
               hideButton={false}
               href={`/prenota?service_id=${service.id}`}
               ctaText="Prenota ora"
               alternateBackground={index % 2 !== 0}
-              alternateColorClass="bg-brand-base"
+              alternateColorClass="bg-white"
+              backgroundColorClass="bg-brand-base"
             />
           ))}
         </div>
@@ -130,7 +131,7 @@ export function YogaPage() {
         {/* Sezione Eventi (Corsi di Gruppo) */}
         {events.length > 0 && (
           <section
-            className={`py-24 px-4 border-t border-brand-contrast/10 ${eventsBgClass}`}
+            className={`py-24 px-4 ${eventsBgClass}`}
           >
             <div className="container mx-auto max-w-6xl">
               <div className="text-center mb-16">

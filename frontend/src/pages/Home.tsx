@@ -73,18 +73,17 @@ export function Home() {
         {/* 1. Hero Section */}
         <Hero
           imageSrc="/images/home/home-hero-yoga.webp"
-          gradientColorClass="from-brand-base"
+          
           imagePosition="top"
         />
 
         {/* 2. Introduzione (Chi è e Cosa Fa) */}
         <section className="w-full py-24 px-4 bg-brand-base text-center border-b border-brand-contrast/5">
           <div className="container mx-auto max-w-4xl flex flex-col items-center">
-            <h2 className="font-serif text-3xl md:text-5xl text-brand-primary mb-8 leading-tight">
-              "Credo in un approccio olistico che abbraccia corpo, mente ed
-              emozioni."
+            <h2 className="font-serif text-3xl md:text-5xl text-brand-contrast mb-8 leading-tight">
+              "Credo in un approccio olistico che abbraccia corpo, mente ed emozioni."
             </h2>
-            <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-10">
+            <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-12">
               Ogni persona è unica e merita un ascolto profondo. Attraverso lo
               yoga, i trattamenti e uno spazio di ascolto autentico, ti
               accompagno nel tuo personale viaggio di trasformazione. Che tu
@@ -93,7 +92,7 @@ export function Home() {
             </p>
             <Link
               to="/chi-sono"
-              className="inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary bg-brand-primary text-brand-base hover:bg-brand-primary/90 h-12 px-8 text-lg"
+              className="inline-flex items-center justify-center rounded-full font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary bg-brand-primary text-white hover:bg-brand-primary/90 h-14 px-10 text-lg shadow-sm"
             >
               Scopri di più su di me
             </Link>
@@ -101,7 +100,7 @@ export function Home() {
         </section>
 
         {/* 3. Carosello Eventi */}
-        <EventCarousel events={eventsData} className="bg-white" />
+        <EventCarousel events={eventsData} className="bg-brand-base" />
 
         {/* 4. Panoramica Servizi */}
         <div className="flex flex-col w-full">
@@ -148,7 +147,7 @@ export function Home() {
             href="/consulenze"
             ctaText="Richiedi una consulenza"
             imagePosition="right"
-            isLast={true}
+            
             alternateBackground={true}
             alternateColorClass="bg-white"
             backgroundColorClass="bg-brand-base"

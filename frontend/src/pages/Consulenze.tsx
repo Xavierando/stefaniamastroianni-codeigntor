@@ -82,16 +82,16 @@ export function ConsulenzePage() {
       >
         <Hero
           imageSrc="/images/consulenze/consulenze.webp"
-          gradientColorClass="from-brand-base"
+          
           imagePosition="top"
         />
 
-        <section className="py-16 md:py-24 px-4 bg-brand-base border-b border-brand-contrast/5">
+        <section className="py-16 md:py-24 px-4 bg-brand-base">
           <div className="container mx-auto max-w-4xl text-center mb-16">
-            <h1 className="font-serif text-4xl md:text-5xl text-brand-primary mb-6">
+            <h1 className="font-serif text-4xl md:text-5xl text-brand-contrast mb-6">
               Consulenze e Percorsi
             </h1>
-            <p className="text-xl text-brand-contrast/90 leading-relaxed font-light mb-12">
+            <p className="text-xl text-brand-contrast/80 leading-relaxed font-light mb-12">
               Spazi di parola e ascolto profondo. Insieme tracciamo la mappa per
               il tuo benessere psicofisico, rispettando i tuoi tempi e la tua
               unicità.
@@ -109,12 +109,13 @@ export function ConsulenzePage() {
               durationMin={service.duration ? parseInt(service.duration) : null}
               price={service.price ? parseInt(service.price) : null}
               imagePosition={index % 2 === 0 ? "left" : "right"}
-              isLast={index === services.length - 1}
+              
               hideButton={false}
               href={`/prenota?service_id=${service.id}`}
               ctaText="Prenota ora"
               alternateBackground={index % 2 !== 0}
-              alternateColorClass="bg-brand-base"
+              alternateColorClass="bg-white"
+              backgroundColorClass="bg-brand-base"
             />
           ))}
         </div>
@@ -131,7 +132,7 @@ export function ConsulenzePage() {
         {/* Sezione Eventi (Se presenti) */}
         {events.length > 0 && (
           <section
-            className={`py-24 px-4 border-t border-brand-contrast/10 ${eventsBgClass}`}
+            className={`py-24 px-4 ${eventsBgClass}`}
           >
             <div className="container mx-auto max-w-6xl">
               <div className="text-center mb-16">
