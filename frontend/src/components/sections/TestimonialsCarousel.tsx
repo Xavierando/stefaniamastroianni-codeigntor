@@ -6,8 +6,8 @@ import { ReviewCard, type ReviewProps } from "../ui/ReviewCard";
 
 export function TestimonialsCarousel({ reviews, title = "Dicono di me", className }: { reviews: ReviewProps[], title?: string, className?: string }) {
   const [emblaRef, emblaApi] = useEmblaCarousel(
-    { loop: true, align: "start" },
-    [Autoplay({ delay: 5000, stopOnMouseEnter: true, stopOnInteraction: false })]
+    { loop: true, align: "center" },
+    [Autoplay({ delay: 10000, stopOnMouseEnter: true, stopOnInteraction: false })]
   );
 
   const scrollPrev = useCallback(() => {
@@ -36,7 +36,7 @@ export function TestimonialsCarousel({ reviews, title = "Dicono di me", classNam
             {reviews.map((review) => (
               <div
                 key={review.id}
-                className="flex-[0_0_100%] md:flex-[0_0_80%] lg:flex-[0_0_50%] min-w-0 pl-4 pb-4"
+                className="flex-[0_0_100%] min-w-0 pl-4 pb-4"
               >
                 <ReviewCard review={review} />
               </div>
