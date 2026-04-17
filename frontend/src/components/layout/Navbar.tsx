@@ -31,15 +31,15 @@ export function Navbar() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-      <header
+    <header
       className={cn(
-        "fixed z-50 left-0 right-0 mx-auto px-4 sm:px-6 w-full max-w-7xl transition-all duration-700 ease-in-out flex justify-end lg:justify-center",
-        scrolled ? "top-2" : "top-6"
+        "fixed z-50 left-0 right-0 mx-auto px-4 sm:px-6 w-full max-w-7xl transition-all duration-700 ease-in-out flex justify-end xl:justify-center",
+        scrolled ? "top-2" : "top-6",
       )}
     >
       <div
@@ -47,7 +47,7 @@ export function Navbar() {
           "relative flex items-center rounded-full transition-all duration-700 ease-in-out overflow-hidden shadow-soft h-14",
           scrolled || isOpen
             ? "w-full px-6 bg-brand-base/95 backdrop-blur-lg shadow-md border border-brand-contrast/5"
-            : "w-[56px] bg-brand-base/80 backdrop-blur-md border border-transparent lg:w-full lg:px-6 lg:py-2"
+            : "w-[56px] bg-brand-base/80 backdrop-blur-md border border-transparent xl:w-full xl:px-6 xl:py-2",
         )}
       >
         {/* Logo / Wordmark (Expands behind the bolted hamburger) */}
@@ -55,9 +55,9 @@ export function Navbar() {
           to="/"
           className={cn(
             "flex items-center transition-all duration-700 ease-in-out hover:opacity-80 overflow-hidden shrink-0",
-            scrolled || isOpen 
-              ? "max-w-[400px] gap-3 md:gap-4 opacity-100 pr-12 lg:pr-0" 
-              : "max-w-0 gap-0 opacity-0 lg:max-w-[400px] lg:gap-3 lg:md:gap-4 lg:opacity-100"
+            scrolled || isOpen
+              ? "max-w-[400px] gap-3 md:gap-4 opacity-100 pr-12 xl:pr-0"
+              : "max-w-0 gap-0 opacity-0 xl:max-w-[400px] xl:gap-3 xl:md:gap-4 xl:opacity-100",
           )}
         >
           {/* Logo icon */}
@@ -86,7 +86,7 @@ export function Navbar() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-1">
+        <nav className="hidden xl:flex items-center gap-1">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
@@ -95,7 +95,7 @@ export function Navbar() {
                 "px-5 py-2.5 rounded-full text-[13px] uppercase tracking-wider font-bold transition-all duration-300",
                 pathname === link.href
                   ? "bg-white shadow-sm text-brand-primary"
-                  : "text-brand-contrast/60 hover:bg-white/50 hover:text-brand-contrast"
+                  : "text-brand-contrast/60 hover:bg-white/50 hover:text-brand-contrast",
               )}
             >
               {link.name}
@@ -105,7 +105,7 @@ export function Navbar() {
 
         {/* Mobile menu toggle (Calculated absolute center for 0px shift) */}
         <button
-          className="absolute right-1 top-1 w-12 h-12 flex items-center justify-center text-brand-contrast focus:outline-none hover:bg-white/50 rounded-full transition-colors lg:hidden"
+          className="absolute right-1 top-1 w-12 h-12 flex items-center justify-center text-brand-contrast focus:outline-none hover:bg-white/50 rounded-full transition-colors xl:hidden"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
         >
@@ -132,7 +132,7 @@ export function Navbar() {
                   "w-full text-center px-6 py-3 rounded-full text-lg font-bold transition-all duration-300",
                   pathname === link.href
                     ? "bg-white text-brand-primary shadow-sm"
-                    : "text-brand-contrast/70 hover:bg-white/50 hover:text-brand-contrast"
+                    : "text-brand-contrast/70 hover:bg-white/50 hover:text-brand-contrast",
                 )}
               >
                 {link.name}

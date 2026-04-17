@@ -45,7 +45,7 @@ export function Hero({
     return (
       <section
         className={cn(
-          "relative w-full h-[70vh] md:h-[90vh] flex items-center justify-center overflow-hidden bg-brand-base",
+          "relative w-full h-[70vh] md:h-[70vh] flex items-center justify-center overflow-hidden bg-brand-base",
           className,
         )}
       >
@@ -76,7 +76,6 @@ export function Hero({
     >
       <div className="container mx-auto px-4 relative z-10 w-full">
         <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          
           {/* Image Side - Photography Driven (Mobile First: Order 1) */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -132,7 +131,6 @@ export function Hero({
               </motion.div>
             )}
           </motion.div>
-
         </div>
       </div>
     </section>
