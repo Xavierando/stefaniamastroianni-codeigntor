@@ -53,6 +53,23 @@ export function AdminEventsPage() {
     }
   };
 
+  const filteredEvents = events.filter(event => {
+    if (!event.date) return true;
+    const eventDate = new Date(event.date);
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    const oneWeekAgo = new Date(now);
+    oneWeekAgo.setDate(now.getDate() - 7);
+    
+    // Future events + past 7 days
+    return eventDate >= oneWeekAgo;
+  }).sort((a, b) => {
+    if (!a.date && !b.date) return 0;
+    if (!a.date) return 1;
+    if (!b.date) return -1;
+    return new Date(a.date).getTime() - new Date(b.date).getTime();
+  });
+
   return (
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -70,7 +87,63 @@ export function AdminEventsPage() {
         </Link>
       </div>
 
-      <Card className="overflow-hidden bg-white border border-brand-primary/10">
+      {/* Mobile View (Cards) */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
+        {loading ? (
+          <div className="bg-white p-8 text-center text-brand-contrast/50 rounded-xl border border-brand-primary/10">
+            Caricamento in corso...
+          </div>
+        ) : filteredEvents.length === 0 ? (
+          <div className="bg-white p-8 text-center text-brand-contrast/50 rounded-xl border border-brand-primary/10">
+            Nessun evento recente o futuro trovato.
+          </div>
+        ) : (
+          filteredEvents.map((event) => (
+            <Card key={event.id} className="p-4 space-y-4 bg-white border border-brand-primary/10 font-sans shadow-sm">
+              <div className="flex justify-between items-start">
+                <div className="space-y-1">
+                  <h3 className="font-medium text-lg text-brand-primary leading-tight">{event.title}</h3>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-primary/10 text-brand-primary uppercase tracking-wider">
+                    {event.category}
+                  </span>
+                </div>
+                <div className="text-right">
+                   <p className="font-bold text-brand-primary">
+                     {event.price ? `€${event.price}` : "-"}
+                   </p>
+                </div>
+              </div>
+
+              {event.date && (
+                <div className="flex items-center gap-1.5 text-sm text-brand-contrast/60">
+                  <Calendar size={16} className="text-brand-primary/60" />
+                  <span>{new Date(event.date).toLocaleDateString('it-IT')}</span>
+                </div>
+              )}
+
+              <div className="flex gap-2 pt-2 border-t border-brand-primary/5">
+                <Link 
+                  to={`/admin/events/${event.id}/edit`}
+                  className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-brand-primary/5 text-brand-primary rounded-xl font-medium transition-colors hover:bg-brand-primary/10 border border-brand-primary/10 text-sm"
+                >
+                  <Pencil size={16} />
+                  Modifica
+                </Link>
+                <ConfirmDeleteButton 
+                  onConfirm={() => handleDelete(event.id)}
+                  className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-red-50 text-red-500 rounded-xl font-medium transition-colors hover:bg-red-100 !shadow-none border border-red-100 text-sm"
+                >
+                  <Trash2 size={16} />
+                  Elimina
+                </ConfirmDeleteButton>
+              </div>
+            </Card>
+          ))
+        )}
+      </div>
+
+      {/* Desktop View (Table) */}
+      <Card className="overflow-hidden bg-white border border-brand-primary/10 hidden md:block">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -88,14 +161,14 @@ export function AdminEventsPage() {
                    Caricamento in corso...
                  </td>
                </tr>
-              ) : events.length === 0 ? (
+              ) : filteredEvents.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="p-8 text-center text-brand-contrast/50">
-                    Nessun evento trovato. Aggiungine uno nuovo!
+                    Nessun evento recente o futuro trovato.
                   </td>
                 </tr>
               ) : (
-                events.map((event) => (
+                filteredEvents.map((event) => (
                   <tr key={event.id} className="border-b border-brand-primary/5 hover:bg-brand-primary/5 transition-colors">
                     <td className="p-4">
                       <p className="font-medium text-brand-contrast">{event.title}</p>

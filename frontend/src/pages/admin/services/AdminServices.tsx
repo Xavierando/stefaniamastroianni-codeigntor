@@ -70,7 +70,68 @@ export function AdminServicesPage() {
         </Link>
       </div>
 
-      <Card className="overflow-hidden bg-white border border-brand-primary/10">
+      {/* Mobile View (Cards) */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
+        {loading ? (
+          <div className="bg-white p-8 text-center text-brand-contrast/50 rounded-xl border border-brand-primary/10">
+            Caricamento in corso...
+          </div>
+        ) : services.length === 0 ? (
+          <div className="bg-white p-8 text-center text-brand-contrast/50 rounded-xl border border-brand-primary/10">
+            Nessun servizio o evento trovato. Aggiungine uno nuovo!
+          </div>
+        ) : (
+          services.map((service) => (
+            <Card key={service.id} className="p-4 space-y-4 bg-white border border-brand-primary/10">
+              <div className="flex justify-between items-start">
+                <div className="space-y-1">
+                  <h3 className="font-medium text-lg text-brand-primary leading-tight">{service.title}</h3>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-primary/10 text-brand-primary uppercase tracking-wider">
+                    {service.category}
+                  </span>
+                </div>
+                <div className="text-right">
+                   <p className="font-bold text-brand-primary">
+                     {service.price ? `€${service.price}` : "-"}
+                   </p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-brand-contrast/70">
+                <div className="flex items-center gap-1.5 line-clamp-1">
+                  {service.isEvent ? <Calendar size={16} className="text-brand-primary/60" /> : <LayoutList size={16} className="text-brand-primary/60" />}
+                  <span>{service.isEvent ? "Evento" : "Servizio Fisso"}</span>
+                </div>
+                {service.isEvent && service.eventDate && (
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-brand-contrast/60">📅 {new Date(service.eventDate).toLocaleDateString('it-IT')}</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-2 pt-2 border-t border-brand-primary/5">
+                <Link 
+                  to={`/admin/services/${service.id}/edit`}
+                  className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-brand-primary/5 text-brand-primary rounded-xl font-medium transition-colors hover:bg-brand-primary/10 border border-brand-primary/10 text-sm"
+                >
+                  <Pencil size={16} />
+                  Modifica
+                </Link>
+                <ConfirmDeleteButton 
+                  onConfirm={() => handleDelete(service.id)}
+                  className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-red-50 text-red-500 rounded-xl font-medium transition-colors hover:bg-red-100 !shadow-none border border-red-100 text-sm"
+                >
+                  <Trash2 size={16} />
+                  Elimina
+                </ConfirmDeleteButton>
+              </div>
+            </Card>
+          ))
+        )}
+      </div>
+
+      {/* Desktop View (Table) */}
+      <Card className="overflow-hidden bg-white border border-brand-primary/10 hidden md:block">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>

@@ -68,7 +68,70 @@ export function AdminReviewsPage() {
         </Link>
       </div>
 
-      <Card className="overflow-hidden bg-white border border-brand-primary/10">
+      {/* Mobile View (Cards) */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
+        {loading ? (
+          <div className="bg-white p-8 text-center text-brand-contrast/50 rounded-xl border border-brand-primary/10">
+            Caricamento in corso...
+          </div>
+        ) : reviews.length === 0 ? (
+          <div className="bg-white p-8 text-center text-brand-contrast/50 rounded-xl border border-brand-primary/10">
+            Nessuna recensione trovata.
+          </div>
+        ) : (
+          reviews.map((review) => (
+            <Card key={review.id} className="p-4 space-y-4 bg-white border border-brand-primary/10 font-sans shadow-sm">
+                <div className="flex items-center gap-3">
+                  {review.imageUrl ? (
+                    <div className="w-12 h-12 rounded-full overflow-hidden relative border border-brand-primary/10">
+                      <img 
+                        src={review.imageUrl} 
+                        alt={review.name}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary font-serif font-bold text-lg shrink-0">
+                      {review.name.charAt(0)}
+                    </div>
+                  )}
+                  <div>
+                    <p className="font-medium text-brand-contrast">{review.name}</p>
+                    {review.category && (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-secondary/10 text-brand-secondary uppercase tracking-wider mt-1">
+                        {review.category}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <p className="text-sm text-brand-contrast/80 italic leading-relaxed line-clamp-3">
+                  "{review.description}"
+                </p>
+
+                <div className="flex gap-2 pt-2 border-t border-brand-primary/5">
+                  <Link 
+                    to={`/admin/reviews/${review.id}/edit`}
+                    className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-brand-primary/5 text-brand-primary rounded-xl font-medium transition-colors hover:bg-brand-primary/10 border border-brand-primary/10 text-sm"
+                  >
+                    <Pencil size={16} />
+                    Modifica
+                  </Link>
+                  <ConfirmDeleteButton 
+                    onConfirm={() => handleDelete(review.id)}
+                    className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-red-50 text-red-500 rounded-xl font-medium transition-colors hover:bg-red-100 !shadow-none border border-red-100 text-sm"
+                  >
+                    <Trash2 size={16} />
+                    Elimina
+                  </ConfirmDeleteButton>
+                </div>
+            </Card>
+          ))
+        )}
+      </div>
+
+      {/* Desktop View (Table) */}
+      <Card className="overflow-hidden bg-white border border-brand-primary/10 hidden md:block">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>

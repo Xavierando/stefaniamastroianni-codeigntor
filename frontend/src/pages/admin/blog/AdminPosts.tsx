@@ -4,6 +4,7 @@ import { Plus, Edit2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { apiFetch } from "@/lib/api";
 import { ConfirmDeleteButton } from "@/components/admin/ui/ConfirmDeleteButton";
+import { Card } from "../../../components/admin/ui/Card";
 
 export function AdminPosts() {
   const [posts, setPosts] = useState<any[]>([]);
@@ -55,19 +56,70 @@ export function AdminPosts() {
         </div>
       )}
 
+      {/* Mobile View (Cards) */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
+        {isLoading ? (
+          <div className="flex justify-center p-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-primary"></div>
+          </div>
+        ) : posts.length === 0 ? (
+          <div className="bg-white rounded-2xl p-12 text-center border border-brand-primary/10">
+            <p className="text-brand-contrast/60 mb-4">Nessun articolo trovato.</p>
+            <Link to="/admin/blog/new">
+              <Button variant="outline">Crea il tuo primo articolo</Button>
+            </Link>
+          </div>
+        ) : (
+          posts.map((post) => (
+            <Card key={post.id} className="p-4 space-y-4 bg-white border border-brand-primary/10 font-sans shadow-sm">
+              <div className="flex justify-between items-start">
+                <div className="space-y-1">
+                  <h3 className="font-medium text-lg text-brand-primary leading-tight">{post.title}</h3>
+                  <p className="text-xs text-brand-contrast/50">/{post.slug}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-medium text-brand-contrast/60">
+                    {post.date ? new Date(post.date).toLocaleDateString("it-IT") : "-"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-2 border-t border-brand-primary/5">
+                <Link to={`/admin/blog/${post.id}/edit`} className="flex-1">
+                  <Button variant="outline" className="w-full flex items-center justify-center gap-2 py-2.5 bg-brand-primary/5 text-brand-primary rounded-xl font-medium transition-colors hover:bg-brand-primary/10 border-brand-primary/10 h-auto">
+                    <Edit2 size={16} />
+                    Modifica
+                  </Button>
+                </Link>
+                <ConfirmDeleteButton 
+                  onConfirm={() => handleDelete(post.id)}
+                  confirmMessage="Sei sicuro di voler eliminare questo articolo?"
+                  variant="outline"
+                  className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-red-50 text-red-500 rounded-xl font-medium transition-colors hover:bg-red-100 border-red-100 h-auto"
+                >
+                  <Trash2 size={16} />
+                  Elimina
+                </ConfirmDeleteButton>
+              </div>
+            </Card>
+          ))
+        )}
+      </div>
+
+      {/* Desktop View (Table) */}
       {isLoading ? (
-        <div className="flex justify-center p-12">
+        <div className="flex justify-center p-12 hidden md:flex">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-primary"></div>
         </div>
       ) : posts.length === 0 ? (
-        <div className="bg-white rounded-2xl p-12 text-center border border-brand-primary/10">
+        <div className="bg-white rounded-2xl p-12 text-center border border-brand-primary/10 hidden md:block">
           <p className="text-brand-contrast/60 mb-4">Nessun articolo trovato.</p>
           <Link to="/admin/blog/new">
             <Button variant="outline">Crea il tuo primo articolo</Button>
           </Link>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-brand-primary/10 overflow-hidden">
+        <div className="bg-white rounded-2xl border border-brand-primary/10 overflow-hidden hidden md:block">
           <table className="w-full text-left border-collapse p-4">
             <thead>
               <tr className="bg-brand-primary/5 border-b border-brand-primary/10">

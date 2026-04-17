@@ -16,6 +16,12 @@ interface Booking {
   status: string;
 }
 
+interface Service {
+  id: number;
+  title: string;
+  isEvent: boolean;
+}
+
 interface BookingSettings {
   booking_start_offset_days: string;
   daily_start_time: string;
@@ -35,20 +41,25 @@ interface BookingSettings {
 
 export function AdminBookingsPage() {
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
   const [settings, setSettings] = useState<BookingSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"list" | "settings">("list");
+  const [filterRange, setFilterRange] = useState<"all" | "today" | "tomorrow" | "this_week" | "next_week">("all");
+  const [selectedServiceId, setSelectedServiceId] = useState<string>("all");
   const token = useSelector((state: RootState) => state.auth.token);
 
   const loadData = async () => {
     try {
       setLoading(true);
-      const [bookingsData, settingsData] = await Promise.all([
+      const [bookingsData, settingsData, servicesData] = await Promise.all([
         apiFetch("admin/bookings", { headers: { Authorization: `Bearer ${token}` } }),
-        apiFetch("admin/bookings/settings", { headers: { Authorization: `Bearer ${token}` } })
+        apiFetch("admin/bookings/settings", { headers: { Authorization: `Bearer ${token}` } }),
+        apiFetch("services")
       ]);
       setBookings(Array.isArray(bookingsData) ? bookingsData : []);
       setSettings(settingsData);
+      setServices(Array.isArray(servicesData) ? servicesData : []);
     } catch (error) {
       console.error("Failed to fetch booking data", error);
     } finally {
@@ -91,6 +102,62 @@ export function AdminBookingsPage() {
     }
   };
 
+  const getFilteredBookings = () => {
+    let filtered = [...bookings];
+
+    if (selectedServiceId !== "all") {
+      if (selectedServiceId === "services_treatments") {
+        const nonEventIds = services.filter(s => !s.isEvent).map(s => String(s.id));
+        filtered = filtered.filter(b => nonEventIds.includes(String(b.service_id)));
+      } else {
+        filtered = filtered.filter(b => String(b.service_id) === String(selectedServiceId));
+      }
+    }
+
+    if (filterRange !== "all") {
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+      const today = now.getTime();
+      const oneDay = 24 * 60 * 60 * 1000;
+
+      filtered = filtered.filter(b => {
+        const bDate = new Date(b.start_time);
+        bDate.setHours(0, 0, 0, 0);
+        const bTime = bDate.getTime();
+
+        if (filterRange === "today") return bTime === today;
+        if (filterRange === "tomorrow") return bTime === today + oneDay;
+        
+        if (filterRange === "this_week") {
+          const day = now.getDay() || 7; // 1-7 where 7 is Sunday
+          const start = today - (day - 1) * oneDay;
+          const end = start + 6 * oneDay;
+          return bTime >= start && bTime <= end;
+        }
+
+        if (filterRange === "next_week") {
+          const day = now.getDay() || 7;
+          const start = today + (8 - day) * oneDay;
+          const end = start + 6 * oneDay;
+          return bTime >= start && bTime <= end;
+        }
+
+        return true;
+      });
+    }
+
+    return filtered.sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime());
+  };
+
+  const filteredBookings = getFilteredBookings();
+  
+  const getServiceInfo = (id: string) => {
+    const service = services.find(s => String(s.id) === String(id));
+    if (!service) return "Prenotazione";
+    if (service.isEvent) return `Evento: ${service.title}`;
+    return service.title;
+  };
+
   return (
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -126,64 +193,187 @@ export function AdminBookingsPage() {
       </div>
 
       {activeTab === "list" ? (
-        <Card className="overflow-hidden bg-white border border-brand-primary/10 font-sans">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-brand-primary/5 border-b border-brand-primary/10">
-                  <th className="p-4 font-semibold text-brand-primary">Data & Ora</th>
-                  <th className="p-4 font-semibold text-brand-primary">Cliente</th>
-                  <th className="p-4 font-semibold text-brand-primary">Contatti</th>
-                  <th className="p-4 font-semibold text-brand-primary">Stato</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan={4} className="p-8 text-center text-brand-contrast/50">Caricamento...</td>
-                  </tr>
-                ) : bookings.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} className="p-8 text-center text-brand-contrast/50">Nessuna prenotazione trovata.</td>
-                  </tr>
-                ) : (
-                  bookings.map((booking) => (
-                    <tr key={booking.id} className="border-b border-brand-primary/5 hover:bg-brand-primary/5 transition-colors">
-                      <td className="p-4">
-                        <div className="font-medium text-brand-contrast">
-                          {new Date(booking.start_time).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}
-                        </div>
-                        <div className="text-sm text-brand-contrast/60">
-                          {new Date(booking.start_time).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}
-                        </div>
-                      </td>
-                      <td className="p-4">
-                        <p className="font-medium text-brand-contrast">{booking.name}</p>
-                      </td>
-                      <td className="p-4">
-                        <p className="text-sm text-brand-contrast/80">{booking.email}</p>
-                        <p className="text-sm text-brand-contrast/60">{booking.phone}</p>
-                      </td>
-                      <td className="p-4">
-                        {booking.status === 'confirmed' ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                            <CheckCircle2 size={12} />
-                            Confermato
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
-                            <XCircle size={12} />
-                            Cancellato
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                  ))
+        <div className="space-y-4">
+          {/* Filter Bar */}
+          <div className="flex flex-col gap-6 p-4 bg-white border border-brand-primary/10 rounded-xl font-sans">
+            {/* Period Filter */}
+            <div className="space-y-2">
+              <span className="text-[10px] font-bold text-brand-primary/40 uppercase tracking-[0.2em] ml-1">Periodo</span>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { id: "all", label: "Tutte" },
+                  { id: "today", label: "Oggi" },
+                  { id: "tomorrow", label: "Domani" },
+                  { id: "this_week", label: "Questa Settimana" },
+                  { id: "next_week", label: "Prossima Settimana" },
+                ].map((range) => (
+                  <button
+                    key={range.id}
+                    onClick={() => setFilterRange(range.id as any)}
+                    className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all border ${
+                      filterRange === range.id
+                        ? "bg-brand-primary text-white border-brand-primary shadow-sm"
+                        : "bg-white text-brand-contrast/60 border-brand-primary/10 hover:border-brand-primary/30"
+                    }`}
+                  >
+                    {range.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Event Filter */}
+            <div className="space-y-2 pt-4 border-t border-brand-primary/5">
+              <span className="text-[10px] font-bold text-brand-secondary/40 uppercase tracking-[0.2em] ml-1">Filtro Eventi / Servizi</span>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setSelectedServiceId("all")}
+                  className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all border ${
+                    selectedServiceId === "all"
+                      ? "bg-brand-secondary text-white border-brand-secondary shadow-sm"
+                      : "bg-white text-brand-contrast/60 border-brand-primary/10 hover:border-brand-primary/30"
+                  }`}
+                >
+                  Tutte le prenotazioni
+                </button>
+
+                {/* Consolidated Button for Services/Treatments */}
+                {services.some(s => !s.isEvent) && (
+                  <button
+                    onClick={() => setSelectedServiceId("services_treatments")}
+                    className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all border ${
+                      selectedServiceId === "services_treatments"
+                        ? "bg-brand-secondary text-white border-brand-secondary shadow-sm"
+                        : "bg-white text-brand-contrast/60 border-brand-primary/10 hover:border-brand-primary/30"
+                    }`}
+                  >
+                    Servizi / Trattamenti
+                  </button>
                 )}
-              </tbody>
-            </table>
+
+                {/* Individual Buttons for Events */}
+                {services.filter(s => s.isEvent).map(service => (
+                  <button
+                    key={service.id}
+                    onClick={() => setSelectedServiceId(String(service.id))}
+                    className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all border ${
+                      String(selectedServiceId) === String(service.id)
+                        ? "bg-brand-secondary text-white border-brand-secondary shadow-sm"
+                        : "bg-white text-brand-contrast/60 border-brand-primary/10 hover:border-brand-primary/30"
+                    }`}
+                  >
+                    {service.title}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
-        </Card>
+
+          {/* List Display */}
+          <div className="grid grid-cols-1 gap-4 md:hidden">
+            {loading ? (
+              <div className="p-8 text-center text-brand-contrast/50 bg-white rounded-xl border border-brand-primary/10">Caricamento...</div>
+            ) : filteredBookings.length === 0 ? (
+              <div className="p-8 text-center text-brand-contrast/50 bg-white rounded-xl border border-brand-primary/10">Nessuna prenotazione trovata.</div>
+            ) : (
+              filteredBookings.map((booking) => (
+                <Card key={booking.id} className="p-4 space-y-4 bg-white border border-brand-primary/10">
+                  <div className="flex justify-between items-start">
+                    <div className="space-y-1">
+                      <p className="text-xs font-bold text-brand-primary uppercase tracking-wider">
+                        {new Date(booking.start_time).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })}
+                        <span className="mx-2 text-brand-primary/30">|</span>
+                        {new Date(booking.start_time).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                      <h3 className="font-medium text-lg text-brand-contrast leading-tight">{booking.name}</h3>
+                      <p className="text-sm text-brand-primary/80 font-medium">{getServiceInfo(booking.service_id)}</p>
+                    </div>
+                    <div className="shrink-0">
+                      {booking.status === 'confirmed' ? (
+                        <span className="p-1.5 rounded-full bg-green-50 text-green-600 border border-green-100 block">
+                          <CheckCircle2 size={18} />
+                        </span>
+                      ) : (
+                        <span className="p-1.5 rounded-full bg-red-50 text-red-600 border border-red-100 block">
+                          <XCircle size={18} />
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-brand-primary/5 space-y-1">
+                    <p className="text-sm text-brand-contrast/60 flex items-center gap-2">
+                       <span className="opacity-50 text-xs">Email:</span> {booking.email}
+                    </p>
+                    <p className="text-sm text-brand-contrast/60 flex items-center gap-2">
+                       <span className="opacity-50 text-xs">Tel:</span> {booking.phone}
+                    </p>
+                  </div>
+                </Card>
+              ))
+            )}
+          </div>
+
+          <Card className="overflow-hidden bg-white border border-brand-primary/10 font-sans hidden md:block">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-brand-primary/5 border-b border-brand-primary/10">
+                    <th className="p-4 font-semibold text-brand-primary">Data & Ora</th>
+                    <th className="p-4 font-semibold text-brand-primary">Cliente</th>
+                    <th className="p-4 font-semibold text-brand-primary">Contatti</th>
+                    <th className="p-4 font-semibold text-brand-primary">Stato</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td colSpan={4} className="p-8 text-center text-brand-contrast/50">Caricamento...</td>
+                    </tr>
+                  ) : filteredBookings.length === 0 ? (
+                    <tr>
+                      <td colSpan={4} className="p-8 text-center text-brand-contrast/50">Nessuna prenotazione trovata.</td>
+                    </tr>
+                  ) : (
+                    filteredBookings.map((booking) => (
+                      <tr key={booking.id} className="border-b border-brand-primary/5 hover:bg-brand-primary/5 transition-colors">
+                        <td className="p-4">
+                          <div className="font-medium text-brand-contrast">
+                            {new Date(booking.start_time).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}
+                          </div>
+                          <div className="text-sm text-brand-contrast/60">
+                            {new Date(booking.start_time).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}
+                          </div>
+                        </td>
+                        <td className="p-4">
+                          <p className="font-medium text-brand-contrast">{booking.name}</p>
+                          <p className="text-xs text-brand-primary/60 font-medium uppercase mt-1">{getServiceInfo(booking.service_id)}</p>
+                        </td>
+                        <td className="p-4">
+                          <p className="text-sm text-brand-contrast/80">{booking.email}</p>
+                          <p className="text-sm text-brand-contrast/60">{booking.phone}</p>
+                        </td>
+                        <td className="p-4">
+                          {booking.status === 'confirmed' ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                              <CheckCircle2 size={12} />
+                              Confermato
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                              <XCircle size={12} />
+                              Cancellato
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 font-sans">
           <div className="lg:col-span-2">
