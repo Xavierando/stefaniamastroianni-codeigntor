@@ -100,6 +100,17 @@ abstract class BaseEmail
             $this->email->setAltMessage($plainTextMessage);
         }
 
-        return $this->email->send();
+        log_message('info', "[EmailService] Sending email to: {$to} | Subject: {$subject}");
+        
+        $sent = $this->email->send();
+        
+        if (!$sent) {
+            log_message('error', "[EmailService] Failed to send email to: {$to}");
+            log_message('error', "[EmailService] Debugger info: " . $this->email->printDebugger(['headers', 'subject', 'body']));
+        } else {
+            log_message('info', "[EmailService] Email successfully sent to: {$to}");
+        }
+
+        return $sent;
     }
 }

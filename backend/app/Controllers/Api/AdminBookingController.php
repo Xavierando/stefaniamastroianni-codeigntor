@@ -141,6 +141,8 @@ class AdminBookingController extends ResourceController
     public function googleCallback()
     {
         $code = $this->request->getGet('code');
+        log_message('info', "[AdminBookingController] googleCallback reached. Code present: " . ($code ? 'YES' : 'NO'));
+
         if (!$code) {
             return $this->fail('No code provided');
         }

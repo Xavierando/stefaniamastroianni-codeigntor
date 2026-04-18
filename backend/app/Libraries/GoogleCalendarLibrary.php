@@ -25,6 +25,9 @@ class GoogleCalendarLibrary
         $this->client->setAccessType('offline');
         $this->client->setPrompt('select_account consent');
 
+        log_message('info', "[GoogleCalendar] Initialized with Client ID: " . (env('GOOGLE_CLIENT_ID') ? 'Set' : 'MISSING'));
+        log_message('info', "[GoogleCalendar] Redirect URI: " . env('GOOGLE_REDIRECT_URI'));
+
         $this->loadToken();
         $this->service = new Calendar($this->client);
     }
@@ -37,12 +40,17 @@ class GoogleCalendarLibrary
         try {
             $tokenJson = $this->settingsModel->getSetting('google_oauth_token');
             if ($tokenJson) {
+                log_message('info', "[GoogleCalendar] Token found in settings.");
                 $accessToken = json_decode($tokenJson, true);
-                if (!$accessToken) return;
+                if (!$accessToken) {
+                    log_message('error', "[GoogleCalendar] Failed to decode token JSON.");
+                    return;
+                }
 
                 $this->client->setAccessToken($accessToken);
 
                 if ($this->client->isAccessTokenExpired()) {
+                    log_message('info', "[GoogleCalendar] Access token expired. Attempting refresh...");
                     if ($this->client->getRefreshToken()) {
                         $newToken = $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
                         
@@ -73,7 +81,15 @@ class GoogleCalendarLibrary
      */
     public function authenticate(string $code): array
     {
+        log_message('info', "[GoogleCalendar] Authenticating with code...");
         $accessToken = $this->client->fetchAccessTokenWithAuthCode($code);
+        
+        if (isset($accessToken['error'])) {
+            log_message('error', "[GoogleCalendar] Authentication error: " . ($accessToken['error_description'] ?? $accessToken['error']));
+        } else {
+            log_message('info', "[GoogleCalendar] Authentication successful. Token obtained.");
+        }
+
         $this->settingsModel->setSetting('google_oauth_token', json_encode($accessToken));
         return $accessToken;
     }
@@ -99,9 +115,10 @@ class GoogleCalendarLibrary
         try {
             // Try to fetch the primary calendar metadata as a lightweight check
             $this->service->calendars->get('primary');
+            log_message('info', "[GoogleCalendar] Connection verified successfully.");
             return true;
         } catch (\Exception $e) {
-            log_message('error', '[GoogleCalendar] Connection verification failed: ' . $e->getMessage());
+            log_message('error', "[GoogleCalendar] Connection verification failed: " . $e->getMessage());
             return false;
         }
     }
