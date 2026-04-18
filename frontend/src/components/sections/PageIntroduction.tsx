@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Quote } from "lucide-react";
 
 interface PageIntroductionProps {
   title: string;
