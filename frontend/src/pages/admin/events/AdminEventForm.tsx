@@ -26,6 +26,7 @@ export function AdminEventForm() {
     imagePosition: "centrato",
     max_capacity: "",
     duration: "60",
+    is_booking_enabled: "1",
   });
   
   const [image, setImage] = useState<File | null>(null);
@@ -52,6 +53,7 @@ export function AdminEventForm() {
             imagePosition: event.imagePosition || "centrato",
             max_capacity: event.max_capacity?.toString() || "",
             duration: event.duration?.toString() || "60",
+            is_booking_enabled: event.is_booking_enabled?.toString() ?? "1",
           });
           
           if (event.imageUrl) {
@@ -327,6 +329,22 @@ export function AdminEventForm() {
                 <option value="basso">Basso</option>
               </select>
               <p className="text-xs text-brand-contrast/50">Controlla la posizione verticale dell'immagine nella sezione hero</p>
+            </div>
+          </div>
+
+          <div className="bg-brand-primary/5 p-4 rounded-md border border-brand-primary/10">
+            <div className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                id="is_booking_enabled"
+                name="is_booking_enabled"
+                checked={formData.is_booking_enabled === "1"}
+                onChange={(e) => setFormData(prev => ({ ...prev, is_booking_enabled: e.target.checked ? "1" : "0" }))}
+                className="w-5 h-5 text-brand-primary border-brand-primary/20 rounded focus:ring-brand-primary"
+              />
+              <label htmlFor="is_booking_enabled" className="font-medium text-brand-primary">
+                Abilita Prenotazioni per questo evento
+              </label>
             </div>
           </div>
 

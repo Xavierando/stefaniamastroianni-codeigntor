@@ -14,7 +14,8 @@ class EventModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'title', 'description', 'shortDescription', 'slug', 'category', 'date', 
-        'location', 'price', 'imageUrl', 'imagePosition', 'duration', 'max_capacity'
+        'location', 'price', 'imageUrl', 'imagePosition', 'duration', 'max_capacity',
+        'is_booking_enabled'
     ];
 
     protected bool $allowEmptyInserts = false;

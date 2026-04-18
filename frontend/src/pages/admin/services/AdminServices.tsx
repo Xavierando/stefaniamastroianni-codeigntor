@@ -8,12 +8,10 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../../../store";
 
 interface Service {
-  id: number;
+  id: string;
   title: string;
   description: string;
   category: string;
-  isEvent: boolean;
-  eventDate?: string;
   price?: number;
 }
 
@@ -57,8 +55,8 @@ export function AdminServicesPage() {
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-serif text-brand-primary mb-2">Servizi ed Eventi</h1>
-          <p className="text-brand-contrast/60">Gestisci le tue consulenze, i trattamenti e i laboratori.</p>
+          <h1 className="text-3xl font-serif text-brand-primary mb-2">Servizi</h1>
+          <p className="text-brand-contrast/60">Gestisci le tue consulenze e i trattamenti.</p>
         </div>
         
         <Link 
@@ -66,7 +64,7 @@ export function AdminServicesPage() {
           className="flex items-center gap-2 bg-brand-primary text-white px-6 py-3 rounded-full hover:bg-brand-primary/90 transition-colors font-medium shadow-sm hover:shadow-md"
         >
           <Plus size={20} />
-          Nuovo Servizio/Evento
+          Nuovo Servizio
         </Link>
       </div>
 
@@ -78,7 +76,7 @@ export function AdminServicesPage() {
           </div>
         ) : services.length === 0 ? (
           <div className="bg-white p-8 text-center text-brand-contrast/50 rounded-xl border border-brand-primary/10">
-            Nessun servizio o evento trovato. Aggiungine uno nuovo!
+            Nessun servizio trovato. Aggiungine uno nuovo!
           </div>
         ) : (
           services.map((service) => (
@@ -99,14 +97,9 @@ export function AdminServicesPage() {
 
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-brand-contrast/70">
                 <div className="flex items-center gap-1.5 line-clamp-1">
-                  {service.isEvent ? <Calendar size={16} className="text-brand-primary/60" /> : <LayoutList size={16} className="text-brand-primary/60" />}
-                  <span>{service.isEvent ? "Evento" : "Servizio Fisso"}</span>
+                  <LayoutList size={16} className="text-brand-primary/60" />
+                  <span>Servizio Fisso</span>
                 </div>
-                {service.isEvent && service.eventDate && (
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-brand-contrast/60">📅 {new Date(service.eventDate).toLocaleDateString('it-IT')}</span>
-                  </div>
-                )}
               </div>
 
               <div className="flex gap-2 pt-2 border-t border-brand-primary/5">
@@ -138,9 +131,8 @@ export function AdminServicesPage() {
               <tr className="bg-brand-primary/5 border-b border-brand-primary/10">
                 <th className="p-4 font-semibold text-brand-primary">Titolo</th>
                 <th className="p-4 font-semibold text-brand-primary">Categoria</th>
-                <th className="p-4 font-semibold text-brand-primary">Tipo</th>
                 <th className="p-4 font-semibold text-brand-primary">Prezzo</th>
-                <th className="p-4 text-right font-semibold text-brand-primary">Azioni</th>
+        <th className="p-4 text-right font-semibold text-brand-primary">Azioni</th>
               </tr>
             </thead>
             <tbody>
@@ -153,7 +145,7 @@ export function AdminServicesPage() {
               ) : services.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="p-8 text-center text-brand-contrast/50">
-                    Nessun servizio o evento trovato. Aggiungine uno nuovo!
+                    Nessun servizio trovato. Aggiungine uno nuovo!
                   </td>
                 </tr>
               ) : (
@@ -161,22 +153,11 @@ export function AdminServicesPage() {
                   <tr key={service.id} className="border-b border-brand-primary/5 hover:bg-brand-primary/5 transition-colors">
                     <td className="p-4">
                       <p className="font-medium text-brand-contrast">{service.title}</p>
-                      {service.isEvent && service.eventDate && (
-                        <p className="text-sm text-brand-contrast/60 font-medium mt-1">
-                          📅 {new Date(service.eventDate).toLocaleDateString('it-IT')}
-                        </p>
-                      )}
                     </td>
                     <td className="p-4">
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-primary/10 text-brand-primary uppercase tracking-wider">
                         {service.category}
                       </span>
-                    </td>
-                    <td className="p-4">
-                      <div className="flex items-center gap-2 text-brand-contrast/70">
-                        {service.isEvent ? <Calendar size={16} /> : <LayoutList size={16} />}
-                        <span>{service.isEvent ? "Evento" : "Servizio Fisso"}</span>
-                      </div>
                     </td>
                     <td className="p-4 text-brand-contrast/80">
                       {service.price ? `€${service.price}` : "-"}

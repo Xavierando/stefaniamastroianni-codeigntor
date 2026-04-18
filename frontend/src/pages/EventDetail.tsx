@@ -27,12 +27,9 @@ export function EventDetail() {
             category: data.category,
             date: data.date ? new Date(data.date).toLocaleDateString("it-IT", { day: 'numeric', month: 'long', year: 'numeric' }) : "Da definire",
             location: data.location || "Studio Olistico Mastroianni",
-            price: data.price,
-            isFull: data.is_full,
-            isPast: data.is_past,
-            remainingCapacity: data.remaining_capacity,
             imageSrc: data.imageUrl || undefined,
-            imagePosition: data.imagePosition || 'centrato'
+            imagePosition: data.imagePosition || 'centrato',
+            isBookingEnabled: data.is_booking_enabled === 1 || data.is_booking_enabled === true || data.is_booking_enabled === "1"
           });
         } else {
           setError("Evento non trovato");
@@ -111,18 +108,20 @@ export function EventDetail() {
         </div>
       )}
 
-      <div className="pt-6 border-t border-brand-primary/10">
-        <Link to={event.isPast ? "/laboratori-eventi" : (event.isFull ? "/contatti" : `/prenota?event_id=${event.id}`)} className="block w-full">
-          <Button variant={event.isFull || event.isPast ? "outline" : "primary"} className="w-full py-6 text-lg shadow-sm hover:translate-y-[-2px] transition-transform">
-            {event.isPast ? "Evento Concluso" : (event.isFull ? "Richiedi lista d'attesa" : "Prenota il tuo posto")}
-          </Button>
-        </Link>
-        {!event.isFull && !event.isPast && (
-            <p className="text-center text-sm text-brand-contrast/50 mt-4">
-              La prenotazione non è vincolante ed è soggetta a conferma.
-            </p>
-        )}
-      </div>
+      {event.isBookingEnabled && (
+        <div className="pt-6 border-t border-brand-primary/10">
+          <Link to={event.isPast ? "/laboratori-eventi" : (event.isFull ? "/contatti" : `/prenota?event_id=${event.id}`)} className="block w-full">
+            <Button variant={event.isFull || event.isPast ? "outline" : "primary"} className="w-full py-6 text-lg shadow-sm hover:translate-y-[-2px] transition-transform">
+              {event.isPast ? "Evento Concluso" : (event.isFull ? "Richiedi lista d'attesa" : "Prenota il tuo posto")}
+            </Button>
+          </Link>
+          {!event.isFull && !event.isPast && (
+              <p className="text-center text-sm text-brand-contrast/50 mt-4">
+                La prenotazione non è vincolante ed è soggetta a conferma.
+              </p>
+          )}
+        </div>
+      )}
     </div>
   );
 

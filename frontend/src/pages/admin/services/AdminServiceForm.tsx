@@ -21,11 +21,9 @@ export function AdminServiceForm() {
     description: "",
     price: "",
     duration: "",
-    eventDate: "",
-    eventLocation: "",
+    is_booking_enabled: "1",
   });
   
-  const [isEvent, setIsEvent] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
 
@@ -45,10 +43,8 @@ export function AdminServiceForm() {
             description: service.description || "",
             price: service.price?.toString() || "",
             duration: service.duration || "",
-            eventDate: service.eventDate ? service.eventDate.substring(0, 16) : "", // Format for datetime-local
-            eventLocation: service.eventLocation || "",
+            is_booking_enabled: service.is_booking_enabled?.toString() ?? "1",
           });
-          setIsEvent(service.isEvent === 1 || service.isEvent === true);
           
           if (service.imageUrl) {
             setCurrentImageUrl(service.imageUrl);
@@ -85,7 +81,6 @@ export function AdminServiceForm() {
       Object.entries(formData).forEach(([key, value]) => {
         submitData.append(key, value);
       });
-      submitData.append("isEvent", isEvent ? "1" : "0");
       
       if (image) {
         const optimizedFile = await ImageOptimizer.optimizeImage(image, 1920, 0.85);
@@ -121,7 +116,7 @@ export function AdminServiceForm() {
         </Link>
         <div>
           <h1 className="text-3xl font-serif text-brand-primary mb-2">
-            {isEditing ? "Modifica Servizio" : "Nuovo Servizio / Evento"}
+            {isEditing ? "Modifica Servizio" : "Nuovo Servizio"}
           </h1>
           <p className="text-brand-contrast/60">Compila i campi per pubblicare un nuovo contenuto sul sito.</p>
         </div>
@@ -241,54 +236,20 @@ export function AdminServiceForm() {
             />
           </div>
 
-          <hr className="border-brand-primary/10" />
-
-          {/* Event Toggle */}
+          {/* Booking Enabled Toggle */}
           <div className="bg-brand-primary/5 p-4 rounded-md border border-brand-primary/10">
             <div className="flex items-center gap-3">
               <input
                 type="checkbox"
-                id="isEventToggle"
-                checked={isEvent}
-                onChange={(e) => setIsEvent(e.target.checked)}
+                id="is_booking_enabled"
+                checked={formData.is_booking_enabled === "1"}
+                onChange={(e) => setFormData(prev => ({ ...prev, is_booking_enabled: e.target.checked ? "1" : "0" }))}
                 className="w-5 h-5 text-brand-primary border-brand-primary/20 rounded focus:ring-brand-primary"
               />
-              <label htmlFor="isEventToggle" className="font-medium text-brand-primary">
-                Questo è un Evento / Laboratorio con data specifica
+              <label htmlFor="is_booking_enabled" className="font-medium text-brand-primary">
+                Abilita Prenotazioni per questo servizio
               </label>
             </div>
-
-            {isEvent && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 ml-8">
-                <div className="space-y-2">
-                  <label htmlFor="eventDate" className="block text-sm font-medium text-brand-contrast/80">
-                    Data e Ora Evento
-                  </label>
-                  <input
-                    type="datetime-local"
-                    id="eventDate"
-                    name="eventDate"
-                    value={formData.eventDate}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="eventLocation" className="block text-sm font-medium text-brand-contrast/80">
-                    Luogo Evento
-                  </label>
-                  <input
-                    type="text"
-                    id="eventLocation"
-                    name="eventLocation"
-                    value={formData.eventLocation}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
-                    placeholder="es. Studio, Online, Bosco..."
-                  />
-                </div>
-              </div>
-            )}
           </div>
 
           <div className="flex justify-end pt-4">

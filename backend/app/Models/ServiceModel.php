@@ -14,7 +14,7 @@ class ServiceModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'id', 'slug', 'title', 'description', 'category', 'price', 
-        'duration', 'imageUrl'
+        'duration', 'imageUrl', 'is_booking_enabled'
     ];
 
     protected bool $allowEmptyInserts = false;

@@ -107,8 +107,8 @@ export function ConsulenzePage() {
               price={service.price ? parseInt(service.price) : null}
               imagePosition={index % 2 === 0 ? "left" : "right"}
               hideButton={false}
-              href={`/prenota?service_id=${service.id}`}
-              ctaText="Prenota ora"
+              href={service.is_booking_enabled == 1 ? `/prenota?service_id=${service.id}` : "/contatti"}
+              ctaText={service.is_booking_enabled == 1 ? "Prenota ora" : "Contattami"}
               alternateBackground={index % 2 !== 0}
               alternateColorClass="bg-white"
               backgroundColorClass="bg-brand-base"
