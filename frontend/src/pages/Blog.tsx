@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { Calendar, ArrowRight } from "lucide-react";
 import { Hero } from "@/components/ui/Hero";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
+import { PageIntroduction } from "@/components/sections/PageIntroduction";
 
 export function Blog() {
   const [posts, setPosts] = useState<any[]>([]);
@@ -42,23 +43,12 @@ export function Blog() {
       <div
         className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? "opacity-0 h-screen overflow-hidden" : "opacity-100"}`}
       >
-        <Hero
-          imageSrc="/images/home/slidehome1.webp"
-          
-          imagePosition="top"
-        />
+        <Hero imageSrc="/images/home/slidehome1.webp" imagePosition="top" />
 
-        <section className="py-16 md:py-24 px-4 bg-brand-base">
-          <div className="container mx-auto max-w-4xl text-center mb-16">
-            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-brand-contrast mb-6">
-              Il Blog di Stefania
-            </h1>
-            <p className="text-xl text-brand-contrast/80 leading-relaxed font-light mb-12">
-              Riflessioni, approfondimenti e consigli sul benessere olistico, la
-              maternità e la crescita personale.
-            </p>
-          </div>
-        </section>
+        <PageIntroduction
+          title="Il Blog di Stefania"
+          description="Riflessioni, approfondimenti e consigli sul benessere olistico, la maternità e la crescita personale."
+        />
         <section className="py-24 px-4 bg-brand-base overflow-hidden relative">
           <div className="container mx-auto px-4">
             {isLoading ? (

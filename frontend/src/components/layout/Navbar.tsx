@@ -83,6 +83,7 @@ export function Navbar() {
               Mastroianni
             </span>
           </div>
+          <div className="w-5 h-10 md:w-11 md:h-11 flex-shrink-0 " />
         </Link>
 
         {/* Desktop Navigation */}
@@ -92,7 +93,7 @@ export function Navbar() {
               key={link.href}
               to={link.href}
               className={cn(
-                "px-5 py-2.5 rounded-full text-[13px] uppercase tracking-wider font-bold transition-all duration-300",
+                "px-4 py-2.5 rounded-full text-[13px] uppercase tracking-wider font-bold transition-all duration-300",
                 pathname === link.href
                   ? "bg-white shadow-sm text-brand-primary"
                   : "text-brand-contrast/60 hover:bg-white/50 hover:text-brand-contrast",

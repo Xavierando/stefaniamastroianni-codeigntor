@@ -1,4 +1,5 @@
 import { Hero } from "@/components/ui/Hero";
+import { PageIntroduction } from "@/components/sections/PageIntroduction";
 import { ContactForm } from "@/components/ui/ContactForm";
 import { Mail, MapPin, Instagram, Facebook } from "lucide-react";
 
@@ -10,21 +11,10 @@ export function Contatti() {
         
       />
 
-      <section className="py-24 px-4 bg-brand-base">
-        <div className="container mx-auto max-w-4xl text-center mb-16">
-          <h1 className="font-serif text-4xl md:text-5xl text-brand-contrast mb-6">
-            Mettiamoci in Contatto
-          </h1>
-          <p className="text-xl text-brand-contrast/80 leading-relaxed font-light mb-12">
-            Ogni percorso inizia con una semplice conversazione. Sono qui per
-            ascoltarti e rispondere a qualsiasi dubbio o domanda sui trattamenti
-            e sui percorsi disponibili. Puoi utilizzare il modulo di contatto
-            per richiedere informazioni sui percorsi indivudali, per iscriverti
-            ai laboratori, o semplicemente per esplorare assieme come posso
-            accompagnarti nel tuo momento attuale.
-          </p>
-        </div>
-      </section>
+      <PageIntroduction
+        title="Mettiamoci in Contatto"
+        description="Ogni percorso inizia con una semplice conversazione. Sono qui per ascoltarti e rispondere a qualsiasi dubbio o domanda sui trattamenti e sui percorsi disponibili. Puoi utilizzare il modulo di contatto per richiedere informazioni sui percorsi indivudali, per iscriverti ai laboratori, o semplicemente per esplorare assieme come posso accompagnarti nel tuo momento attuale."
+      />
       <section className="py-24 px-4 bg-white overflow-hidden relative">
         <div className="container mx-auto max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-16">

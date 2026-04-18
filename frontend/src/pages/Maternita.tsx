@@ -5,6 +5,7 @@ import { EventCard } from "@/components/ui/EventCard";
 import { TestimonialsCarousel } from "@/components/sections/TestimonialsCarousel";
 import { apiFetch } from "@/lib/api";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
+import { PageIntroduction } from "@/components/sections/PageIntroduction";
 
 import { Category } from "../types";
 
@@ -80,23 +81,12 @@ export function MaternitaPage() {
       <div
         className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? "opacity-0 h-screen overflow-hidden" : "opacity-100"}`}
       >
-        <Hero
-          imageSrc="/images/maternita/Servizi-maternita-2.webp"
-          
-        />
+        <Hero imageSrc="/images/maternita/Servizi-maternita-2.webp" />
 
-        <section className="py-16 md:py-24 px-4 bg-brand-base">
-          <div className="container mx-auto max-w-4xl text-center mb-16">
-            <h1 className="font-serif text-4xl md:text-5xl text-brand-contrast mb-6">
-              Maternità Consapevole
-            </h1>
-            <p className="text-xl text-brand-contrast/80 leading-relaxed font-light mb-12">
-              Sostegno emotivo, corporeo e pratico dal concepimento al
-              puerperio. Un faro per navigare i cambiamenti della maternità
-              sentendoti accolta e mai sola.
-            </p>
-          </div>
-        </section>
+        <PageIntroduction
+          title="Maternità Consapevole"
+          description="Sostegno emotivo, corporeo e pratico dal concepimento al puerperio. Un faro per navigare i cambiamenti della maternità sentendoti accolta e mai sola."
+        />
 
         <div className="flex flex-col w-full">
           {services.map((service, index) => (
@@ -110,7 +100,6 @@ export function MaternitaPage() {
               durationMin={service.duration ? parseInt(service.duration) : null}
               price={service.price ? parseInt(service.price) : null}
               imagePosition={index % 2 === 0 ? "left" : "right"}
-              
               hideButton={false}
               href={`/prenota?service_id=${service.id}`}
               ctaText="Prenota ora"
@@ -132,9 +121,7 @@ export function MaternitaPage() {
 
         {/* Sezione Eventi (Se presenti) */}
         {events.length > 0 && (
-          <section
-            className={`py-24 px-4 ${eventsBgClass}`}
-          >
+          <section className={`py-24 px-4 ${eventsBgClass}`}>
             <div className="container mx-auto max-w-6xl">
               <div className="text-center mb-16">
                 <h2 className="font-serif text-3xl md:text-4xl text-brand-primary mb-6">

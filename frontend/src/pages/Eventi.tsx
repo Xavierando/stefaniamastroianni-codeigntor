@@ -3,6 +3,7 @@ import { Hero } from "@/components/ui/Hero";
 import { EventCard } from "@/components/ui/EventCard";
 import { apiFetch } from "@/lib/api";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
+import { PageIntroduction } from "@/components/sections/PageIntroduction";
 
 export function EventiPage() {
   const [events, setEvents] = useState<any[]>([]);
@@ -59,22 +60,12 @@ export function EventiPage() {
       <div
         className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? "opacity-0 h-screen overflow-hidden" : "opacity-100"}`}
       >
-        <Hero
-          imageSrc="/images/eventi/intermediate-workshop-featured.webp"
-          
-        />
+        <Hero imageSrc="/images/eventi/intermediate-workshop-featured.webp" />
 
-        <section className="py-24 px-4 bg-brand-base">
-          <div className="container mx-auto max-w-4xl text-center mb-16">
-            <h1 className="font-serif text-4xl md:text-5xl text-brand-contrast mb-6">
-              Laboratori ed Eventi
-            </h1>
-            <p className="text-xl text-brand-contrast/80 leading-relaxed font-light mb-12">
-              Spazi collettivi dove l'energia del gruppo amplifica l'esperienza
-              individuale. Ritiri, seminari tematici e cerchi di condivisione.
-            </p>
-          </div>
-        </section>
+        <PageIntroduction
+          title="Laboratori ed Eventi"
+          description="Spazi collettivi dove l'energia del gruppo amplifica l'esperienza individuale. Ritiri, seminari tematici e cerchi di condivisione."
+        />
         <section className="py-24 px-4 bg-white overflow-hidden relative">
           <div className="container mx-auto max-w-4xl text-center mb-16">
             <div className="flex flex-col gap-8 max-w-4xl mx-auto">

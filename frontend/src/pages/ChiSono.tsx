@@ -3,6 +3,7 @@ import { Leaf, Heart, ArrowRight, BookOpen, Sun, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/Button";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
+import { PageIntroduction } from "@/components/sections/PageIntroduction";
 
 const PRACTICES = [
   {
@@ -44,23 +45,13 @@ export function ChiSono() {
         className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? "opacity-0 h-screen overflow-hidden" : "opacity-100"}`}
       >
         {/* 1. Hero Section (Cover Layout) */}
-        <Hero
-          imageSrc="/images/chi-sono/IMG_2028.webp"
-          imagePosition="top"
-        />
+        <Hero imageSrc="/images/chi-sono/IMG_2028.webp" imagePosition="top" />
 
         {/* Sezione Testo Hero */}
-        <section className="w-full py-20 px-4 bg-brand-base text-center">
-          <div className="container mx-auto max-w-4xl">
-            <h1 className="font-serif text-4xl md:text-5xl text-brand-contrast mb-6">
-              La Mia Storia
-            </h1>
-            <p className="text-xl md:text-2xl text-brand-contrast/80 font-light leading-relaxed">
-              Un percorso intrecciato tra ascolto, cura e riconnessione profonda
-              con i cicli della natura e della vita.
-            </p>
-          </div>
-        </section>
+        <PageIntroduction
+          title="La Mia Storia"
+          description="Un percorso intrecciato tra ascolto, cura e riconnessione profonda con i cicli della natura e della vita."
+        />
 
         {/* 2. Introduzione */}
         <section className="w-full py-16 md:py-32 px-4 bg-brand-base">
@@ -128,7 +119,7 @@ export function ChiSono() {
                   </div>
                   <div>
                     <h4 className="font-serif text-xl sm:text-2xl text-brand-contrast mb-2">
-                       Insegnante Yoga (RYT 500)
+                      Insegnante Yoga (RYT 500)
                     </h4>
                     <p className="text-brand-contrast/70 font-light text-base md:text-lg">
                       Specializzazione in Hatha Vinyasa e Yoga Pre/Post Parto.
@@ -198,7 +189,10 @@ export function ChiSono() {
                     {practice.description}
                   </p>
                   <Link to={practice.href} className="mt-auto w-full">
-                    <Button variant="link" className="w-full group/btn font-semibold text-brand-primary hover:text-brand-primary/80">
+                    <Button
+                      variant="link"
+                      className="w-full group/btn font-semibold text-brand-primary hover:text-brand-primary/80"
+                    >
                       Scopri
                       <ArrowRight
                         className="ml-2 group-hover/btn:translate-x-1 transition-transform"

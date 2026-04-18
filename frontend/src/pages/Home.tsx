@@ -7,6 +7,7 @@ import { MarqueeGallery } from "@/components/sections/MarqueeGallery";
 import { TestimonialsCarousel } from "@/components/sections/TestimonialsCarousel";
 import { apiFetch } from "@/lib/api";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
+import { PageIntroduction } from "@/components/sections/PageIntroduction";
 
 export function Home() {
   const [eventsData, setEventsData] = useState([]);
@@ -71,33 +72,17 @@ export function Home() {
         className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? "opacity-0 h-screen overflow-hidden" : "opacity-100"}`}
       >
         {/* 1. Hero Section */}
-        <Hero
-          imageSrc="/images/home/home-hero-yoga.webp"
-          
-          imagePosition="top"
-        />
+        <Hero imageSrc="/images/home/home-hero-yoga.webp" imagePosition="top" />
 
         {/* 2. Introduzione (Chi è e Cosa Fa) */}
-        <section className="w-full py-24 px-4 bg-brand-base text-center border-b border-brand-contrast/5">
-          <div className="container mx-auto max-w-4xl flex flex-col items-center">
-            <h2 className="font-serif text-3xl md:text-5xl text-brand-contrast mb-8 leading-tight">
-              "Credo in un approccio olistico che abbraccia corpo, mente ed emozioni."
-            </h2>
-            <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-12">
-              Ogni persona è unica e merita un ascolto profondo. Attraverso lo
-              yoga, i trattamenti e uno spazio di ascolto autentico, ti
-              accompagno nel tuo personale viaggio di trasformazione. Che tu
-              stia cercando sollievo dallo stress, accompagnamento in gravidanza
-              o semplicemente uno spazio per te.
-            </p>
-            <Link
-              to="/chi-sono"
-              className="inline-flex items-center justify-center rounded-full font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary bg-brand-primary text-white hover:bg-brand-primary/90 h-14 px-10 text-lg shadow-sm"
-            >
-              Scopri di più su di me
-            </Link>
-          </div>
-        </section>
+        <PageIntroduction
+          as="h2"
+          showBorder
+          title="&quot;Credo in un approccio olistico che abbraccia corpo, mente ed emozioni.&quot;"
+          description="Ogni persona è unica e merita un ascolto profondo. Attraverso lo yoga, i trattamenti e uno spazio di ascolto autentico, ti accompagno nel tuo personale viaggio di trasformazione. Che tu stia cercando sollievo dallo stress, accompagnamento in gravidanza o semplicemente uno spazio per te."
+          ctaText="Scopri di più su di me"
+          ctaHref="/chi-sono"
+        />
 
         {/* 3. Carosello Eventi */}
         <EventCarousel events={eventsData} className="bg-brand-base" />
@@ -147,7 +132,6 @@ export function Home() {
             href="/consulenze"
             ctaText="Richiedi una consulenza"
             imagePosition="right"
-            
             alternateBackground={true}
             alternateColorClass="bg-white"
             backgroundColorClass="bg-brand-base"
