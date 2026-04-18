@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { Hero } from "@/components/ui/Hero";
 import { EventCarousel } from "@/components/sections/EventCarousel";
 import { ServiceOverview } from "@/components/sections/ServiceOverview";
@@ -78,7 +77,7 @@ export function Home() {
         <PageIntroduction
           as="h2"
           showBorder
-          title="&quot;Credo in un approccio olistico che abbraccia corpo, mente ed emozioni.&quot;"
+          title='"Credo in un approccio olistico che abbraccia corpo, mente ed emozioni."'
           description="Ogni persona è unica e merita un ascolto profondo. Attraverso lo yoga, i trattamenti e uno spazio di ascolto autentico, ti accompagno nel tuo personale viaggio di trasformazione. Che tu stia cercando sollievo dallo stress, accompagnamento in gravidanza o semplicemente uno spazio per te."
           ctaText="Scopri di più su di me"
           ctaHref="/chi-sono"
