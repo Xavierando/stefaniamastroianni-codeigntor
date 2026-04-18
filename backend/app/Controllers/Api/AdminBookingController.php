@@ -7,17 +7,25 @@ use App\Models\BookingModel;
 use App\Models\BookingSettingsModel;
 use App\Libraries\GoogleCalendarLibrary;
 
+use App\Models\ServiceModel;
+use App\Models\EventModel;
+use App\Libraries\Emails\BookingRejectionEmail;
+
 class AdminBookingController extends ResourceController
 {
     protected $modelName = BookingModel::class;
     protected $format    = 'json';
     protected $settingsModel;
     protected $googleLibrary;
+    protected $serviceModel;
+    protected $eventModel;
 
     public function __construct()
     {
         $this->settingsModel = new BookingSettingsModel();
         $this->googleLibrary = new GoogleCalendarLibrary();
+        $this->serviceModel = new ServiceModel();
+        $this->eventModel = new EventModel();
     }
 
     /**
@@ -27,6 +35,49 @@ class AdminBookingController extends ResourceController
     {
         $bookings = $this->model->orderBy('start_time', 'DESC')->findAll();
         return $this->respond($bookings);
+    }
+
+    /**
+     * POST /api/admin/bookings/reject/(:num)
+     */
+    public function reject($id = null)
+    {
+        $booking = $this->model->find($id);
+        if (!$booking) {
+            return $this->failNotFound('Prenotazione non trovata');
+        }
+
+        if ($booking['status'] === 'cancelled') {
+            return $this->respond(['success' => true, 'message' => 'Prenotazione già cancellata']);
+        }
+
+        // 1. Update status to cancelled
+        $this->model->update($id, ['status' => 'cancelled']);
+
+        // 2. Remove from Google Calendar if exists
+        if ($booking['google_event_id'] && $this->googleLibrary->isConnected()) {
+            try {
+                $this->googleLibrary->deleteEvent($booking['google_event_id']);
+            } catch (\Exception $e) {
+                // Log error but continue
+                log_message('error', 'Google Calendar delete error: ' . $e->getMessage());
+            }
+        }
+
+        // 3. Send notification email to client
+        $title = "";
+        if ($booking['service_id']) {
+            $service = $this->serviceModel->find($booking['service_id']);
+            $title = $service['title'] ?? 'Servizio';
+        } else {
+            $event = $this->eventModel->find($booking['event_id']);
+            $title = $event['title'] ?? 'Evento';
+        }
+
+        $email = new BookingRejectionEmail();
+        $email->sendRejection($booking, $title, new \DateTime($booking['start_time']));
+
+        return $this->respond(['success' => true, 'message' => 'Prenotazione rifiutata e cliente notificato']);
     }
 
     /**

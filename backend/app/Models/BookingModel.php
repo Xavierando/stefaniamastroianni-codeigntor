@@ -15,7 +15,7 @@ class BookingModel extends Model
     protected $allowedFields    = [
         'service_id', 'event_id', 'name', 'email', 'phone', 
         'start_time', 'end_time', 'google_event_id', 
-        'status', 'cancellation_token'
+        'status', 'cancellation_token', 'confirmation_token', 'notes'
     ];
 
     // Dates
@@ -27,12 +27,15 @@ class BookingModel extends Model
 
     // Callbacks
     protected $allowCallbacks = true;
-    protected $beforeInsert   = ['generateCancellationToken'];
+    protected $beforeInsert   = ['generateRegistrationTokens'];
 
-    protected function generateCancellationToken(array $data)
+    protected function generateRegistrationTokens(array $data)
     {
         if (!isset($data['data']['cancellation_token'])) {
             $data['data']['cancellation_token'] = bin2hex(random_bytes(32));
+        }
+        if (!isset($data['data']['confirmation_token'])) {
+            $data['data']['confirmation_token'] = bin2hex(random_bytes(32));
         }
         return $data;
     }

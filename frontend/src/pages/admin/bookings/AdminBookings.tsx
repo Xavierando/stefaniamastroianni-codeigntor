@@ -10,16 +10,18 @@ interface Booking {
   name: string;
   email: string;
   phone: string;
-  service_id: string;
+  service_id: string | null;
+  event_id: number | null;
   start_time: string;
   end_time: string;
   status: string;
+  notes: string | null;
 }
 
 interface Service {
-  id: number;
+  id: number | string;
   title: string;
-  isEvent: boolean;
+  isEvent?: boolean;
 }
 
 interface BookingSettings {
@@ -52,14 +54,20 @@ export function AdminBookingsPage() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [bookingsData, settingsData, servicesData] = await Promise.all([
+      const [bookingsData, settingsData, servicesData, eventsData] = await Promise.all([
         apiFetch("admin/bookings", { headers: { Authorization: `Bearer ${token}` } }),
         apiFetch("admin/bookings/settings", { headers: { Authorization: `Bearer ${token}` } }),
-        apiFetch("services")
+        apiFetch("services"),
+        apiFetch("events")
       ]);
       setBookings(Array.isArray(bookingsData) ? bookingsData : []);
       setSettings(settingsData);
-      setServices(Array.isArray(servicesData) ? servicesData : []);
+      
+      const combinedServices = [
+        ...(Array.isArray(servicesData) ? servicesData.map(s => ({ ...s, isEvent: false })) : []),
+        ...(Array.isArray(eventsData) ? eventsData.map(e => ({ ...e, isEvent: true })) : [])
+      ];
+      setServices(combinedServices);
     } catch (error) {
       console.error("Failed to fetch booking data", error);
     } finally {
@@ -91,6 +99,23 @@ export function AdminBookingsPage() {
     }
   };
 
+  const handleReject = async (id: number) => {
+    if (!confirm("Sei sicuro di voler cancellare questa richiesta? Il cliente riceverà un'email di notifica.")) {
+      return;
+    }
+    
+    try {
+      await apiFetch(`admin/bookings/reject/${id}`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      loadData();
+    } catch (error) {
+      console.error("Failed to reject booking", error);
+      alert("Errore durante la cancellazione della richiesta");
+    }
+  };
+
   const handleGoogleConnect = async () => {
     try {
       const { url } = await apiFetch("admin/bookings/google-auth", {
@@ -108,9 +133,15 @@ export function AdminBookingsPage() {
     if (selectedServiceId !== "all") {
       if (selectedServiceId === "services_treatments") {
         const nonEventIds = services.filter(s => !s.isEvent).map(s => String(s.id));
-        filtered = filtered.filter(b => nonEventIds.includes(String(b.service_id)));
+        filtered = filtered.filter(b => b.service_id && nonEventIds.includes(String(b.service_id)));
       } else {
-        filtered = filtered.filter(b => String(b.service_id) === String(selectedServiceId));
+        // Find if the selected ID is an event or a service in our combined list
+        const item = services.find(s => String(s.id) === String(selectedServiceId));
+        if (item?.isEvent) {
+          filtered = filtered.filter(b => String(b.event_id) === String(selectedServiceId));
+        } else {
+          filtered = filtered.filter(b => String(b.service_id) === String(selectedServiceId));
+        }
       }
     }
 
@@ -151,11 +182,13 @@ export function AdminBookingsPage() {
 
   const filteredBookings = getFilteredBookings();
   
-  const getServiceInfo = (id: string) => {
-    const service = services.find(s => String(s.id) === String(id));
-    if (!service) return "Prenotazione";
-    if (service.isEvent) return `Evento: ${service.title}`;
-    return service.title;
+  const getServiceInfo = (booking: Booking) => {
+    if (booking.event_id) {
+       const event = services.find(s => s.isEvent && String(s.id) === String(booking.event_id));
+       return event ? `Evento: ${event.title}` : "Evento indefinito";
+    }
+    const service = services.find(s => !s.isEvent && String(s.id) === String(booking.service_id));
+    return service ? service.title : "Servizio indefinito";
   };
 
   return (
@@ -286,20 +319,39 @@ export function AdminBookingsPage() {
                         {new Date(booking.start_time).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}
                       </p>
                       <h3 className="font-medium text-lg text-brand-contrast leading-tight">{booking.name}</h3>
-                      <p className="text-sm text-brand-primary/80 font-medium">{getServiceInfo(booking.service_id)}</p>
+                      <p className="text-sm text-brand-primary/80 font-medium">{getServiceInfo(booking)}</p>
                     </div>
                     <div className="shrink-0">
                       {booking.status === 'confirmed' ? (
-                        <span className="p-1.5 rounded-full bg-green-50 text-green-600 border border-green-100 block">
+                        <span className="p-1.5 rounded-full bg-green-50 text-green-600 border border-green-100 block" title="Confermato">
                           <CheckCircle2 size={18} />
                         </span>
+                      ) : booking.status === 'pending' ? (
+                        <div className="flex flex-col items-end gap-2">
+                          <span className="p-1.5 rounded-full bg-amber-50 text-amber-600 border border-amber-100 block" title="In attesa">
+                            <AlertCircle size={18} />
+                          </span>
+                          <button 
+                            onClick={() => handleReject(booking.id)}
+                            className="text-[10px] text-red-500 font-bold uppercase tracking-wider"
+                          >
+                            Cancella
+                          </button>
+                        </div>
                       ) : (
-                        <span className="p-1.5 rounded-full bg-red-50 text-red-600 border border-red-100 block">
+                        <span className="p-1.5 rounded-full bg-red-50 text-red-600 border border-red-100 block" title="Cancellato">
                           <XCircle size={18} />
                         </span>
                       )}
                     </div>
                   </div>
+
+                  {booking.notes && (
+                    <div className="p-3 bg-brand-primary/5 rounded-lg border border-brand-primary/10 text-xs italic text-brand-contrast/70">
+                      <p className="font-bold uppercase tracking-wider text-[10px] mb-1 opacity-50">Note del cliente:</p>
+                      {booking.notes}
+                    </div>
+                  )}
 
                   <div className="pt-2 border-t border-brand-primary/5 space-y-1">
                     <p className="text-sm text-brand-contrast/60 flex items-center gap-2">
@@ -347,24 +399,44 @@ export function AdminBookingsPage() {
                         </td>
                         <td className="p-4">
                           <p className="font-medium text-brand-contrast">{booking.name}</p>
-                          <p className="text-xs text-brand-primary/60 font-medium uppercase mt-1">{getServiceInfo(booking.service_id)}</p>
+                          <p className="text-xs text-brand-primary/60 font-medium uppercase mt-1">{getServiceInfo(booking)}</p>
                         </td>
                         <td className="p-4">
                           <p className="text-sm text-brand-contrast/80">{booking.email}</p>
                           <p className="text-sm text-brand-contrast/60">{booking.phone}</p>
+                          {booking.notes && (
+                            <p className="text-[11px] text-brand-primary/60 italic mt-2 max-w-xs truncate" title={booking.notes}>
+                              Note: {booking.notes}
+                            </p>
+                          )}
                         </td>
                         <td className="p-4">
-                          {booking.status === 'confirmed' ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                              <CheckCircle2 size={12} />
-                              Confermato
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
-                              <XCircle size={12} />
-                              Cancellato
-                            </span>
-                          )}
+                          <div className="flex items-center gap-3">
+                            {booking.status === 'confirmed' ? (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                                <CheckCircle2 size={12} />
+                                Confermato
+                              </span>
+                            ) : booking.status === 'pending' ? (
+                              <div className="flex flex-col gap-2">
+                                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700 w-fit">
+                                  <AlertCircle size={12} />
+                                  In Attesa
+                                </span>
+                                <button 
+                                  onClick={() => handleReject(booking.id)}
+                                  className="text-[10px] text-red-500 hover:text-red-700 font-bold uppercase tracking-wider text-left"
+                                >
+                                  Cancella Richiesta
+                                </button>
+                              </div>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                                <XCircle size={12} />
+                                Cancellato
+                              </span>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     ))

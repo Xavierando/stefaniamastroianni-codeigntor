@@ -6,7 +6,11 @@ use CodeIgniter\RESTful\ResourceController;
 use App\Models\BookingModel;
 use App\Models\BookingSettingsModel;
 use App\Models\ServiceModel;
+use App\Models\EventModel;
 use App\Libraries\GoogleCalendarLibrary;
+use App\Libraries\Emails\BookingVerificationEmail;
+use App\Libraries\Emails\BookingConfirmationEmail;
+use App\Libraries\Emails\BookingCancellationEmail;
 use DateTime;
 use DateInterval;
 
@@ -108,7 +112,7 @@ class BookingController extends ResourceController
 
         // Fetch existing bookings from DB for this day
         $dbBookings = $this->model->where('DATE(start_time)', $dateStr)
-                                 ->where('status', 'confirmed')
+                                 ->whereIn('status', ['confirmed', 'pending'])
                                  ->findAll();
 
         $dPart = substr($dateStr, 0, 10);
@@ -219,14 +223,14 @@ class BookingController extends ResourceController
                 return $this->fail('Questo evento è già passato. Non è possibile effettuare prenotazioni.');
             }
             
-            // Capacity check
+            // Capacity check (including pending to avoid overbooking)
             $max = (int)($event['max_capacity'] ?? 0);
             if ($max > 0) {
                 $count = $this->model->where('event_id', $eventId)
-                                     ->where('status', 'confirmed')
+                                     ->whereIn('status', ['confirmed', 'pending'])
                                      ->countAllResults();
                 if ($count >= $max) {
-                    return $this->fail('Questo evento è al completo. Non è possibile accettare altre prenotazioni.');
+                    return $this->fail('Questo evento è al completo. Non è possibile accettare altre prenotazioni (alcune richieste sono in attesa di conferma).');
                 }
             }
 
@@ -252,7 +256,7 @@ class BookingController extends ResourceController
             'phone'           => $data['phone'] ?? null,
             'start_time'      => $startTime->format('Y-m-d H:i:s'),
             'end_time'        => $blockedEndTime->format('Y-m-d H:i:s'),
-            'status'          => 'confirmed'
+            'status'          => 'pending' // Start as pending
         ];
 
         // 1. Save to DB
@@ -263,11 +267,11 @@ class BookingController extends ResourceController
 
         $booking = $this->model->find($bookingId);
 
-        // 2. Add to Google Calendar
+        // 2. Add to Google Calendar as "PENDING"
         if ($this->googleLibrary->isConnected()) {
             $eventIdGoogle = $this->googleLibrary->createEvent([
-                'summary'      => "Booking: {$title} - {$booking['name']}",
-                'description'  => "Client: {$booking['name']}\nEmail: {$booking['email']}\nPhone: {$booking['phone']}\nItem: {$title}\n\nClient sees: {$startTime->format('H:i')} - {$endTime->format('H:i')}\nAdmin blocked: {$startTime->format('H:i')} - {$blockedEndTime->format('H:i')}",
+                'summary'      => "(IN ATTESA) {$title} - {$booking['name']}",
+                'description'  => "Richiesta in attesa di conferma.\n\nClient: {$booking['name']}\nEmail: {$booking['email']}\nPhone: {$booking['phone']}\nItem: {$title}\n\nClient sees: {$startTime->format('H:i')} - {$endTime->format('H:i')}\nAdmin blocked: {$startTime->format('H:i')} - {$blockedEndTime->format('H:i')}",
                 'start'        => $startTime->format(DateTime::RFC3339),
                 'end'          => $blockedEndTime->format(DateTime::RFC3339),
                 'client_email' => $booking['email']
@@ -276,39 +280,139 @@ class BookingController extends ResourceController
             $this->model->update($bookingId, ['google_event_id' => $eventIdGoogle]);
         }
 
-        // 3. Send Emails
-        $this->sendConfirmationEmails($booking, $title, $startTime, $endTime);
+        // 3. Send Emails (Verification Request)
+        $this->sendVerificationEmail($booking, $title, $startTime, $endTime);
 
         return $this->respondCreated(['success' => true, 'booking_id' => $bookingId]);
     }
 
+    /**
+     * GET /api/bookings/details/{token}
+     */
+    public function getByToken($token = null)
+    {
+        $booking = $this->model->where('confirmation_token', $token)->first();
+        if (!$booking) {
+            return $this->failNotFound('Prenotazione non trovata');
+        }
+
+        $title = "";
+        if ($booking['service_id']) {
+            $service = $this->serviceModel->find($booking['service_id']);
+            $title = $service['title'];
+        } else {
+            $event = $this->eventModel->find($booking['event_id']);
+            $title = $event['title'];
+        }
+
+        return $this->respond([
+            'id'    => $booking['id'],
+            'name'  => $booking['name'],
+            'email' => $booking['email'],
+            'title' => $title,
+            'start' => $booking['start_time'],
+            'status' => $booking['status']
+        ]);
+    }
+
+    /**
+     * POST /api/bookings/confirm/{token}
+     */
+    public function confirm($token = null)
+    {
+        $data = $this->request->getPost();
+        if (empty($data)) {
+            $data = json_decode($this->request->getBody(), true) ?? [];
+        }
+
+        $booking = $this->model->where('confirmation_token', $token)->first();
+        if (!$booking) {
+            return $this->failNotFound('Prenotazione non trovata');
+        }
+
+        if ($booking['status'] === 'confirmed') {
+            return $this->respond(['success' => true, 'message' => 'Prenotazione già confermata']);
+        }
+
+        $notes = $data['notes'] ?? null;
+        $title = "";
+        if ($booking['service_id']) {
+            $service = $this->serviceModel->find($booking['service_id']);
+            $title = $service['title'];
+        } else {
+            $event = $this->eventModel->find($booking['event_id']);
+            $title = $event['title'];
+        }
+
+        $startTime = new DateTime($booking['start_time']);
+        $endTime = new DateTime($booking['end_time']); 
+        // Note: end_time in DB includes buffer. For display we might want to subtract it or just use it.
+        // Let's assume for now we just show the range.
+
+        // 1. Update DB
+        $this->model->update($booking['id'], [
+            'status' => 'confirmed',
+            'notes'  => $notes
+        ]);
+
+        // 2. Update Google Calendar
+        if ($booking['google_event_id'] && $this->googleLibrary->isConnected()) {
+            $this->googleLibrary->updateEvent($booking['google_event_id'], [
+                'summary'     => "{$title} - {$booking['name']}",
+                'description' => "CONFERMATA\nNote del cliente: " . ($notes ?? 'Nessuna') . "\n\nClient: {$booking['name']}\nEmail: {$booking['email']}\nPhone: {$booking['phone']}\nItem: {$title}"
+            ]);
+        }
+
+        // 3. Send Confirmation Emails
+        $this->sendConfirmationEmails($booking, $title, $startTime, $endTime);
+
+        return $this->respond(['success' => true, 'message' => 'Prenotazione confermata con successo']);
+    }
+
+    protected function sendVerificationEmail($booking, $title, $startTime, $endTime)
+    {
+        $email = new BookingVerificationEmail();
+        $email->sendVerification($booking, $title, $startTime);
+    }
+
     protected function sendConfirmationEmails($booking, $title, $startTime, $endTime)
     {
-        $email = \Config\Services::email();
         $settings = $this->settingsModel->getAllSettings();
         
-        $cancelLink = site_url("api/bookings/cancel/{$booking['cancellation_token']}");
+        // Send to client
+        $clientEmail = new BookingConfirmationEmail();
+        $clientEmail->sendConfirmation($booking, $title, $startTime, $settings);
         
-        $message = "Ciao {$booking['name']},\n\n";
-        $message .= "La tua prenotazione per '{$title}' è confermata.\n";
-        $message .= "Data: " . $startTime->format('d/m/Y') . "\n";
-        $message .= "Ora: " . $startTime->format('H:i') . " - " . $endTime->format('H:i') . "\n\n";
-        $message .= "Puoi cancellare la prenotazione cliccando qui (fino a {$settings['cancellation_limit_days']} giorni prima): {$cancelLink}\n";
-        
-        // Final email system implementation will use HTML templates
+        // Notify admin
+        $clientEmail->notifyAdmin($booking, $title, $startTime);
+    }
 
-        // Email to user
-        $email->setTo($booking['email']);
-        $email->setSubject("Conferma Prenotazione - Stefania Mastroianni");
-        $email->setMessage($message);
-        $email->send();
+    /**
+     * GET /api/bookings/cancel-details/{token}
+     */
+    public function getByCancellationToken($token = null)
+    {
+        $booking = $this->model->where('cancellation_token', $token)->first();
+        if (!$booking) {
+            return $this->failNotFound('Prenotazione non trovata');
+        }
 
-        // Email to admin
-        $adminEmail = config('Email')->fromEmail;
-        $email->setTo($adminEmail);
-        $email->setSubject("Nuova Prenotazione: {$booking['name']} - {$title}");
-        $email->setMessage("Nuova prenotazione ricevuta:\n\n" . $message);
-        $email->send();
+        $title = "";
+        if ($booking['service_id']) {
+            $service = $this->serviceModel->find($booking['service_id']);
+            $title = $service['title'];
+        } else {
+            $event = $this->eventModel->find($booking['event_id']);
+            $title = $event['title'];
+        }
+
+        return $this->respond([
+            'id'    => $booking['id'],
+            'name'  => $booking['name'],
+            'title' => $title,
+            'start' => $booking['start_time'],
+            'status' => $booking['status']
+        ]);
     }
 
     /**
@@ -316,6 +420,12 @@ class BookingController extends ResourceController
      */
     public function cancel($token = null)
     {
+        $data = $this->request->getPost();
+        if (empty($data)) {
+            $data = json_decode($this->request->getBody(), true) ?? [];
+        }
+        $notes = $data['notes'] ?? null;
+
         $booking = $this->model->where('cancellation_token', $token)->first();
         if (!$booking) {
             return $this->failNotFound('Booking not found');
@@ -337,7 +447,11 @@ class BookingController extends ResourceController
         }
 
         // 1. Update DB
-        $this->model->update($booking['id'], ['status' => 'cancelled']);
+        $updateData = ['status' => 'cancelled'];
+        if ($notes) {
+            $updateData['notes'] = $notes;
+        }
+        $this->model->update($booking['id'], $updateData);
 
         // 2. Remove from Google Calendar
         if ($booking['google_event_id'] && $this->googleLibrary->isConnected()) {
@@ -345,12 +459,18 @@ class BookingController extends ResourceController
         }
 
         // 3. Send Notification to Admin
-        $email = \Config\Services::email();
-        $adminEmail = config('Email')->fromEmail;
-        $email->setTo($adminEmail);
-        $email->setSubject("Prenotazione Cancellata: {$booking['name']}");
-        $email->setMessage("La prenotazione di {$booking['name']} per il " . $startTime->format('d/m/Y H:i') . " è stata cancellata dal cliente.");
-        $email->send();
+        $title = "";
+        if ($booking['service_id']) {
+            $service = $this->serviceModel->find($booking['service_id']);
+            $title = $service['title'];
+        } else {
+            $event = $this->eventModel->find($booking['event_id']);
+            $title = $event['title'];
+        }
+
+        $email = new BookingCancellationEmail();
+        $email->notifyAdmin($booking, $title, $startTime, $notes);
+        $email->sendCancellationToClient($booking, $title, $startTime);
 
         return $this->respond(['success' => true, 'message' => 'Booking cancelled successfully']);
     }

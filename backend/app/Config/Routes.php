@@ -30,7 +30,10 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->get('bookings/available-slots', 'BookingController::availableSlots');
     $routes->get('bookings/settings', 'BookingController::getPublicSettings');
     $routes->post('bookings', 'BookingController::create');
-    $routes->get('bookings/cancel/(:segment)', 'BookingController::cancel/$1');
+    $routes->get('bookings/details/(:segment)', 'BookingController::getByToken/$1');
+    $routes->post('bookings/confirm/(:segment)', 'BookingController::confirm/$1');
+    $routes->get('bookings/cancel-details/(:segment)', 'BookingController::getByCancellationToken/$1');
+    $routes->match(['get', 'post'], 'bookings/cancel/(:segment)', 'BookingController::cancel/$1');
 
     // Blog feature
     $routes->post('posts/(:segment)', 'PostController::update/$1');
@@ -58,6 +61,7 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
         $routes->post('bookings/settings', 'AdminBookingController::updateSettings');
         $routes->get('bookings/google-auth', 'AdminBookingController::getGoogleAuthUrl');
         $routes->get('bookings/google-callback', 'AdminBookingController::googleCallback');
+        $routes->post('bookings/reject/(:num)', 'AdminBookingController::reject/$1');
     });
 
     // Migrations

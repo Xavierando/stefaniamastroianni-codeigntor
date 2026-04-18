@@ -9,7 +9,7 @@ use App\Models\BookingModel;
 class EventController extends ResourceController
 {
     protected $modelName = EventModel::class;
-    protected $format    = 'json';
+    protected $format = 'json';
 
     public function index()
     {
@@ -23,19 +23,25 @@ class EventController extends ResourceController
         $this->model->orderBy('date', 'ASC');
 
         if ($limit !== null && is_numeric($limit)) {
-            $events = $this->model->findAll((int)$limit);
+            $events = $this->model->findAll((int) $limit);
         } else {
             $events = $this->model->findAll();
         }
 
         $bookingModel = new BookingModel();
         foreach ($events as &$event) {
-            $event['bookings_count'] = $bookingModel->where('event_id', $event['id'])
-                                                    ->where('status', 'confirmed')
-                                                    ->countAllResults();
-            $max = (int)($event['max_capacity'] ?? 0);
-            $event['is_full'] = ($max > 0 && $event['bookings_count'] >= $max);
-            $event['remaining_capacity'] = $max > 0 ? max(0, $max - $event['bookings_count']) : null;
+            $confirmedCount = $bookingModel->where('event_id', $event['id'])
+                ->where('status', 'confirmed')
+                ->countAllResults();
+
+            $pendingCount = $bookingModel->where('event_id', $event['id'])
+                ->where('status', 'pending')
+                ->countAllResults();
+
+            $max = (int) ($event['max_capacity'] ?? 0);
+            $event['is_full'] = ($max > 0 && ($confirmedCount + $pendingCount) >= $max);
+            $event['remaining_capacity'] = $max > 0 ? max(0, $max - $confirmedCount - $pendingCount) : null;
+            $event['bookings_count'] = $confirmedCount; // Keep this for backward compatibility if needed, though mostly using the fields above
             $event['is_past'] = (new \DateTime($event['date'])) < (new \DateTime());
         }
 
@@ -52,14 +58,20 @@ class EventController extends ResourceController
 
         if ($event) {
             $bookingModel = new BookingModel();
-            $event['bookings_count'] = $bookingModel->where('event_id', $event['id'])
-                                                    ->where('status', 'confirmed')
-                                                    ->countAllResults();
-            $max = (int)($event['max_capacity'] ?? 0);
-            $event['is_full'] = ($max > 0 && $event['bookings_count'] >= $max);
-            $event['remaining_capacity'] = $max > 0 ? max(0, $max - $event['bookings_count']) : null;
+            $confirmedCount = $bookingModel->where('event_id', $event['id'])
+                ->where('status', 'confirmed')
+                ->countAllResults();
+
+            $pendingCount = $bookingModel->where('event_id', $event['id'])
+                ->where('status', 'pending')
+                ->countAllResults();
+
+            $max = (int) ($event['max_capacity'] ?? 0);
+            $event['is_full'] = ($max > 0 && ($confirmedCount + $pendingCount) >= $max);
+            $event['remaining_capacity'] = $max > 0 ? max(0, $max - $confirmedCount - $pendingCount) : null;
+            $event['bookings_count'] = $confirmedCount;
             $event['is_past'] = (new \DateTime($event['date'])) < (new \DateTime());
-            
+
             return $this->respond($event);
         }
 

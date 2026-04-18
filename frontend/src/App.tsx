@@ -16,6 +16,8 @@ import { Blog } from "./pages/Blog";
 import { BlogPost } from "./pages/BlogPost";
 import { Unsubscribe } from "./pages/Unsubscribe";
 import { BookingPage } from "./pages/Booking";
+import { BookingConfirmation } from "./pages/BookingConfirmation";
+import { BookingCancellation } from "./pages/BookingCancellation";
 
 import { AdminLayout } from "./components/admin/layout/AdminLayout";
 import { AdminLogin } from "./pages/admin/AdminLogin";
@@ -68,6 +70,8 @@ function App() {
         <Route path="cookie-policy" element={<CookiePolicyPage />} />
         <Route path="unsubscribe" element={<Unsubscribe />} />
         <Route path="prenota" element={<BookingPage />} />
+        <Route path="conferma-prenotazione/:token" element={<BookingConfirmation />} />
+        <Route path="cancella-prenotazione/:token" element={<BookingCancellation />} />
       </Route>
 
       <Route path="/admin" element={<AdminLayout />}>

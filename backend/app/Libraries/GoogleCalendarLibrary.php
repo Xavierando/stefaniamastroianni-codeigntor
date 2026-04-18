@@ -126,6 +126,36 @@ class GoogleCalendarLibrary
     }
 
     /**
+     * Update a calendar event.
+     */
+    public function updateEvent(string $eventId, array $eventData): bool
+    {
+        $calendarId = $this->settingsModel->getSetting('google_calendar_id', 'primary');
+        try {
+            $event = $this->service->events->get($calendarId, $eventId);
+            
+            if (isset($eventData['summary'])) {
+                $event->setSummary($eventData['summary']);
+            }
+            if (isset($eventData['description'])) {
+                $event->setDescription($eventData['description']);
+            }
+            // Update start/end if provided
+            if (isset($eventData['start'])) {
+                $event->getStart()->setDateTime($eventData['start']);
+            }
+            if (isset($eventData['end'])) {
+                $event->getEnd()->setDateTime($eventData['end']);
+            }
+
+            $this->service->events->update($calendarId, $eventId, $event);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
      * Delete a calendar event.
      */
     public function deleteEvent(string $eventId): bool
