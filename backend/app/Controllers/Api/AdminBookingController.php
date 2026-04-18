@@ -55,13 +55,8 @@ class AdminBookingController extends ResourceController
         $this->model->update($id, ['status' => 'cancelled']);
 
         // 2. Remove from Google Calendar if exists
-        if ($booking['google_event_id'] && $this->googleLibrary->isConnected()) {
-            try {
-                $this->googleLibrary->deleteEvent($booking['google_event_id']);
-            } catch (\Exception $e) {
-                // Log error but continue
-                log_message('error', 'Google Calendar delete error: ' . $e->getMessage());
-            }
+        if ($booking['google_event_id']) {
+            $this->googleLibrary->deleteEvent($booking['google_event_id']);
         }
 
         // 3. Send notification email to client
@@ -86,7 +81,7 @@ class AdminBookingController extends ResourceController
     public function getSettings()
     {
         $settings = $this->settingsModel->getAllSettings();
-        $settings['google_is_connected'] = $this->googleLibrary->isConnected();
+        $settings['google_is_connected'] = $this->googleLibrary->verifyConnection();
         
         // Provide defaults for workdays
         foreach (['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as $day) {

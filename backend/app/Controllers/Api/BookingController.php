@@ -120,10 +120,20 @@ class BookingController extends ResourceController
         // Fetch busy slots from Google Calendar
         $busySlots = [];
         if ($this->googleLibrary->isConnected()) {
-            $busySlots = $this->googleLibrary->getFreeBusy(
-                "{$dPart}T{$startTimeStr}:00Z", 
-                "{$dPart}T{$endTimeStr}:00Z"
-            );
+            try {
+                $tz = new \DateTimeZone('Europe/Rome');
+                $startObj = new DateTime("{$dPart} {$startTimeStr}", $tz);
+                $endObj = new DateTime("{$dPart} {$endTimeStr}", $tz);
+
+                $busySlots = $this->googleLibrary->getFreeBusy(
+                    $startObj->format(DateTime::RFC3339), 
+                    $endObj->format(DateTime::RFC3339)
+                );
+            } catch (\Exception $e) {
+                log_message('error', '[BookingController] Error fetching free/busy: ' . $e->getMessage());
+                // Continue with empty busy slots rather than failing the whole request
+                $busySlots = [];
+            }
         }
 
         $availableSlots = [];
@@ -269,6 +279,10 @@ class BookingController extends ResourceController
 
         // 2. Add to Google Calendar as "PENDING"
         if ($this->googleLibrary->isConnected()) {
+            $tz = new \DateTimeZone('Europe/Rome');
+            $startTime->setTimezone($tz);
+            $blockedEndTime->setTimezone($tz);
+
             $eventIdGoogle = $this->googleLibrary->createEvent([
                 'summary'      => "(IN ATTESA) {$title} - {$booking['name']}",
                 'description'  => "Richiesta in attesa di conferma.\n\nClient: {$booking['name']}\nEmail: {$booking['email']}\nPhone: {$booking['phone']}\nItem: {$title}\n\nClient sees: {$startTime->format('H:i')} - {$endTime->format('H:i')}\nAdmin blocked: {$startTime->format('H:i')} - {$blockedEndTime->format('H:i')}",
@@ -277,7 +291,11 @@ class BookingController extends ResourceController
                 'client_email' => $booking['email']
             ]);
             
-            $this->model->update($bookingId, ['google_event_id' => $eventIdGoogle]);
+            if ($eventIdGoogle) {
+                $this->model->update($bookingId, ['google_event_id' => $eventIdGoogle]);
+            } else {
+                log_message('error', "[BookingController] Failed to create Google event for booking $bookingId");
+            }
         }
 
         // 3. Send Emails (Verification Request)

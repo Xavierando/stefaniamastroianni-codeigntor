@@ -11,6 +11,7 @@ class GoogleCalendarLibrary
     protected Client $client;
     protected Calendar $service;
     protected BookingSettingsModel $settingsModel;
+    protected const DEFAULT_TIMEZONE = 'Europe/Rome';
 
     public function __construct()
     {
@@ -33,23 +34,29 @@ class GoogleCalendarLibrary
      */
     protected function loadToken()
     {
-        $tokenJson = $this->settingsModel->getSetting('google_oauth_token');
-        if ($tokenJson) {
-            $accessToken = json_decode($tokenJson, true);
-            $this->client->setAccessToken($accessToken);
+        try {
+            $tokenJson = $this->settingsModel->getSetting('google_oauth_token');
+            if ($tokenJson) {
+                $accessToken = json_decode($tokenJson, true);
+                if (!$accessToken) return;
 
-            if ($this->client->isAccessTokenExpired()) {
-                if ($this->client->getRefreshToken()) {
-                    $newToken = $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
-                    
-                    // Merge refresh token if not present in the new set
-                    if (!isset($newToken['refresh_token'])) {
-                        $newToken['refresh_token'] = $accessToken['refresh_token'];
+                $this->client->setAccessToken($accessToken);
+
+                if ($this->client->isAccessTokenExpired()) {
+                    if ($this->client->getRefreshToken()) {
+                        $newToken = $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
+                        
+                        // Merge refresh token if not present in the new set
+                        if (!isset($newToken['refresh_token'])) {
+                            $newToken['refresh_token'] = $accessToken['refresh_token'];
+                        }
+
+                        $this->settingsModel->setSetting('google_oauth_token', json_encode($newToken));
                     }
-
-                    $this->settingsModel->setSetting('google_oauth_token', json_encode($newToken));
                 }
             }
+        } catch (\Exception $e) {
+            log_message('error', '[GoogleCalendar] Token load/refresh error: ' . $e->getMessage());
         }
     }
 
@@ -72,11 +79,31 @@ class GoogleCalendarLibrary
     }
 
     /**
-     * Is the client authenticated?
+     * Is the client authenticated? (Basic check)
      */
     public function isConnected(): bool
     {
-        return !$this->client->isAccessTokenExpired();
+        $token = $this->client->getAccessToken();
+        return $token && !$this->client->isAccessTokenExpired();
+    }
+
+    /**
+     * Deep check of connection health.
+     */
+    public function verifyConnection(): bool
+    {
+        if (!$this->isConnected()) {
+            return false;
+        }
+
+        try {
+            // Try to fetch the primary calendar metadata as a lightweight check
+            $this->service->calendars->get('primary');
+            return true;
+        } catch (\Exception $e) {
+            log_message('error', '[GoogleCalendar] Connection verification failed: ' . $e->getMessage());
+            return false;
+        }
     }
 
     /**
@@ -84,45 +111,69 @@ class GoogleCalendarLibrary
      */
     public function getFreeBusy(string $startTime, string $endTime): array
     {
-        $calendarId = $this->settingsModel->getSetting('google_calendar_id', 'primary');
-        
-        $freeBusyRequest = new \Google\Service\Calendar\FreeBusyRequest();
-        $freeBusyRequest->setTimeMin($startTime);
-        $freeBusyRequest->setTimeMax($endTime);
-        $freeBusyRequest->setItems([['id' => $calendarId]]);
+        if (!$this->isConnected()) {
+            return [];
+        }
 
-        $response = $this->service->freebusy->query($freeBusyRequest);
-        return $response->getCalendars()[$calendarId]->getBusy();
+        try {
+            $calendarId = $this->settingsModel->getSetting('google_calendar_id', 'primary');
+            
+            $freeBusyRequest = new \Google\Service\Calendar\FreeBusyRequest();
+            $freeBusyRequest->setTimeMin($startTime);
+            $freeBusyRequest->setTimeMax($endTime);
+            $freeBusyRequest->setItems([['id' => $calendarId]]);
+
+            $response = $this->service->freebusy->query($freeBusyRequest);
+            $calendars = $response->getCalendars();
+            
+            if (isset($calendars[$calendarId])) {
+                return $calendars[$calendarId]->getBusy();
+            }
+            
+            return [];
+        } catch (\Exception $e) {
+            log_message('error', '[GoogleCalendar] FreeBusy error: ' . $e->getMessage());
+            return [];
+        }
     }
 
     /**
      * Create a calendar event.
      */
-    public function createEvent(array $eventData): string
+    public function createEvent(array $eventData): ?string
     {
+        if (!$this->isConnected()) {
+            return null;
+        }
+
         $calendarId = $this->settingsModel->getSetting('google_calendar_id', 'primary');
         
-        $event = new \Google\Service\Calendar\Event([
-            'summary'     => $eventData['summary'],
-            'description' => $eventData['description'] ?? '',
-            'start' => [
-                'dateTime' => $eventData['start'],
-                'timeZone' => 'Europe/Rome',
-            ],
-            'end' => [
-                'dateTime' => $eventData['end'],
-                'timeZone' => 'Europe/Rome',
-            ],
-            'attendees' => [
-                ['email' => $eventData['client_email']],
-            ],
-            'reminders' => [
-                'useDefault' => true,
-            ],
-        ]);
+        try {
+            $event = new \Google\Service\Calendar\Event([
+                'summary'     => $eventData['summary'],
+                'description' => $eventData['description'] ?? '',
+                'start' => [
+                    'dateTime' => $eventData['start'],
+                    'timeZone' => self::DEFAULT_TIMEZONE,
+                ],
+                'end' => [
+                    'dateTime' => $eventData['end'],
+                    'timeZone' => self::DEFAULT_TIMEZONE,
+                ],
+                'attendees' => [
+                    ['email' => $eventData['client_email']],
+                ],
+                'reminders' => [
+                    'useDefault' => true,
+                ],
+            ]);
 
-        $event = $this->service->events->insert($calendarId, $event);
-        return $event->getId();
+            $event = $this->service->events->insert($calendarId, $event);
+            return $event->getId();
+        } catch (\Exception $e) {
+            log_message('error', '[GoogleCalendar] Event creation error: ' . $e->getMessage());
+            return null;
+        }
     }
 
     /**
@@ -130,6 +181,10 @@ class GoogleCalendarLibrary
      */
     public function updateEvent(string $eventId, array $eventData): bool
     {
+        if (!$this->isConnected()) {
+            return false;
+        }
+
         $calendarId = $this->settingsModel->getSetting('google_calendar_id', 'primary');
         try {
             $event = $this->service->events->get($calendarId, $eventId);
@@ -143,14 +198,17 @@ class GoogleCalendarLibrary
             // Update start/end if provided
             if (isset($eventData['start'])) {
                 $event->getStart()->setDateTime($eventData['start']);
+                $event->getStart()->setTimeZone(self::DEFAULT_TIMEZONE);
             }
             if (isset($eventData['end'])) {
                 $event->getEnd()->setDateTime($eventData['end']);
+                $event->getEnd()->setTimeZone(self::DEFAULT_TIMEZONE);
             }
 
             $this->service->events->update($calendarId, $eventId, $event);
             return true;
         } catch (\Exception $e) {
+            log_message('error', '[GoogleCalendar] Event update error: ' . $e->getMessage() . " (ID: $eventId)");
             return false;
         }
     }
@@ -160,11 +218,16 @@ class GoogleCalendarLibrary
      */
     public function deleteEvent(string $eventId): bool
     {
+        if (!$this->isConnected()) {
+            return false;
+        }
+
         $calendarId = $this->settingsModel->getSetting('google_calendar_id', 'primary');
         try {
             $this->service->events->delete($calendarId, $eventId);
             return true;
         } catch (\Exception $e) {
+            log_message('error', '[GoogleCalendar] Event deletion error: ' . $e->getMessage() . " (ID: $eventId)");
             return false;
         }
     }
