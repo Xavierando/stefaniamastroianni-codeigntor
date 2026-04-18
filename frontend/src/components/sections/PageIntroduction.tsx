@@ -5,6 +5,7 @@ interface PageIntroductionProps {
   title: string;
   description: string;
   as?: "h1" | "h2";
+  variant?: "default" | "editorial";
   ctaText?: string;
   ctaHref?: string;
   showBorder?: boolean;
@@ -16,6 +17,7 @@ export function PageIntroduction({
   title,
   description,
   as: Tag = "h1",
+  variant = "default",
   ctaText,
   ctaHref,
   showBorder = false,
@@ -36,9 +38,9 @@ export function PageIntroduction({
         <Tag
           className={cn(
             "font-serif mb-8 leading-tight",
-            Tag === "h1"
-              ? "text-4xl md:text-5xl text-brand-contrast"
-              : "text-4xl lg:text-5xl italic text-brand-primary max-w-4xl",
+            variant === "editorial"
+              ? "text-4xl lg:text-5xl italic text-brand-primary max-w-4xl"
+              : "text-4xl md:text-5xl text-brand-contrast",
           )}
         >
           {title}

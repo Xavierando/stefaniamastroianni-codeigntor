@@ -88,11 +88,7 @@ export function Home() {
         </div>
       )}
 
-      <SEO
-        title="Home"
-        description="Benvenuti nello studio di Stefania Mastroianni. Scopri percorsi olistici, yoga, trattamenti e accompagnamento alla nascita per il tuo benessere integrale."
-        schema={localBusinessSchema}
-      />
+      <SEO schema={localBusinessSchema} />
 
       <div
         className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? "opacity-0 h-screen overflow-hidden" : "opacity-100"}`}
@@ -102,7 +98,8 @@ export function Home() {
 
         {/* 2. Introduzione (Chi è e Cosa Fa) */}
         <PageIntroduction
-          as="h2"
+          as="h1"
+          variant="editorial"
           showBorder
           title='"Credo in un approccio olistico che abbraccia corpo, mente ed emozioni."'
           description="Ogni persona è unica e merita un ascolto profondo. Attraverso lo yoga, i trattamenti e uno spazio di ascolto autentico, ti accompagno nel tuo personale viaggio di trasformazione. Che tu stia cercando sollievo dallo stress, accompagnamento in gravidanza o semplicemente uno spazio per te."
