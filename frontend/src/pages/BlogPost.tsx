@@ -6,6 +6,8 @@ import { Calendar } from "lucide-react";
 import { CommentList } from "@/components/comments/CommentList";
 import { CommentForm } from "@/components/comments/CommentForm";
 import { MarkdownRenderer } from "@/components/ui/MarkdownRenderer";
+import { SEO } from "@/components/common/SEO";
+import { SITE_URL } from "@/config/site";
 
 export function BlogPost() {
   const { slug } = useParams();
@@ -103,8 +105,29 @@ export function BlogPost() {
     </div>
   );
 
+  const blogPostSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "image": [post.imageUrl],
+    "datePublished": post.date,
+    "author": [{
+        "@type": "Person",
+        "name": "Stefania Mastroianni",
+        "url": `${SITE_URL}/chi-sono`
+      }]
+  };
+
   return (
-    <ContentDetailLayout
+    <>
+      <SEO 
+        title={post.title} 
+        description={post.content ? post.content.substring(0, 160).replace(/[#*`]/g, '') : undefined}
+        image={post.imageUrl}
+        type="article"
+        schema={blogPostSchema}
+      />
+      <ContentDetailLayout
       title={post.title}
       imageSrc={post.imageUrl}
       backLink="/blog"
@@ -124,5 +147,6 @@ export function BlogPost() {
         </div>
       </div>
     </ContentDetailLayout>
+    </>
   );
 }

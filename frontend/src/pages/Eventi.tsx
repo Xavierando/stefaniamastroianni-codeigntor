@@ -1,3 +1,4 @@
+import { SEO } from "@/components/common/SEO";
 import { useEffect, useState } from "react";
 import { Hero } from "@/components/ui/Hero";
 import { EventCard } from "@/components/ui/EventCard";
@@ -52,6 +53,10 @@ export function EventiPage() {
 
   return (
     <>
+      <SEO 
+        title="Laboratori ed Eventi" 
+        description="Scopri i prossimi incontri, laboratori e cerchi di condivisione. Spazi dedicati alla crescita collettiva, allo yoga e al benessere olistico."
+      />
       {!isReady && (
         <div className="fixed inset-0 z-[100] flex flex-col bg-brand-base items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>

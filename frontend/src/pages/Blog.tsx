@@ -1,3 +1,4 @@
+import { SEO } from "@/components/common/SEO";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { apiFetch } from "@/lib/api";
@@ -35,6 +36,10 @@ export function Blog() {
 
   return (
     <>
+      <SEO 
+        title="Blog" 
+        description="Approfondimenti su yoga, benessere olistico e maternità. Leggi gli articoli di Stefania Mastroianni per nutrire corpo e spirito."
+      />
       {!isReady && (
         <div className="fixed inset-0 z-[100] flex flex-col bg-brand-base items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>

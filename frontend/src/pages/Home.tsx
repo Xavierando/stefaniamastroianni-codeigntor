@@ -7,6 +7,8 @@ import { TestimonialsCarousel } from "@/components/sections/TestimonialsCarousel
 import { apiFetch } from "@/lib/api";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
 import { PageIntroduction } from "@/components/sections/PageIntroduction";
+import { SEO } from "@/components/common/SEO";
+import { SITE_URL } from "@/config/site";
 
 export function Home() {
   const [eventsData, setEventsData] = useState([]);
@@ -59,6 +61,25 @@ export function Home() {
 
   const isReady = !isLoading && isHeroLoaded;
 
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": "HealthAndBeautyBusiness",
+    name: "Stefania Mastroianni",
+    description:
+      "Operatrice per la Salute e il Benessere - Yoga, Trattamenti, Accompagnamento alla nascita",
+    url: SITE_URL,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Ancona",
+      addressRegion: "AN",
+      addressCountry: "IT",
+    },
+    founder: {
+      "@type": "Person",
+      name: "Stefania Mastroianni",
+    },
+  };
+
   return (
     <>
       {!isReady && (
@@ -66,6 +87,12 @@ export function Home() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
         </div>
       )}
+
+      <SEO
+        title="Home"
+        description="Benvenuti nello studio di Stefania Mastroianni. Scopri percorsi olistici, yoga, trattamenti e accompagnamento alla nascita per il tuo benessere integrale."
+        schema={localBusinessSchema}
+      />
 
       <div
         className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? "opacity-0 h-screen overflow-hidden" : "opacity-100"}`}

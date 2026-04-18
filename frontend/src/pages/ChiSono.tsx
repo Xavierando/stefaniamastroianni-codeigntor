@@ -1,5 +1,6 @@
 import { Hero } from "@/components/ui/Hero";
 import { Leaf, Heart, ArrowRight, BookOpen, Sun, Sparkles } from "lucide-react";
+import { SEO } from "@/components/common/SEO";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/Button";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
@@ -36,6 +37,10 @@ export function ChiSono() {
 
   return (
     <>
+      <SEO 
+        title="Chi Sono" 
+        description="Conosci di più su Stefania Mastroianni, il suo percorso, la sua formazione e la visione olistica che guida il suo lavoro con le persone."
+      />
       {!isReady && (
         <div className="fixed inset-0 z-[100] flex flex-col bg-brand-base items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>

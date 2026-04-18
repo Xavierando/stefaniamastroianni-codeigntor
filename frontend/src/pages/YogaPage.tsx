@@ -1,3 +1,4 @@
+import { SEO } from "@/components/common/SEO";
 import { useEffect, useState } from "react";
 import { Hero } from "@/components/ui/Hero";
 import { ServiceOverview } from "@/components/sections/ServiceOverview";
@@ -71,6 +72,10 @@ export function YogaPage() {
 
   return (
     <>
+      <SEO 
+        title="Yoga e Meditazione" 
+        description="Pratiche di Hatha Yoga, Vinyasa e meditazione guidata. Coltiva la tua forza interiore e la flessibilità attraverso il respiro e la presenza."
+      />
       {!isReady && (
         <div className="fixed inset-0 z-[100] flex flex-col bg-brand-base items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>

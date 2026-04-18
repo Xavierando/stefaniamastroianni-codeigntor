@@ -1,11 +1,17 @@
 import { Hero } from "@/components/ui/Hero";
+import { SEO } from "@/components/common/SEO";
 import { PageIntroduction } from "@/components/sections/PageIntroduction";
 import { ContactForm } from "@/components/ui/ContactForm";
 import { Mail, MapPin, Instagram, Facebook } from "lucide-react";
 
 export function Contatti() {
   return (
-    <div className="flex flex-col min-h-screen bg-brand-base">
+    <>
+      <SEO 
+        title="Contatti" 
+        description="Contatta Stefania Mastroianni per informazioni su percorsi, trattamenti o workshop. Prenota la tua consulenza o richiedi maggiori dettagli."
+      />
+      <div className="flex flex-col min-h-screen bg-brand-base">
       <Hero
         imageSrc="/images/contatti/mt-sample-background.webp"
         
@@ -88,5 +94,6 @@ export function Contatti() {
         </div>
       </section>
     </div>
+    </>
   );
 }

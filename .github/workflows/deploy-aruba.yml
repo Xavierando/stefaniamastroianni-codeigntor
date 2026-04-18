@@ -29,6 +29,8 @@ jobs:
 
       - name: Build Frontend
         working-directory: ./frontend
+        env:
+          VITE_SITE_URL: ${{ vars.SITE_URL || 'https://www.arpelux.it' }}
         run: npm run build
 
       # --- BACKEND BUILD ---
@@ -85,11 +87,16 @@ jobs:
       # --- RUN DATABASE MIGRATIONS ---
       - name: Run Database Migrations
         continue-on-error: true
+        env:
+          SITE_URL: ${{ vars.SITE_URL || 'https://www.arpelux.it' }}
         run: |
           echo "Triggering automated database migrations..."
           TOKEN="${{ secrets.MIGRATION_TOKEN }}"
           
-          RESPONSE=$(curl -s -X POST https://www.arpelux.it/api/migrations/run \
+          # Clean trailing slash and use defined SITE_URL
+          BASE_URL=$(echo $SITE_URL | sed 's:/*$::')
+          
+          RESPONSE=$(curl -s -X POST $BASE_URL/api/migrations/run \
             -H "X-Migration-Token: $TOKEN" \
             -H "Content-Type: application/json" || echo "curl_failed")
             
@@ -97,6 +104,6 @@ jobs:
           if echo "$RESPONSE" | grep -q '"success":true'; then
             echo "Migrations completed successfully."
           else
-            echo "Migrations failed (Domain might not be active or token invalid)."
+            echo "Migrations failed."
             echo "Please run migrations manually or verify domain DNS."
           fi

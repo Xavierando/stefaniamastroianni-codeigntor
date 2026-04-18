@@ -4,6 +4,7 @@ import { apiFetch } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
 import { Calendar, MapPin, Tag } from "lucide-react";
 import { ContentDetailLayout } from "@/components/layout/ContentDetailLayout";
+import { SEO } from "@/components/common/SEO";
 
 export function EventDetail() {
   const { slug } = useParams();
@@ -126,7 +127,14 @@ export function EventDetail() {
   );
 
   return (
-    <ContentDetailLayout
+    <>
+      <SEO 
+        title={event.title} 
+        description={event.description ? event.description.substring(0, 160).replace(/[#*`]/g, '') : `Partecipa a ${event.title} a ${event.location}. Un evento dedicato al benessere e alla crescita personale.`}
+        image={event.imageSrc}
+        type="article"
+      />
+      <ContentDetailLayout
       title={event.title}
       imageSrc={event.imageSrc}
       imagePosition={event.imagePosition}
@@ -138,5 +146,6 @@ export function EventDetail() {
     >
       {event.description || ''}
     </ContentDetailLayout>
+    </>
   );
 }
