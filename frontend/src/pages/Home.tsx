@@ -101,8 +101,8 @@ export function Home() {
           as="h1"
           variant="editorial"
           showBorder
-          title='"Credo in un approccio olistico che abbraccia corpo, mente ed emozioni."'
-          description="Ogni persona è unica e merita un ascolto profondo. Attraverso lo yoga, i trattamenti e uno spazio di ascolto autentico, ti accompagno nel tuo personale viaggio di trasformazione. Che tu stia cercando sollievo dallo stress, accompagnamento in gravidanza o semplicemente uno spazio per te."
+          title='"Ogni giorno il nostro corpo ci offre dei messaggi importanti, che ci indicano come stiamo e di cosa abbiamo bisogno"'
+          description="Per tornare lì, all'origine, a quel linguaggio semplice e naturale di relazione tra corpo, mente e emozioni, abbiamo bisogno di uno spazio sicuro, in cui sentirci visti e ascoltati. Attraverso momenti di dialogo, esplorazione, ascolto, movimento, contatto, gioco e tanto altro, sono felice di accompagnarti nel tuo personale viaggio di ri-scoperta e trasformazione, come un'alleata che cresce e cambia con te."
           ctaText="Scopri di più su di me"
           ctaHref="/chi-sono"
         />
@@ -113,7 +113,7 @@ export function Home() {
         {/* 4. Panoramica Servizi */}
         <div className="flex flex-col w-full">
           <ServiceOverview
-            title="Maternità Consapevole"
+            title="Maternità"
             description="Un accompagnamento dolce dal preconcepimento al post-parto. Spazi di condivisione, preparazione corporea ed emotiva per vivere la nascita in pienezza."
             imageSrc="/images/home/Servizi-maternita-1.webp"
             href="/maternita"

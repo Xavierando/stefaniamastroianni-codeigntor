@@ -1,7 +1,7 @@
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "./Card";
-import { Button } from "./Button";
-import { Link } from "react-router-dom";
+import { Card, CardTitle } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 import { Clock, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 interface ServiceCardProps {
@@ -10,51 +10,70 @@ interface ServiceCardProps {
   description: string;
   durationMin?: number | null;
   price?: number | null;
+  imageSrc?: string;
 }
 
-export function ServiceCard({ id, title, description, durationMin, price }: ServiceCardProps) {
+export function ServiceCard({ id, title, description, durationMin, price, imageSrc }: ServiceCardProps) {
   return (
     <motion.div
       whileHover={{ y: -5 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
       className="h-full"
     >
-      <Card className="flex flex-col h-full bg-white border-0 shadow-sm hover:shadow-soft transition-all duration-300 rounded-[2rem] overflow-hidden p-8">
-        <CardHeader className="p-0 mb-6">
-          <CardTitle className="text-2xl font-serif text-brand-contrast group-hover:text-brand-primary transition-colors">
-            {title}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0 flex-1 mb-8">
-          <CardDescription className="text-base text-brand-contrast/70 leading-relaxed font-light mb-6">
-            {description}
-          </CardDescription>
-          
-          {(durationMin || price) && (
-            <div className="flex items-center gap-6 mt-auto">
-              {durationMin && (
-                <div className="flex items-center text-[10px] font-bold uppercase tracking-widest text-brand-contrast/50">
-                  <Clock size={14} className="mr-2 text-brand-secondary" />
-                  {durationMin} min
-                </div>
-              )}
-              {price && (
-                <div className="flex items-center text-[10px] font-bold uppercase tracking-widest text-brand-contrast/50">
-                  <span className="w-1.5 h-1.5 bg-brand-secondary rounded-full mr-2" />
-                  € {price}
-                </div>
-              )}
-            </div>
+      <Card className="flex flex-col h-full sm:flex-row hover:shadow-lg transition-all overflow-hidden group">
+        {/* Image / Icon Side */}
+        <div className="relative p-6 sm:w-1/3 flex flex-col justify-center items-center text-center overflow-hidden min-h-[200px] sm:min-h-full">
+          {imageSrc ? (
+            <>
+              <img 
+                src={imageSrc} 
+                alt={title}
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              {/* Overlay to ensure icons/text are readable */}
+              <div className="absolute inset-0 bg-brand-secondary/60" />
+            </>
+          ) : (
+            <div className="absolute inset-0 bg-brand-secondary" />
           )}
-        </CardContent>
-        <CardFooter className="p-0 pt-6 mt-auto">
-          <Link to={`/prenota?service_id=${id}`} className="w-full">
-            <Button variant="link" className="p-0 h-auto text-brand-primary hover:text-brand-primary/80 flex items-center gap-2 group/btn font-semibold">
+          
+          <div className="relative z-10 text-brand-base">
+            <Clock size={32} className="mb-4 mx-auto opacity-90" />
+            {(durationMin || price) && (
+              <div className="space-y-1">
+                {durationMin && <span className="font-medium text-lg block">{durationMin} min</span>}
+                {price && <span className="font-medium text-lg block">€ {price}</span>}
+              </div>
+            )}
+          </div>
+        </div>
+        
+        {/* Content Side */}
+        <div className="p-6 sm:w-2/3 flex flex-col justify-between">
+          <div>
+            <div className="mb-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-brand-secondary">
+                Servizio
+              </span>
+            </div>
+            <CardTitle className="text-xl md:text-2xl text-brand-primary mb-4 leading-snug">
+              {title}
+            </CardTitle>
+            <p className="text-brand-contrast/80 text-sm mb-6 line-clamp-3 leading-relaxed">
+              {description}
+            </p>
+          </div>
+          
+          <Link to={`/prenota?service_id=${id}`}>
+            <Button 
+              variant="outline" 
+              className="w-full sm:w-auto mt-4 group/btn flex items-center gap-2"
+            >
               Prenota Ora
-              <ArrowRight size={18} className="transform group-hover/btn:translate-x-1 transition-transform" />
+              <ArrowRight size={18} className="transition-transform group-hover/btn:translate-x-1" />
             </Button>
           </Link>
-        </CardFooter>
+        </div>
       </Card>
     </motion.div>
   );

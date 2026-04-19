@@ -37,25 +37,25 @@ export function ServiceOverview({
   return (
     <section
       className={cn(
-        "w-full py-24 md:py-40 px-4 md:px-8",
+        "w-full py-24 lg:py-40 px-4 lg:px-8",
         alternateBackground ? alternateColorClass : backgroundColorClass,
       )}
     >
       <div
         className={cn(
-          "container mx-auto max-w-7xl flex flex-col gap-16 md:gap-32 items-center",
-          imagePosition === "left" ? "md:flex-row" : "md:flex-row-reverse",
+          "container mx-auto max-w-7xl flex flex-col gap-16 lg:gap-32 items-center",
+          imagePosition === "left" ? "lg:flex-row" : "lg:flex-row-reverse",
         )}
       >
         {/* Image Side - Editorial & Soft */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="w-full md:w-1/2"
+          className="w-full lg:w-1/2"
         >
-          <div className="relative aspect-[4/3] overflow-hidden rounded-[2.5rem] shadow-sm group">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-xl shadow-sm group">
             <img
               src={imageSrc}
               alt={title}
@@ -65,14 +65,14 @@ export function ServiceOverview({
         </motion.div>
 
         {/* Content Side - Clean, Professional */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-          className="w-full md:w-1/2 flex flex-col justify-center max-w-xl pl-0 md:px-8"
+          className="w-full lg:w-1/2 flex flex-col justify-center max-w-xl pl-0 lg:px-8"
         >
-          <h2 className="font-serif text-4xl md:text-5xl text-brand-contrast mb-8 leading-[1.15]">
+          <h2 className="font-serif text-4xl lg:text-5xl text-brand-contrast mb-8 leading-[1.15]">
             {title}
           </h2>
           <p className="text-xl text-brand-contrast/70 leading-relaxed mb-10 font-light">
@@ -106,7 +106,10 @@ export function ServiceOverview({
                   {ctaText}
                   <span className="absolute bottom-0 left-0 w-full h-[1px] bg-brand-primary/30 group-hover:bg-brand-primary group-hover:h-[2px] transition-all" />
                 </span>
-                <ArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform" />
+                <ArrowRight
+                  size={18}
+                  className="transform group-hover:translate-x-1 transition-transform"
+                />
               </Link>
             ) : (
               <button
@@ -117,7 +120,10 @@ export function ServiceOverview({
                   {ctaText}
                   <span className="absolute bottom-0 left-0 w-full h-[1px] bg-brand-primary/30 group-hover:bg-brand-primary group-hover:h-[2px] transition-all" />
                 </span>
-                <ArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform" />
+                <ArrowRight
+                  size={18}
+                  className="transform group-hover:translate-x-1 transition-transform"
+                />
               </button>
             ))}
         </motion.div>
