@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Plus, Trash2, Calendar, LayoutList, Pencil } from "lucide-react";
+import { Plus, Trash2, LayoutList, Pencil } from "lucide-react";
 import { Card } from "../../../components/admin/ui/Card";
 import { ConfirmDeleteButton } from "../../../components/admin/ui/ConfirmDeleteButton";
 import { apiFetch } from "../../../lib/api";
@@ -36,7 +36,7 @@ export function AdminServicesPage() {
     loadServices();
   }, []);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     try {
       await apiFetch(`services/${id}`, {
         method: "DELETE",
