@@ -1,6 +1,5 @@
 import { Hero } from "@/components/ui/Hero";
 import { SEO } from "@/components/common/SEO";
-import { PageIntroduction } from "@/components/sections/PageIntroduction";
 import { ContactForm } from "@/components/ui/ContactForm";
 import { Mail, MapPin, Instagram, Facebook } from "lucide-react";
 
@@ -17,10 +16,57 @@ export function Contatti() {
         
       />
 
-      <PageIntroduction
-        title="Mettiamoci in Contatto"
-        description="Ogni percorso inizia con una semplice conversazione. Sono qui per ascoltarti e rispondere a qualsiasi dubbio o domanda sui trattamenti e sui percorsi disponibili. Puoi utilizzare il modulo di contatto per richiedere informazioni sui percorsi indivudali, per iscriverti ai laboratori, o semplicemente per esplorare assieme come posso accompagnarti nel tuo momento attuale."
-      />
+      <section className="w-full pb-24 pt-6 md:py-24 px-4 bg-brand-base text-center relative overflow-hidden">
+        <div className="container mx-auto flex flex-col items-center max-w-6xl">
+          <h1 className="font-serif mb-8 leading-tight text-4xl md:text-5xl text-brand-contrast">
+            Entriamo in contatto
+          </h1>
+
+          <div className="text-brand-contrast/80 leading-relaxed font-light text-xl md:text-2xl space-y-6 max-w-4xl">
+            <p>
+              <strong className="font-semibold text-brand-contrast">
+                Ogni percorso inizia con un incontro gratuito:
+              </strong>{" "}
+              uno spazio sicuro, in cui<br />
+              <strong className="font-semibold text-brand-contrast">
+                conoscerci e capire insieme di cosa hai bisogno ora
+              </strong>
+              .
+            </p>
+            <p>
+              Tante possibilità diverse, tra cui sessioni individuali,
+              trattamenti,
+              <br />
+              corsi di yoga, laboratori e tanto altro.
+            </p>
+            <p>
+              Non devi avere le idee chiare. Basta{" "}
+              <strong className="font-semibold text-brand-contrast">
+                il desiderio di iniziare
+              </strong>
+              .
+              <br />
+              Compila il modulo qui sotto.
+            </p>
+            <p className="italic">Grazie</p>
+          </div>
+
+          <blockquote className="mt-12 max-w-3xl border-l-2 border-brand-secondary/40 pl-6 text-left">
+            <p className="font-serif italic font-semibold text-2xl md:text-3xl text-brand-primary leading-snug">
+              «Non siamo fatti per rimanere nella sofferenza.
+              <br />
+              Siamo fatti per guarire.»
+            </p>
+            <footer className="mt-4 text-base md:text-lg text-brand-contrast/70 not-italic">
+              —{" "}
+              <strong className="font-semibold text-brand-contrast">
+                Clarissa Pinkola Estés
+              </strong>
+              , scrittrice e psicoanalista messicana
+            </footer>
+          </blockquote>
+        </div>
+      </section>
       <section className="py-24 px-4 bg-white overflow-hidden relative">
         <div className="container mx-auto max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-16">
