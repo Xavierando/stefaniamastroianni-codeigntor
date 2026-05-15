@@ -95,9 +95,8 @@ export function Contatti() {
                   <div>
                     <h4 className="font-medium text-lg">Studio Olistico</h4>
                     <p className="opacity-80">
-                      Ricevo su appuntamento ad Ancona e provincia.
-                      <br />
-                      Disponibile anche per sessioni online via Zoom.
+                      Ricevo su appuntamento a Saint-Christophe e in vari altri
+                      studi della Valle d'Aosta.
                     </p>
                   </div>
                 </div>
