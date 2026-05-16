@@ -57,7 +57,7 @@ export function ContactForm() {
       )}
 
       <div className="space-y-2">
-        <label htmlFor="name" className="text-sm font-medium text-brand-contrast">Nome e Cognome</label>
+        <label htmlFor="name" className="text-sm font-medium text-brand-contrast">Nome</label>
         <input 
           id="name"
           name="name"
