@@ -37,7 +37,9 @@ export function SEO({
       <title>{fullTitle}</title>
       <meta name="description" content={siteDescription} />
       {noindex && <meta name="robots" content="noindex, follow" />}
-      <link rel="canonical" href={window.location.href} />
+      {/* SSR-safe: fall back to the route URL during prerender (no window in Node).
+          The prerender step rewrites this to the correct per-route absolute URL. */}
+      <link rel="canonical" href={typeof window !== "undefined" ? window.location.href : url} />
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />

@@ -1,6 +1,5 @@
 import { useEffect, lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
-import { HelmetProvider } from "react-helmet-async";
 import { MainLayout } from "./components/layout/MainLayout";
 import { Home } from "./pages/Home";
 import { Contatti } from "./pages/Contatti";
@@ -65,7 +64,6 @@ function App() {
   }, []);
 
   return (
-    <HelmetProvider>
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<MainLayout />}>
@@ -114,7 +112,6 @@ function App() {
           <Route path="/admin/login" element={<AdminLogin />} />
         </Routes>
       </Suspense>
-    </HelmetProvider>
   );
 }
 

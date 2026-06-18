@@ -6,9 +6,14 @@ interface AuthState {
   token: string | null;
 }
 
+// Guard via `window` so the store can also be imported during server-side
+// prerendering (Node may expose a non-functional global localStorage, but never window).
+const storedToken =
+  typeof window !== 'undefined' ? window.localStorage.getItem('adminToken') : null;
+
 const initialState: AuthState = {
-  isAuthenticated: !!localStorage.getItem('adminToken'),
-  token: localStorage.getItem('adminToken') || null,
+  isAuthenticated: !!storedToken,
+  token: storedToken,
 };
 
 const authSlice = createSlice({
