@@ -480,11 +480,13 @@ export function BookingPage() {
                   </p>
                   <p className="flex items-center gap-2 text-brand-contrast/70">
                     <CalendarIcon size={16} />
-                    {new Date(selectedDate).toLocaleDateString("it-IT", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
+                    {selectedDate && !isNaN(new Date(selectedDate).getTime())
+                      ? new Date(selectedDate).toLocaleDateString("it-IT", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })
+                      : "Data da definire"}
                   </p>
                   <p className="flex items-center gap-2 text-brand-contrast/70">
                     <Clock size={16} /> {selectedSlot?.start} -{" "}

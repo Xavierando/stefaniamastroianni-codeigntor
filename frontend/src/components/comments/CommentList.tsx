@@ -10,19 +10,27 @@ export function CommentList({ postId }: CommentListProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const controller = new AbortController();
+    let ignore = false;
+
     async function fetchComments() {
       try {
         setIsLoading(true);
-        const data = await apiFetch(`/comments?postId=${postId}&status=approved`);
-        setComments(data || []);
-      } catch (err) {
-        console.error("Failed to fetch comments", err);
+        const data = await apiFetch(`/comments?postId=${postId}&status=approved`, { signal: controller.signal });
+        if (!ignore) setComments(Array.isArray(data) ? data : []);
+      } catch (err: any) {
+        if (!ignore && err?.name !== "AbortError") console.error("Failed to fetch comments", err);
       } finally {
-        setIsLoading(false);
+        if (!ignore) setIsLoading(false);
       }
     }
 
     fetchComments();
+
+    return () => {
+      ignore = true;
+      controller.abort();
+    };
   }, [postId]);
 
   if (isLoading) {
@@ -42,11 +50,11 @@ export function CommentList({ postId }: CommentListProps) {
       {comments.map((comment) => (
         <div key={comment.id} className="bg-white p-6 rounded-2xl shadow-sm border border-brand-primary/10 flex gap-4">
           <div className="hidden sm:flex flex-shrink-0 w-12 h-12 rounded-full bg-brand-primary/10 items-center justify-center text-brand-primary font-serif text-lg uppercase">
-            {comment.name.charAt(0)}
+            {(comment.name || "?").charAt(0)}
           </div>
           <div>
             <div className="flex items-baseline gap-3 mb-2">
-              <span className="font-serif text-lg tracking-wide text-brand-primary">{comment.name}</span>
+              <span className="font-serif text-lg tracking-wide text-brand-primary">{comment.name || "Anonimo"}</span>
               <span className="text-xs text-brand-contrast/40">
                 {new Date(comment.createdAt).toLocaleDateString("it-IT", {
                   day: "numeric",

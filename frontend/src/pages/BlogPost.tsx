@@ -16,26 +16,36 @@ export function BlogPost() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!slug) return;
+
+    const controller = new AbortController();
+    let ignore = false;
+
     async function fetchPost() {
       try {
         setIsLoading(true);
-        const data = await apiFetch(`/posts/${slug}`);
+        const data = await apiFetch(`/posts/${slug}`, { signal: controller.signal });
+        if (ignore) return;
         if (data) {
           setPost(data);
         } else {
           setError("Articolo non trovato");
         }
       } catch (err: any) {
+        if (ignore || err?.name === "AbortError") return;
         console.error("Failed to fetch post data:", err);
         setError("Errore nel caricamento dell'articolo");
       } finally {
-        setIsLoading(false);
+        if (!ignore) setIsLoading(false);
       }
     }
 
-    if (slug) {
-      fetchPost();
-    }
+    fetchPost();
+
+    return () => {
+      ignore = true;
+      controller.abort();
+    };
   }, [slug]);
 
   if (isLoading) {

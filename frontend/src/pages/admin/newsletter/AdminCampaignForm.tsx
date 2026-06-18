@@ -41,6 +41,8 @@ export function AdminCampaignForm() {
   // Sending Logic State
   const [isSending, setIsSending] = useState(false);
   const sendingIntervalRef = useRef<number | null>(null);
+  const isMountedRef = useRef(true);
+  const isSendingRef = useRef(false); // synchronous mirror of isSending for the async loop
 
   useEffect(() => {
     if (isEditing) {
@@ -48,9 +50,11 @@ export function AdminCampaignForm() {
     }
   }, [id]);
 
-  // Clean up interval on unmount
+  // Clean up on unmount: stop the loop and prevent setState after unmount.
   useEffect(() => {
     return () => {
+      isMountedRef.current = false;
+      isSendingRef.current = false;
       if (sendingIntervalRef.current) {
         clearTimeout(sendingIntervalRef.current);
       }
@@ -153,6 +157,10 @@ export function AdminCampaignForm() {
         headers: { Authorization: `Bearer ${token}` }
       });
 
+      // Bail out if the component unmounted or sending was paused while in flight
+      // (otherwise a paused/unmounted loop would re-arm the timer or setState).
+      if (!isMountedRef.current || !isSendingRef.current) return;
+
       if (data.success) {
         setCampaign(prev => ({
           ...prev,
@@ -163,15 +171,20 @@ export function AdminCampaignForm() {
         if (data.has_more) {
           // Wait 10 seconds before next send
           sendingIntervalRef.current = setTimeout(() => {
-            triggerNextSend();
+            if (isMountedRef.current && isSendingRef.current) {
+              triggerNextSend();
+            }
           }, 10000);
         } else {
+          isSendingRef.current = false;
           setIsSending(false);
           alert("Invio completato con successo!");
         }
       }
     } catch (err) {
+      if (!isMountedRef.current) return;
       console.error("Errore durante l'invio batch", err);
+      isSendingRef.current = false;
       setIsSending(false);
       alert("Errore durante l'invio. Pausa avviata.");
     }
@@ -194,6 +207,7 @@ export function AdminCampaignForm() {
           sent_count: 0
         }));
         
+        isSendingRef.current = true;
         setIsSending(true);
         triggerNextSend();
       }
@@ -204,11 +218,13 @@ export function AdminCampaignForm() {
   };
 
   const resumeSending = () => {
+    isSendingRef.current = true;
     setIsSending(true);
     triggerNextSend();
   };
 
   const pauseSending = () => {
+    isSendingRef.current = false;
     if (sendingIntervalRef.current) {
       clearTimeout(sendingIntervalRef.current);
     }

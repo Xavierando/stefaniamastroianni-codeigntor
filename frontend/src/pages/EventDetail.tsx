@@ -13,11 +13,18 @@ export function EventDetail() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!slug) return;
+
+    const controller = new AbortController();
+    let ignore = false;
+
     async function fetchEvent() {
       try {
         setIsLoading(true);
-        const data = await apiFetch(`/events/${slug}`);
+        const data = await apiFetch(`/events/${slug}`, { signal: controller.signal });
+        if (ignore) return;
         if (data) {
+          const truthy = (v: unknown) => v === true || v === 1 || v === "1";
           // Map to correct format safely
           setEvent({
             id: data.id,
@@ -25,26 +32,36 @@ export function EventDetail() {
             title: data.title,
             description: data.description,
             category: data.category,
+            price: data.price ?? null,
             date: data.date ? new Date(data.date).toLocaleDateString("it-IT", { day: 'numeric', month: 'long', year: 'numeric' }) : "Da definire",
             location: data.location || "Studio Olistico Mastroianni",
             imageSrc: data.imageUrl || undefined,
             imagePosition: data.imagePosition || 'centrato',
-            isBookingEnabled: data.is_booking_enabled === 1 || data.is_booking_enabled === true || data.is_booking_enabled === "1"
+            isBookingEnabled: truthy(data.is_booking_enabled),
+            // Backend returns snake_case capacity flags — map them so the CTA,
+            // capacity banner and price reflect reality.
+            isFull: truthy(data.is_full),
+            isPast: truthy(data.is_past),
+            remainingCapacity: data.remaining_capacity ?? null,
           });
         } else {
           setError("Evento non trovato");
         }
       } catch (err: any) {
+        if (ignore || err?.name === "AbortError") return;
         console.error("Failed to fetch event data:", err);
         setError("Errore nel caricamento dell'evento");
       } finally {
-        setIsLoading(false);
+        if (!ignore) setIsLoading(false);
       }
     }
 
-    if (slug) {
-      fetchEvent();
-    }
+    fetchEvent();
+
+    return () => {
+      ignore = true;
+      controller.abort();
+    };
   }, [slug]);
 
   if (isLoading) {
