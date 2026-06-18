@@ -32,6 +32,8 @@ class EventController extends ResourceController
         }
 
         $bookingModel = new BookingModel();
+        // Pending bookings only hold capacity for a limited window (mirrors BookingController).
+        $pendingCutoff = date('Y-m-d H:i:s', time() - 30 * 60);
         foreach ($events as &$event) {
             $confirmedCount = $bookingModel->where('event_id', $event['id'])
                 ->where('status', 'confirmed')
@@ -39,6 +41,7 @@ class EventController extends ResourceController
 
             $pendingCount = $bookingModel->where('event_id', $event['id'])
                 ->where('status', 'pending')
+                ->where('created_at >=', $pendingCutoff)
                 ->countAllResults();
 
             $max = (int) ($event['max_capacity'] ?? 0);
@@ -61,12 +64,14 @@ class EventController extends ResourceController
 
         if ($event) {
             $bookingModel = new BookingModel();
+            $pendingCutoff = date('Y-m-d H:i:s', time() - 30 * 60);
             $confirmedCount = $bookingModel->where('event_id', $event['id'])
                 ->where('status', 'confirmed')
                 ->countAllResults();
 
             $pendingCount = $bookingModel->where('event_id', $event['id'])
                 ->where('status', 'pending')
+                ->where('created_at >=', $pendingCutoff)
                 ->countAllResults();
 
             $max = (int) ($event['max_capacity'] ?? 0);

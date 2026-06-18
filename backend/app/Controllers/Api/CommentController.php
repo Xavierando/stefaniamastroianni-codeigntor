@@ -41,10 +41,15 @@ class CommentController extends ResourceController
             return $this->failValidationErrors(['error' => 'PostId, Name and Message are required']);
         }
 
-        // By default, comments are not approved
-        $data['isApproved'] = 0;
+        // Whitelist fields; isApproved is server-controlled (comments start unapproved).
+        $clean = [
+            'postId'     => $data['postId'],
+            'name'       => trim((string) $data['name']),
+            'message'    => trim((string) $data['message']),
+            'isApproved' => 0,
+        ];
 
-        if ($this->model->insert($data)) {
+        if ($this->model->insert($clean)) {
             return $this->respondCreated(['success' => true, 'message' => 'Comment submitted and awaiting approval']);
         }
 

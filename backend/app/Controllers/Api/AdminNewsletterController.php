@@ -18,11 +18,30 @@ class AdminNewsletterController extends ResourceController
         $this->subscriberModel = new NewsletterSubscriberModel();
     }
 
+    /**
+     * Strip dangerous markup from admin-authored rich text before embedding it in
+     * an email body (defense in depth against stored XSS in HTML mail clients).
+     */
+    private function sanitizeEmailHtml($html): string
+    {
+        $html = (string) $html;
+        // Remove executable / structural tags together with their contents.
+        $html = preg_replace('#<\s*(script|style|iframe|object|embed|form)\b[^>]*>.*?<\s*/\s*\1\s*>#is', '', $html);
+        // Remove any stray opening/closing/self-closing instances of risky tags.
+        $html = preg_replace('#<\s*/?\s*(script|style|iframe|object|embed|form|link|meta|base)\b[^>]*>#is', '', $html);
+        // Strip inline event handlers (onclick, onerror, onload, ...).
+        $html = preg_replace('#\son\w+\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)#is', '', $html);
+        // Neutralise javascript:/vbscript: URIs in href/src.
+        $html = preg_replace('#\b(href|src)\s*=\s*("|\')\s*(?:javascript|vbscript)\s*:[^"\']*\2#is', '$1="#"', $html);
+        return $html;
+    }
+
     private function renderEmailTemplate($content, $subscriberId)
     {
         // Replace &nbsp; with regular spaces to prevent long strings from breaking layout
         $content = str_replace('&nbsp;', ' ', $content);
-        
+        $content = $this->sanitizeEmailHtml($content);
+
         $frontendUrl = \rtrim(getenv('FRONTEND_URL') ?: 'http://localhost:5173', '/');
         $unsubscribeLink = $frontendUrl . '/unsubscribe?token=' . \urlencode($subscriberId);
 
@@ -331,10 +350,11 @@ HTML;
                 'message' => 'Email di test inviata con successo usando ' . $email->protocol . '!'
             ]);
         } else {
+            // Do not leak SMTP debugger output (headers/credentials) to the client; log it server-side.
+            log_message('error', '[Newsletter testSend] ' . $email->printDebugger(['headers']));
             return $this->respond([
                 'success' => false,
                 'message' => 'Impossibile inviare la mail. Controllare i log SMTP.',
-                'debug' => $email->printDebugger(['headers', 'subject', 'body'])
             ], 500);
         }
     }

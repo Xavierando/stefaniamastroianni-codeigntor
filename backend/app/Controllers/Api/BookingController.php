@@ -23,6 +23,9 @@ class BookingController extends ResourceController
     protected $eventModel;
     protected $googleLibrary;
 
+    /** Minutes after which an unconfirmed (pending) booking stops holding a slot. */
+    private const PENDING_TTL_MINUTES = 30;
+
     public function __construct()
     {
         $this->settingsModel = new BookingSettingsModel();
@@ -111,9 +114,9 @@ class BookingController extends ResourceController
         $buffer = (int)($settings['buffer_time'] ?? 15);
 
         // Fetch existing bookings from DB for this day
-        $dbBookings = $this->model->where('DATE(start_time)', $dateStr)
-                                 ->whereIn('status', ['confirmed', 'pending'])
-                                 ->findAll();
+        $dbBookings = $this->applyActiveBookingFilter(
+            $this->model->where('DATE(start_time)', $dateStr)
+        )->findAll();
 
         $dPart = substr($dateStr, 0, 10);
         
@@ -201,6 +204,13 @@ class BookingController extends ResourceController
             $data = json_decode($this->request->getBody(), true) ?? [];
         }
 
+        // Per-IP rate limiting: prevents flooding the public booking endpoint to
+        // exhaust event capacity / hold every slot with pending requests.
+        $throttler = \Config\Services::throttler();
+        if ($throttler->check(md5('booking_' . $this->request->getIPAddress()), 8, MINUTE) === false) {
+            return $this->failTooManyRequests('Troppe richieste di prenotazione. Riprova tra poco.');
+        }
+
         $rules = [
             'name'       => 'required',
             'email'      => 'required|valid_email',
@@ -248,9 +258,9 @@ class BookingController extends ResourceController
             // Capacity check (including pending to avoid overbooking)
             $max = (int)($event['max_capacity'] ?? 0);
             if ($max > 0) {
-                $count = $this->model->where('event_id', $eventId)
-                                     ->whereIn('status', ['confirmed', 'pending'])
-                                     ->countAllResults();
+                $count = $this->applyActiveBookingFilter(
+                    $this->model->where('event_id', $eventId)
+                )->countAllResults();
                 if ($count >= $max) {
                     return $this->fail('Questo evento è al completo. Non è possibile accettare altre prenotazioni (alcune richieste sono in attesa di conferma).');
                 }
@@ -304,12 +314,10 @@ class BookingController extends ResourceController
 
         $booking = $this->model->find($bookingId);
 
-        // 2. Add to Google Calendar as "PENDING"
+        // 2. Add to Google Calendar as "PENDING".
+        // Times are already in Europe/Rome (app timezone), so no re-zoning is needed —
+        // the stored value, the calendar event and the email now all agree.
         if ($this->googleLibrary->isConnected()) {
-            $tz = new \DateTimeZone('Europe/Rome');
-            $startTime->setTimezone($tz);
-            $blockedEndTime->setTimezone($tz);
-
             $eventIdGoogle = $this->googleLibrary->createEvent([
                 'summary'      => "(IN ATTESA) {$title} - {$booking['name']}",
                 'description'  => "Richiesta in attesa di conferma.\n\nClient: {$booking['name']}\nEmail: {$booking['email']}\nPhone: {$booking['phone']}\nItem: {$title}\n\nClient sees: {$startTime->format('H:i')} - {$endTime->format('H:i')}\nAdmin blocked: {$startTime->format('H:i')} - {$blockedEndTime->format('H:i')}",
@@ -325,10 +333,18 @@ class BookingController extends ResourceController
             }
         }
 
-        // 3. Send Emails (Verification Request)
-        $this->sendVerificationEmail($booking, $title, $startTime, $endTime);
+        // 3. Send verification email (best-effort). Surface failure rather than
+        // reporting a false success that leaves the booking unconfirmable.
+        $emailSent = $this->sendVerificationEmail($booking, $title, $startTime, $endTime);
+        if (!$emailSent) {
+            log_message('error', "[BookingController] Verification email failed for booking {$bookingId}");
+        }
 
-        return $this->respondCreated(['success' => true, 'booking_id' => $bookingId]);
+        return $this->respondCreated([
+            'success'    => true,
+            'booking_id' => $bookingId,
+            'email_sent' => $emailSent,
+        ]);
     }
 
     /**
@@ -414,10 +430,10 @@ class BookingController extends ResourceController
         return $this->respond(['success' => true, 'message' => 'Prenotazione confermata con successo']);
     }
 
-    protected function sendVerificationEmail($booking, $title, $startTime, $endTime)
+    protected function sendVerificationEmail($booking, $title, $startTime, $endTime): bool
     {
         $email = new BookingVerificationEmail();
-        $email->sendVerification($booking, $title, $startTime);
+        return (bool) $email->sendVerification($booking, $title, $startTime);
     }
 
     protected function sendConfirmationEmails($booking, $title, $startTime, $endTime)
@@ -521,6 +537,27 @@ class BookingController extends ResourceController
     }
 
     /**
+     * Restrict a bookings query to slots that still hold capacity: confirmed
+     * bookings, plus pending ones created within the TTL. Abandoned/never-confirmed
+     * pending requests therefore stop blocking slots automatically.
+     *
+     * @param  \CodeIgniter\Model $builder a BookingModel query already scoped (e.g. by event_id/date)
+     * @return \CodeIgniter\Model
+     */
+    private function applyActiveBookingFilter($builder)
+    {
+        $cutoff = date('Y-m-d H:i:s', time() - self::PENDING_TTL_MINUTES * 60);
+
+        return $builder->groupStart()
+            ->where('status', 'confirmed')
+            ->orGroupStart()
+                ->where('status', 'pending')
+                ->where('created_at >=', $cutoff)
+            ->groupEnd()
+        ->groupEnd();
+    }
+
+    /**
      * Re-check a requested service slot against all booking rules (offset window,
      * working day, working hours and overlap). Returns an error message when the
      * slot is invalid, or null when it is OK. Mirrors availableSlots() so any slot
@@ -573,9 +610,9 @@ class BookingController extends ResourceController
      */
     private function slotIsFree(string $dateStr, DateTime $slotStart, DateTime $blockedEnd): bool
     {
-        $dbBookings = $this->model->where('DATE(start_time)', $dateStr)
-                                  ->whereIn('status', ['confirmed', 'pending'])
-                                  ->findAll();
+        $dbBookings = $this->applyActiveBookingFilter(
+            $this->model->where('DATE(start_time)', $dateStr)
+        )->findAll();
 
         foreach ($dbBookings as $b) {
             $bStart = new DateTime($b['start_time']);
