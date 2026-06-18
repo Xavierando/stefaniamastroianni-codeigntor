@@ -1,0 +1,13 @@
+# Defense in depth: this directory must only ever contain user-uploaded images.
+# Refuse to serve anything that could execute, regardless of how the server is
+# configured to run PHP (mod_php, CGI or FPM). This complements the strict
+# server-side validation performed before any file is written here.
+
+<FilesMatch "(?i)\.(php|php[0-9]*|phtml|phps|phar|pht|cgi|fcgi|pl|py|rb|asp|aspx|jsp|sh|exe|htaccess)$">
+    Require all denied
+</FilesMatch>
+
+# Strip any script handlers/types and disallow CGI execution + directory listing.
+Options -ExecCGI -Indexes
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8 .phar .cgi .pl .py
+RemoveType .php .phtml .php3 .php4 .php5 .php7 .php8 .phar

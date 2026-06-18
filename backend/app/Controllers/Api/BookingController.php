@@ -223,16 +223,28 @@ class BookingController extends ResourceController
         $duration = 60;
         if ($serviceId) {
             $service = $this->serviceModel->find($serviceId);
+            if (!$service) {
+                return $this->failNotFound('Servizio non trovato.');
+            }
+            if (isset($service['is_booking_enabled']) && (int)$service['is_booking_enabled'] === 0) {
+                return $this->fail('Questo servizio non è prenotabile online.');
+            }
             $title = $service['title'];
             $duration = (int)($service['duration'] ?? 60);
         } else {
             $event = $this->eventModel->find($eventId);
-            
+            if (!$event) {
+                return $this->failNotFound('Evento non trovato.');
+            }
+            if (isset($event['is_booking_enabled']) && (int)$event['is_booking_enabled'] === 0) {
+                return $this->fail('Questo evento non è prenotabile online.');
+            }
+
             // Past event check
             if (new \DateTime($event['date']) < new \DateTime()) {
                 return $this->fail('Questo evento è già passato. Non è possibile effettuare prenotazioni.');
             }
-            
+
             // Capacity check (including pending to avoid overbooking)
             $max = (int)($event['max_capacity'] ?? 0);
             if ($max > 0) {
@@ -246,6 +258,11 @@ class BookingController extends ResourceController
 
             $title = $event['title'];
             $duration = (int)($event['duration'] ?? 60);
+
+            // The event schedule is fixed: never trust a client-supplied time for events.
+            $eventStart   = new \DateTime($event['date']);
+            $data['date'] = $eventStart->format('Y-m-d');
+            $data['time'] = $eventStart->format('H:i');
         }
 
         $settings = $this->settingsModel->getAllSettings();
@@ -257,6 +274,16 @@ class BookingController extends ResourceController
         
         // This is the end time we store and block in the calendar
         $blockedEndTime = (clone $endTime)->add(new DateInterval("PT{$buffer}M"));
+
+        // For one-to-one services, re-validate the requested slot server-side so the
+        // availability rules (offset, working day/hours, overlap) cannot be bypassed
+        // by posting an arbitrary time. (Events use their own fixed, capacity-checked schedule.)
+        if ($serviceId) {
+            $slotError = $this->validateServiceSlot($startTime, $endTime, $blockedEndTime, $datePart);
+            if ($slotError !== null) {
+                return $this->fail($slotError);
+            }
+        }
 
         $bookingData = [
             'service_id'      => $serviceId,
@@ -491,5 +518,92 @@ class BookingController extends ResourceController
         $email->sendCancellationToClient($booking, $title, $startTime);
 
         return $this->respond(['success' => true, 'message' => 'Booking cancelled successfully']);
+    }
+
+    /**
+     * Re-check a requested service slot against all booking rules (offset window,
+     * working day, working hours and overlap). Returns an error message when the
+     * slot is invalid, or null when it is OK. Mirrors availableSlots() so any slot
+     * the UI offered will pass, while arbitrary/taken times are rejected.
+     */
+    private function validateServiceSlot(DateTime $startTime, DateTime $endTime, DateTime $blockedEndTime, string $dateStr): ?string
+    {
+        $settings = $this->settingsModel->getAllSettings();
+
+        // Must be in the future.
+        if ($startTime <= new DateTime()) {
+            return 'Lo slot selezionato non è più disponibile.';
+        }
+
+        // Respect the minimum booking offset.
+        $offsetDays = (int)($settings['booking_start_offset_days'] ?? 2);
+        $minDate    = (new DateTime())->add(new DateInterval("P{$offsetDays}D"))->format('Y-m-d');
+        if ($dateStr < $minDate) {
+            return "Le prenotazioni sono disponibili solo a partire dal {$minDate}.";
+        }
+
+        // Must fall on a configured working day.
+        $dayMap = [
+            1 => 'workday_mon', 2 => 'workday_tue', 3 => 'workday_wed',
+            4 => 'workday_thu', 5 => 'workday_fri', 6 => 'workday_sat', 7 => 'workday_sun',
+        ];
+        $dow = (int)$startTime->format('N');
+        if (!(int)($settings[$dayMap[$dow]] ?? 1)) {
+            return 'Il giorno selezionato non è disponibile per le prenotazioni.';
+        }
+
+        // Must fall within working hours (end without buffer, matching availableSlots()).
+        $dayStart = new DateTime("{$dateStr} " . ($settings['daily_start_time'] ?? '09:00'));
+        $dayEnd   = new DateTime("{$dateStr} " . ($settings['daily_end_time'] ?? '18:00'));
+        if ($startTime < $dayStart || $endTime > $dayEnd) {
+            return 'Lo slot selezionato è fuori dall\'orario di disponibilità.';
+        }
+
+        // Must not overlap an existing booking (or a Google Calendar busy block).
+        if (!$this->slotIsFree($dateStr, $startTime, $blockedEndTime)) {
+            return 'Lo slot selezionato non è più disponibile.';
+        }
+
+        return null;
+    }
+
+    /**
+     * True when [$slotStart, $blockedEnd) does not overlap any pending/confirmed
+     * booking that day, nor (when connected) a Google Calendar busy interval.
+     */
+    private function slotIsFree(string $dateStr, DateTime $slotStart, DateTime $blockedEnd): bool
+    {
+        $dbBookings = $this->model->where('DATE(start_time)', $dateStr)
+                                  ->whereIn('status', ['confirmed', 'pending'])
+                                  ->findAll();
+
+        foreach ($dbBookings as $b) {
+            $bStart = new DateTime($b['start_time']);
+            $bEnd   = new DateTime($b['end_time']);
+            if (max($slotStart->getTimestamp(), $bStart->getTimestamp()) < min($blockedEnd->getTimestamp(), $bEnd->getTimestamp())) {
+                return false;
+            }
+        }
+
+        if ($this->googleLibrary->isConnected()) {
+            try {
+                $busySlots = $this->googleLibrary->getFreeBusy(
+                    $slotStart->format(DateTime::RFC3339),
+                    $blockedEnd->format(DateTime::RFC3339)
+                );
+                foreach ($busySlots as $busy) {
+                    $busyStart = new DateTime($busy->getStart());
+                    $busyEnd   = new DateTime($busy->getEnd());
+                    if (max($slotStart->getTimestamp(), $busyStart->getTimestamp()) < min($blockedEnd->getTimestamp(), $busyEnd->getTimestamp())) {
+                        return false;
+                    }
+                }
+            } catch (\Exception $e) {
+                log_message('error', '[BookingController] slotIsFree free/busy error: ' . $e->getMessage());
+                // Fail open on Google errors; the DB overlap check already passed.
+            }
+        }
+
+        return true;
     }
 }

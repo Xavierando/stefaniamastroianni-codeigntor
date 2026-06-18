@@ -5,9 +5,12 @@ namespace App\Controllers\Api;
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\EventModel;
 use App\Models\BookingModel;
+use App\Controllers\Api\Concerns\HandlesImageUploads;
 
 class EventController extends ResourceController
 {
+    use HandlesImageUploads;
+
     protected $modelName = EventModel::class;
     protected $format = 'json';
 
@@ -91,11 +94,12 @@ class EventController extends ResourceController
 
         $data['slug'] = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $data['title'])));
 
-        $image = $this->request->getFile('image');
-        if ($image && $image->isValid() && !$image->hasMoved()) {
-            $newName = $image->getRandomName();
-            $image->move(FCPATH . 'uploads/events', $newName);
-            $data['imageUrl'] = '/uploads/events/' . $newName;
+        $upload = $this->storeUploadedImage($this->request->getFile('image'), 'events');
+        if (!$upload['ok']) {
+            return $this->failValidationErrors(['image' => $upload['error']]);
+        }
+        if ($upload['url'] !== null) {
+            $data['imageUrl'] = $upload['url'];
         }
 
         if ($this->model->insert($data)) {
@@ -119,11 +123,12 @@ class EventController extends ResourceController
             $data['slug'] = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $data['title'])));
         }
 
-        $image = $this->request->getFile('image');
-        if ($image && $image->isValid() && !$image->hasMoved()) {
-            $newName = $image->getRandomName();
-            $image->move(FCPATH . 'uploads/events', $newName);
-            $data['imageUrl'] = '/uploads/events/' . $newName;
+        $upload = $this->storeUploadedImage($this->request->getFile('image'), 'events');
+        if (!$upload['ok']) {
+            return $this->failValidationErrors(['image' => $upload['error']]);
+        }
+        if ($upload['url'] !== null) {
+            $data['imageUrl'] = $upload['url'];
         }
 
         if ($this->model->update($id, $data)) {

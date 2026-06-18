@@ -23,6 +23,7 @@
 backend/public/uploads/*
 !backend/public/uploads/index.html
 !backend/public/uploads/.gitkeep
+!backend/public/uploads/.htaccess
 
 # Environment variables
 **/.env

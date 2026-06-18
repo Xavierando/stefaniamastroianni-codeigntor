@@ -4,9 +4,12 @@ namespace App\Controllers\Api;
 
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\ServiceModel;
+use App\Controllers\Api\Concerns\HandlesImageUploads;
 
 class ServiceController extends ResourceController
 {
+    use HandlesImageUploads;
+
     protected $modelName = ServiceModel::class;
     protected $format    = 'json';
 
@@ -56,11 +59,12 @@ class ServiceController extends ResourceController
 
         $data['slug'] = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $data['title'])));
 
-        $image = $this->request->getFile('image');
-        if ($image && $image->isValid() && !$image->hasMoved()) {
-            $newName = $image->getRandomName();
-            $image->move(FCPATH . 'uploads/services', $newName);
-            $data['imageUrl'] = '/uploads/services/' . $newName;
+        $upload = $this->storeUploadedImage($this->request->getFile('image'), 'services');
+        if (!$upload['ok']) {
+            return $this->failValidationErrors(['image' => $upload['error']]);
+        }
+        if ($upload['url'] !== null) {
+            $data['imageUrl'] = $upload['url'];
         }
 
         if ($this->model->insert($data)) {
@@ -84,11 +88,12 @@ class ServiceController extends ResourceController
             $data['slug'] = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $data['title'])));
         }
 
-        $image = $this->request->getFile('image');
-        if ($image && $image->isValid() && !$image->hasMoved()) {
-            $newName = $image->getRandomName();
-            $image->move(FCPATH . 'uploads/services', $newName);
-            $data['imageUrl'] = '/uploads/services/' . $newName;
+        $upload = $this->storeUploadedImage($this->request->getFile('image'), 'services');
+        if (!$upload['ok']) {
+            return $this->failValidationErrors(['image' => $upload['error']]);
+        }
+        if ($upload['url'] !== null) {
+            $data['imageUrl'] = $upload['url'];
         }
 
         if ($this->model->update($id, $data)) {

@@ -3,6 +3,7 @@
 namespace App\Controllers\Api;
 
 use CodeIgniter\RESTful\ResourceController;
+use App\Libraries\AuthTokens;
 
 class AuthController extends ResourceController
 {
@@ -25,10 +26,10 @@ class AuthController extends ResourceController
         $envUsername = $_ENV['ADMIN_USERNAME'] ?? getenv('ADMIN_USERNAME') ?: 'admin';
         $envPassword = $_ENV['ADMIN_PASSWORD'] ?? getenv('ADMIN_PASSWORD') ?: 'admin';
 
-        if ($username === $envUsername && $password === $envPassword) {
-            // Generate a simple mock token for now. In a real production app we'd use a real JWT library
-            $token = base64_encode(json_encode(['user' => $username, 'exp' => time() + 3600 * 24]));
-            
+        if (hash_equals($envUsername, $username) && hash_equals($envPassword, $password)) {
+            // Signed, expiring token (HMAC-SHA256). See App\Libraries\AuthTokens.
+            $token = AuthTokens::issue($username);
+
             return $this->respond([
                 'status' => 'success',
                 'message' => 'Login successful',

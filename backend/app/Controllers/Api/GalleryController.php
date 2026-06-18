@@ -4,9 +4,12 @@ namespace App\Controllers\Api;
 
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\GalleryImageModel;
+use App\Controllers\Api\Concerns\HandlesImageUploads;
 
 class GalleryController extends ResourceController
 {
+    use HandlesImageUploads;
+
     protected $modelName = GalleryImageModel::class;
     protected $format    = 'json';
 
@@ -28,21 +31,16 @@ class GalleryController extends ResourceController
         $file = $this->request->getFile('image');
         $alt  = $this->request->getPost('alt') ?? '';
 
-        if (!$file || !$file->isValid()) {
+        $upload = $this->storeUploadedImage($file);
+        if (!$upload['ok']) {
+            return $this->failValidationErrors(['image' => $upload['error']]);
+        }
+        if ($upload['url'] === null) {
             return $this->failValidationErrors(['image' => 'Invalid or missing image file.']);
         }
 
-        if ($file->hasMoved() || !$file->isValid()) {
-            return $this->failValidationErrors(['image' => $file->getErrorString()]);
-        }
-
-        $newName = $file->getRandomName();
-        $file->move(FCPATH . 'uploads', $newName);
-
-        $url = '/uploads/' . $newName;
-
         $data = [
-            'url' => $url,
+            'url' => $upload['url'],
             'alt' => $alt
         ];
 

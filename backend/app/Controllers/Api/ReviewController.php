@@ -4,9 +4,12 @@ namespace App\Controllers\Api;
 
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\ReviewModel;
+use App\Controllers\Api\Concerns\HandlesImageUploads;
 
 class ReviewController extends ResourceController
 {
+    use HandlesImageUploads;
+
     protected $modelName = ReviewModel::class;
     protected $format    = 'json';
 
@@ -48,11 +51,12 @@ class ReviewController extends ResourceController
             return $this->failValidationErrors(['name' => 'Name and description are required']);
         }
 
-        $image = $this->request->getFile('image');
-        if ($image && $image->isValid() && !$image->hasMoved()) {
-            $newName = $image->getRandomName();
-            $image->move(FCPATH . 'uploads/reviews', $newName);
-            $data['imageUrl'] = '/uploads/reviews/' . $newName;
+        $upload = $this->storeUploadedImage($this->request->getFile('image'), 'reviews');
+        if (!$upload['ok']) {
+            return $this->failValidationErrors(['image' => $upload['error']]);
+        }
+        if ($upload['url'] !== null) {
+            $data['imageUrl'] = $upload['url'];
         }
 
         if ($this->model->insert($data)) {
@@ -72,11 +76,12 @@ class ReviewController extends ResourceController
             $data = json_decode($this->request->getBody(), true) ?? [];
         }
 
-        $image = $this->request->getFile('image');
-        if ($image && $image->isValid() && !$image->hasMoved()) {
-            $newName = $image->getRandomName();
-            $image->move(FCPATH . 'uploads/reviews', $newName);
-            $data['imageUrl'] = '/uploads/reviews/' . $newName;
+        $upload = $this->storeUploadedImage($this->request->getFile('image'), 'reviews');
+        if (!$upload['ok']) {
+            return $this->failValidationErrors(['image' => $upload['error']]);
+        }
+        if ($upload['url'] !== null) {
+            $data['imageUrl'] = $upload['url'];
         }
 
         if ($this->model->update($id, $data)) {

@@ -4,9 +4,12 @@ namespace App\Controllers\Api;
 
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\PostModel;
+use App\Controllers\Api\Concerns\HandlesImageUploads;
 
 class PostController extends ResourceController
 {
+    use HandlesImageUploads;
+
     protected $modelName = PostModel::class;
     protected $format    = 'json';
 
@@ -53,11 +56,12 @@ class PostController extends ResourceController
             $data['slug'] = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $data['title'])));
         }
 
-        $image = $this->request->getFile('image');
-        if ($image && $image->isValid() && !$image->hasMoved()) {
-            $newName = $image->getRandomName();
-            $image->move(FCPATH . 'uploads/posts', $newName);
-            $data['imageUrl'] = '/uploads/posts/' . $newName;
+        $upload = $this->storeUploadedImage($this->request->getFile('image'), 'posts');
+        if (!$upload['ok']) {
+            return $this->failValidationErrors(['image' => $upload['error']]);
+        }
+        if ($upload['url'] !== null) {
+            $data['imageUrl'] = $upload['url'];
         }
 
         if ($this->model->insert($data)) {
@@ -81,11 +85,12 @@ class PostController extends ResourceController
             $data['slug'] = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $data['title'])));
         }
 
-        $image = $this->request->getFile('image');
-        if ($image && $image->isValid() && !$image->hasMoved()) {
-            $newName = $image->getRandomName();
-            $image->move(FCPATH . 'uploads/posts', $newName);
-            $data['imageUrl'] = '/uploads/posts/' . $newName;
+        $upload = $this->storeUploadedImage($this->request->getFile('image'), 'posts');
+        if (!$upload['ok']) {
+            return $this->failValidationErrors(['image' => $upload['error']]);
+        }
+        if ($upload['url'] !== null) {
+            $data['imageUrl'] = $upload['url'];
         }
 
         if ($this->model->update($id, $data)) {
