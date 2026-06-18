@@ -239,7 +239,7 @@ class BookingController extends ResourceController
             if (isset($service['is_booking_enabled']) && (int)$service['is_booking_enabled'] === 0) {
                 return $this->fail('Questo servizio non è prenotabile online.');
             }
-            $title = $service['title'];
+            $title = $service['title'] ?? 'Servizio';
             $duration = (int)($service['duration'] ?? 60);
         } else {
             $event = $this->eventModel->find($eventId);
@@ -266,7 +266,7 @@ class BookingController extends ResourceController
                 }
             }
 
-            $title = $event['title'];
+            $title = $event['title'] ?? 'Evento';
             $duration = (int)($event['duration'] ?? 60);
 
             // The event schedule is fixed: never trust a client-supplied time for events.
@@ -306,9 +306,28 @@ class BookingController extends ResourceController
             'status'          => 'pending' // Start as pending
         ];
 
-        // 1. Save to DB
+        // 1. Save to DB inside a transaction, re-checking event capacity within it
+        // to tighten the double-booking / overbooking race window.
+        $db = \Config\Database::connect();
+        $db->transStart();
+
+        if ($eventId) {
+            $max = (int)($event['max_capacity'] ?? 0);
+            if ($max > 0) {
+                $recount = $this->applyActiveBookingFilter(
+                    $this->model->where('event_id', $eventId)
+                )->countAllResults();
+                if ($recount >= $max) {
+                    $db->transComplete();
+                    return $this->fail('Questo evento è al completo. Non è possibile accettare altre prenotazioni (alcune richieste sono in attesa di conferma).');
+                }
+            }
+        }
+
         $bookingId = $this->model->insert($bookingData);
-        if (!$bookingId) {
+        $db->transComplete();
+
+        if ($db->transStatus() === false || !$bookingId) {
             return $this->fail('Failed to save booking');
         }
 
@@ -360,10 +379,10 @@ class BookingController extends ResourceController
         $title = "";
         if ($booking['service_id']) {
             $service = $this->serviceModel->find($booking['service_id']);
-            $title = $service['title'];
+            $title = $service['title'] ?? 'Servizio';
         } else {
             $event = $this->eventModel->find($booking['event_id']);
-            $title = $event['title'];
+            $title = $event['title'] ?? 'Evento';
         }
 
         return $this->respond([
@@ -399,10 +418,10 @@ class BookingController extends ResourceController
         $title = "";
         if ($booking['service_id']) {
             $service = $this->serviceModel->find($booking['service_id']);
-            $title = $service['title'];
+            $title = $service['title'] ?? 'Servizio';
         } else {
             $event = $this->eventModel->find($booking['event_id']);
-            $title = $event['title'];
+            $title = $event['title'] ?? 'Evento';
         }
 
         $startTime = new DateTime($booking['start_time']);
@@ -461,10 +480,10 @@ class BookingController extends ResourceController
         $title = "";
         if ($booking['service_id']) {
             $service = $this->serviceModel->find($booking['service_id']);
-            $title = $service['title'];
+            $title = $service['title'] ?? 'Servizio';
         } else {
             $event = $this->eventModel->find($booking['event_id']);
-            $title = $event['title'];
+            $title = $event['title'] ?? 'Evento';
         }
 
         return $this->respond([
@@ -501,9 +520,12 @@ class BookingController extends ResourceController
         
         $startTime = new DateTime($booking['start_time']);
         $now = new DateTime();
-        $diff = $now->diff($startTime);
 
-        if ($diff->invert || $diff->days < $limitDays) {
+        // Block cancellation once we are past (start − limit days), precise to the
+        // second. (The previous DateInterval->days check floored to whole days and
+        // cut off at the wrong moment.)
+        $cutoff = (clone $startTime)->sub(new DateInterval("P{$limitDays}D"));
+        if ($now > $cutoff) {
             return $this->fail('Cancellation time limit exceeded');
         }
 
@@ -523,10 +545,10 @@ class BookingController extends ResourceController
         $title = "";
         if ($booking['service_id']) {
             $service = $this->serviceModel->find($booking['service_id']);
-            $title = $service['title'];
+            $title = $service['title'] ?? 'Servizio';
         } else {
             $event = $this->eventModel->find($booking['event_id']);
-            $title = $event['title'];
+            $title = $event['title'] ?? 'Evento';
         }
 
         $email = new BookingCancellationEmail();

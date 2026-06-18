@@ -53,13 +53,23 @@ class GoogleCalendarLibrary
                     log_message('info', "[GoogleCalendar] Access token expired. Attempting refresh...");
                     if ($this->client->getRefreshToken()) {
                         $newToken = $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
-                        
-                        // Merge refresh token if not present in the new set
-                        if (!isset($newToken['refresh_token'])) {
-                            $newToken['refresh_token'] = $accessToken['refresh_token'];
-                        }
 
-                        $this->settingsModel->setSetting('google_oauth_token', json_encode($newToken));
+                        if (isset($newToken['error'])) {
+                            // Refresh failed (e.g. revoked/expired grant). Keep the existing
+                            // token rather than overwriting it with an error payload, and
+                            // surface the problem so an admin can reconnect.
+                            log_message('error', '[GoogleCalendar] Token refresh failed: '
+                                . ($newToken['error_description'] ?? $newToken['error'])
+                                . '. Existing token kept; admin re-authentication may be required.');
+                        } else {
+                            // Preserve the refresh token if the refreshed set omits it.
+                            if (!isset($newToken['refresh_token']) && isset($accessToken['refresh_token'])) {
+                                $newToken['refresh_token'] = $accessToken['refresh_token'];
+                            }
+                            $this->settingsModel->setSetting('google_oauth_token', json_encode($newToken));
+                        }
+                    } else {
+                        log_message('warning', '[GoogleCalendar] Access token expired and no refresh token available; admin must reconnect Google.');
                     }
                 }
             }

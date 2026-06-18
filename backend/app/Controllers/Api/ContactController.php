@@ -39,6 +39,12 @@ class ContactController extends ResourceController
         }
 
         if ($this->model->insert($clean)) {
+            // Best-effort admin notification — never block the submission on email.
+            try {
+                (new \App\Libraries\Emails\ContactNotificationEmail())->notify($clean);
+            } catch (\Throwable $e) {
+                log_message('error', '[Contact] admin notification failed: ' . $e->getMessage());
+            }
             return $this->respondCreated(['success' => true]);
         }
 

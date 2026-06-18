@@ -5,10 +5,12 @@ namespace App\Controllers\Api;
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\ServiceModel;
 use App\Controllers\Api\Concerns\HandlesImageUploads;
+use App\Controllers\Api\Concerns\GeneratesSlug;
 
 class ServiceController extends ResourceController
 {
     use HandlesImageUploads;
+    use GeneratesSlug;
 
     protected $modelName = ServiceModel::class;
     protected $format    = 'json';
@@ -57,7 +59,7 @@ class ServiceController extends ResourceController
             return $this->failValidationErrors(['title' => 'Title is required']);
         }
 
-        $data['slug'] = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $data['title'])));
+        $data['slug'] = $this->uniqueSlug($this->model, $data['title']);
 
         $upload = $this->storeUploadedImage($this->request->getFile('image'), 'services');
         if (!$upload['ok']) {
@@ -85,7 +87,7 @@ class ServiceController extends ResourceController
         }
 
         if (isset($data['title'])) {
-            $data['slug'] = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $data['title'])));
+            $data['slug'] = $this->uniqueSlug($this->model, $data['title'], $id);
         }
 
         $upload = $this->storeUploadedImage($this->request->getFile('image'), 'services');

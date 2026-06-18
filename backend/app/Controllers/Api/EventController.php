@@ -6,10 +6,12 @@ use CodeIgniter\RESTful\ResourceController;
 use App\Models\EventModel;
 use App\Models\BookingModel;
 use App\Controllers\Api\Concerns\HandlesImageUploads;
+use App\Controllers\Api\Concerns\GeneratesSlug;
 
 class EventController extends ResourceController
 {
     use HandlesImageUploads;
+    use GeneratesSlug;
 
     protected $modelName = EventModel::class;
     protected $format = 'json';
@@ -97,7 +99,7 @@ class EventController extends ResourceController
             return $this->failValidationErrors(['title' => 'Title is required']);
         }
 
-        $data['slug'] = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $data['title'])));
+        $data['slug'] = $this->uniqueSlug($this->model, $data['title']);
 
         $upload = $this->storeUploadedImage($this->request->getFile('image'), 'events');
         if (!$upload['ok']) {
@@ -125,7 +127,7 @@ class EventController extends ResourceController
         }
 
         if (isset($data['title'])) {
-            $data['slug'] = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $data['title'])));
+            $data['slug'] = $this->uniqueSlug($this->model, $data['title'], $id);
         }
 
         $upload = $this->storeUploadedImage($this->request->getFile('image'), 'events');

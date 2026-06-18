@@ -5,10 +5,12 @@ namespace App\Controllers\Api;
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\PostModel;
 use App\Controllers\Api\Concerns\HandlesImageUploads;
+use App\Controllers\Api\Concerns\GeneratesSlug;
 
 class PostController extends ResourceController
 {
     use HandlesImageUploads;
+    use GeneratesSlug;
 
     protected $modelName = PostModel::class;
     protected $format    = 'json';
@@ -52,9 +54,7 @@ class PostController extends ResourceController
             return $this->failValidationErrors(['title' => 'Title is required']);
         }
 
-        if (empty($data['slug'])) {
-            $data['slug'] = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $data['title'])));
-        }
+        $data['slug'] = $this->uniqueSlug($this->model, !empty($data['slug']) ? $data['slug'] : $data['title']);
 
         $upload = $this->storeUploadedImage($this->request->getFile('image'), 'posts');
         if (!$upload['ok']) {
@@ -81,8 +81,10 @@ class PostController extends ResourceController
             $data = json_decode($this->request->getBody(), true) ?? [];
         }
 
-        if (isset($data['title']) && empty($data['slug'])) {
-            $data['slug'] = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $data['title'])));
+        if (!empty($data['slug'])) {
+            $data['slug'] = $this->uniqueSlug($this->model, $data['slug'], $id);
+        } elseif (isset($data['title'])) {
+            $data['slug'] = $this->uniqueSlug($this->model, $data['title'], $id);
         }
 
         $upload = $this->storeUploadedImage($this->request->getFile('image'), 'posts');

@@ -47,7 +47,7 @@ class BookingCancellationEmail extends BaseEmail
         $htmlMessage = $this->renderLayout($content);
 
         $this->email->setTo($adminEmail);
-        $this->email->setSubject($subject);
+        $this->email->setSubject($this->cleanHeader($subject));
         $this->email->setMessage($htmlMessage);
         $this->email->setMailType('html');
         return $this->email->send();

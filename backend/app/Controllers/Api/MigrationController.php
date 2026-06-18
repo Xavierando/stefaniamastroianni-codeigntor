@@ -12,13 +12,20 @@ class MigrationController extends ResourceController
     {
         // Require a secret token to prevent unauthorized access
         // It can be passed via header or json body
-        $token = $this->request->getHeaderLine('X-Migration-Token') 
+        $token = $this->request->getHeaderLine('X-Migration-Token')
             ?: $this->request->getJsonVar('token');
 
-        // You should configure a secure secret on the server or use an env variable
-        $expectedToken = getenv('MIGRATION_TOKEN') ?: 'aruba_deploy_secret_2026';
+        $expectedToken = getenv('MIGRATION_TOKEN') ?: (env('MIGRATION_TOKEN') ?: null);
 
-        if ($token !== $expectedToken) {
+        // Fail closed: no hardcoded fallback. If no token is configured on the
+        // server the endpoint is disabled rather than protected by a guessable secret.
+        if (empty($expectedToken)) {
+            log_message('error', '[Migration] MIGRATION_TOKEN is not configured; refusing to run.');
+            return $this->failForbidden('Migrations are disabled.');
+        }
+
+        // Constant-time comparison to avoid timing side-channels.
+        if (!is_string($token) || !hash_equals($expectedToken, $token)) {
             return $this->failUnauthorized('Invalid migration token.');
         }
 
@@ -38,7 +45,9 @@ class MigrationController extends ResourceController
                 ]);
             }
         } catch (\Throwable $e) {
-            return $this->failServerError('Migration failed: ' . $e->getMessage());
+            // Log internally; do not leak schema/DB details to the client.
+            log_message('error', '[Migration] failed: ' . $e->getMessage());
+            return $this->failServerError('Migration failed.');
         }
     }
 }

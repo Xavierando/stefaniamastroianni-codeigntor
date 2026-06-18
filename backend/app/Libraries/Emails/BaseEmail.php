@@ -87,10 +87,21 @@ abstract class BaseEmail
     }
 
     /**
+     * Strip CR/LF from a value used in an email header to prevent header/subject
+     * injection via user-controlled fields (e.g. the client's name).
+     */
+    protected function cleanHeader(string $value): string
+    {
+        return trim(preg_replace('/[\r\n]+/', ' ', $value));
+    }
+
+    /**
      * Send the email
      */
     public function send(string $to, string $subject, string $htmlMessage, string $plainTextMessage = ''): bool
     {
+        $to      = $this->cleanHeader($to);
+        $subject = $this->cleanHeader($subject);
         $this->email->setTo($to);
         $this->email->setSubject($subject);
         $this->email->setMessage($htmlMessage);
