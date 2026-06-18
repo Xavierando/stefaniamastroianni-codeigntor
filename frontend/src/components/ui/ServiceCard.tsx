@@ -25,9 +25,11 @@ export function ServiceCard({ id, title, description, durationMin, price, imageS
         <div className="relative p-6 sm:w-1/3 flex flex-col justify-center items-center text-center overflow-hidden min-h-[200px] sm:min-h-full">
           {imageSrc ? (
             <>
-              <img 
-                src={imageSrc} 
+              <img
+                src={imageSrc}
                 alt={title}
+                loading="lazy"
+                decoding="async"
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
               {/* Overlay to ensure icons/text are readable */}

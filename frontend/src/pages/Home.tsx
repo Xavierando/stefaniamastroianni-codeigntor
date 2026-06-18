@@ -70,8 +70,8 @@ export function Home() {
     url: SITE_URL,
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Ancona",
-      addressRegion: "AN",
+      addressLocality: "Aosta",
+      addressRegion: "Valle d'Aosta",
       addressCountry: "IT",
     },
     founder: {

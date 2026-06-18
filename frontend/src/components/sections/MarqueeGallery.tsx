@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X, ZoomIn } from "lucide-react";
 
 export interface GalleryImageProps {
@@ -10,6 +10,16 @@ export interface GalleryImageProps {
 export function MarqueeGallery({ images, className }: { images: GalleryImageProps[], className?: string }) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isHovered, setIsHovered] = useState(false);
+
+  // Close the lightbox on Escape for keyboard accessibility.
+  useEffect(() => {
+    if (!selectedImage) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedImage(null);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [selectedImage]);
 
   if (!images || images.length === 0) return null;
 
@@ -39,12 +49,22 @@ export function MarqueeGallery({ images, className }: { images: GalleryImageProp
           {displayImages.map((img, idx) => (
             <div
               key={`${img.id}-${idx}`}
-              className="relative w-[280px] md:w-[380px] aspect-[4/5] rounded-xl overflow-hidden cursor-pointer group/item flex-shrink-0 shadow-sm"
+              role="button"
+              tabIndex={0}
+              aria-label={img.alt || "Ingrandisci immagine"}
+              className="relative w-[280px] md:w-[380px] aspect-[4/5] rounded-xl overflow-hidden cursor-pointer group/item flex-shrink-0 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
               onClick={() => setSelectedImage(img.url)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setSelectedImage(img.url);
+                }
+              }}
             >
               <img
                 src={img.url}
                 alt={img.alt || `Gallery visual ${idx}`}
+                decoding="async"
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover/item:scale-110"
               />
               <div className="absolute inset-0 bg-brand-contrast/0 group-hover/item:bg-brand-contrast/30 transition-colors flex items-center justify-center">
@@ -57,11 +77,16 @@ export function MarqueeGallery({ images, className }: { images: GalleryImageProp
 
       {/* Fullscreen Dialog Modal */}
       {selectedImage && (
-        <div 
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Immagine ingrandita"
           className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 md:p-8 animate-in fade-in duration-200"
           onClick={() => setSelectedImage(null)}
         >
-          <button 
+          <button
+            type="button"
+            aria-label="Chiudi"
             className="absolute top-6 right-6 text-white bg-black/50 p-2 rounded-full hover:bg-white/20 transition-colors z-10"
             onClick={(e) => {
               e.stopPropagation();

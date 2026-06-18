@@ -8,6 +8,7 @@ interface SEOProps {
   url?: string;
   type?: "website" | "article";
   schema?: object;
+  noindex?: boolean;
 }
 
 export function SEO({
@@ -17,6 +18,7 @@ export function SEO({
   url = SITE_URL,
   type = "website",
   schema,
+  noindex = false,
 }: SEOProps) {
   const siteName = "Stefania Mastroianni";
   const defaultTitle = `${siteName} | Yoga, Maternità e Trattamenti benessere ad Aosta`;
@@ -34,6 +36,7 @@ export function SEO({
       {/* Standard metadata tags */}
       <title>{fullTitle}</title>
       <meta name="description" content={siteDescription} />
+      {noindex && <meta name="robots" content="noindex, follow" />}
       <link rel="canonical" href={window.location.href} />
 
       {/* Open Graph / Facebook */}

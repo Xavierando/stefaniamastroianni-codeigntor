@@ -58,6 +58,8 @@ export function Hero({
           <img
             src={imageSrc}
             alt={imageAlt}
+            fetchPriority="high"
+            decoding="async"
             className={`w-full h-full object-cover ${getObjectPositionClass()}`}
           />
           {/* Subtle bottom fade gradient to blend with the next section */}
@@ -86,6 +88,8 @@ export function Hero({
             <img
               src={imageSrc}
               alt={imageAlt}
+              fetchPriority="high"
+              decoding="async"
               className={`absolute inset-0 w-full h-full object-cover ${getObjectPositionClass()}`}
             />
           </motion.div>
