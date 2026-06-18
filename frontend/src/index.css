@@ -17,8 +17,8 @@
   --color-background: var(--color-brand-base);
   --color-foreground: var(--color-brand-contrast);
 
-  --font-sans: "Nunito", "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-serif: "Playfair Display", serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Lora", serif;
 
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
