@@ -119,7 +119,7 @@ export function EventDetail() {
         </div>
       )}
 
-      {event.remainingCapacity !== null && event.remainingCapacity > 0 && event.remainingCapacity <= 5 && (
+      {!event.isPast && event.remainingCapacity !== null && event.remainingCapacity > 0 && event.remainingCapacity <= 5 && (
         <div className="mb-6 p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-700 text-sm font-medium animate-pulse">
             ⚠️ Ultimi {event.remainingCapacity} posti rimasti!
         </div>

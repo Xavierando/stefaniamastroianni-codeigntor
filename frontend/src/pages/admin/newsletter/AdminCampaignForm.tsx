@@ -50,8 +50,10 @@ export function AdminCampaignForm() {
     }
   }, [id]);
 
-  // Clean up on unmount: stop the loop and prevent setState after unmount.
+  // Track mount state; reset on (re)mount so a StrictMode remount doesn't leave
+  // isMountedRef stuck false (which would make the send loop silently no-op).
   useEffect(() => {
+    isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
       isSendingRef.current = false;

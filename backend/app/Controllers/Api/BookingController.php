@@ -306,26 +306,45 @@ class BookingController extends ResourceController
             'status'          => 'pending' // Start as pending
         ];
 
-        // 1. Save to DB inside a transaction, re-checking event capacity within it
-        // to tighten the double-booking / overbooking race window.
+        // 1. Save to DB. A MySQL advisory lock serialises concurrent bookings for
+        // the same resource (the day's calendar for services, or the specific
+        // event) so the capacity/overlap re-check and the insert are atomic across
+        // connections — this closes the overbooking / double-booking race, not just
+        // narrows it.
         $db = \Config\Database::connect();
-        $db->transStart();
+        $lockKey = $eventId
+            ? "booking_event_{$eventId}"
+            : "booking_calendar_{$datePart}";
 
-        if ($eventId) {
-            $max = (int)($event['max_capacity'] ?? 0);
-            if ($max > 0) {
-                $recount = $this->applyActiveBookingFilter(
-                    $this->model->where('event_id', $eventId)
-                )->countAllResults();
-                if ($recount >= $max) {
+        $bookingId = null;
+        $db->query('SELECT GET_LOCK(?, 10) AS acquired', [$lockKey]);
+        try {
+            $db->transStart();
+
+            if ($eventId) {
+                $max = (int)($event['max_capacity'] ?? 0);
+                if ($max > 0) {
+                    $recount = $this->applyActiveBookingFilter(
+                        $this->model->where('event_id', $eventId)
+                    )->countAllResults();
+                    if ($recount >= $max) {
+                        $db->transComplete();
+                        return $this->fail('Questo evento è al completo. Non è possibile accettare altre prenotazioni (alcune richieste sono in attesa di conferma).');
+                    }
+                }
+            } else {
+                // Final overlap re-check for one-to-one services, under the lock.
+                if (!$this->slotIsFree($datePart, $startTime, $blockedEndTime)) {
                     $db->transComplete();
-                    return $this->fail('Questo evento è al completo. Non è possibile accettare altre prenotazioni (alcune richieste sono in attesa di conferma).');
+                    return $this->fail('Lo slot selezionato non è più disponibile.');
                 }
             }
-        }
 
-        $bookingId = $this->model->insert($bookingData);
-        $db->transComplete();
+            $bookingId = $this->model->insert($bookingData);
+            $db->transComplete();
+        } finally {
+            $db->query('SELECT RELEASE_LOCK(?) AS released', [$lockKey]);
+        }
 
         if ($db->transStatus() === false || !$bookingId) {
             return $this->fail('Failed to save booking');
