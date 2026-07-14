@@ -46,7 +46,9 @@ services:
       ADMIN_USERNAME: ${ADMIN_USERNAME}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     ports:
-      - "8080:8080"
+      # Host 8080 is used by other local projects; the frontend proxy talks to
+      # backend:8080 over the compose network, so only the host port shifts.
+      - "8081:8080"
     volumes:
       - ./../../backend:/var/www/html
     depends_on:
@@ -60,7 +62,7 @@ services:
     container_name: stefaniamastroianni-frontend
     restart: always
     ports:
-      - "5173:5173"
+      - "81:5173"
     volumes:
       - ./../../frontend:/app
       - /app/node_modules

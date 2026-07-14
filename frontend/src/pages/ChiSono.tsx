@@ -63,8 +63,8 @@ export function ChiSono() {
           <div className="container mx-auto max-w-6xl flex flex-col md:flex-row gap-12 md:gap-24 items-center">
             <div className="w-full md:w-1/2 relative aspect-[3/4] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-soft">
               <img
-                src="/images/home/DSC_0557.webp"
-                alt="Stefania Mastroianni nella natura"
+                src="/images/chi-sono/stefania-mare.webp"
+                alt="Stefania Mastroianni seduta accanto a una porta di legno turchese"
                 className="absolute inset-0 w-full h-full object-cover"
               />
             </div>
@@ -73,17 +73,69 @@ export function ChiSono() {
                 Chi è Stefania?
               </h2>
               <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-8">
-                Sono una donna, una madre e un'appassionata ricercatrice di
-                equilibrio. Amo perdermi nei boschi, ascoltare il suono del
-                vento tra le foglie e osservare come la natura abbia sempre una
-                risposta per ogni nostra inquietudine.
+                <em className="text-brand-contrast">Amo perdermi nei boschi,</em>{" "}
+                ascoltare il suono del vento tra le foglie, osservare la natura
+                e{" "}
+                <em className="text-brand-contrast">lasciarmi sorprendere</em>{" "}
+                dalla sua saggezza.
+              </p>
+              <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-8">
+                Sono{" "}
+                <em className="text-brand-contrast">madre di due creature</em>{" "}
+                che, fino ad ora, mi hanno insegnato tanto. Sono{" "}
+                <em className="text-brand-contrast">appassionata di arte</em>,
+                cultura e mistero, di simboli e rituali, di linguaggi e
+                movimento.
+              </p>
+              <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-8">
+                I viaggi oltreoceano mi hanno aperto ad una nuova visione di{" "}
+                <em className="text-brand-contrast">“stare nel presente”</em>,
+                riportandomi all’<em className="text-brand-contrast">essenziale</em>{" "}
+                e alla{" "}
+                <em className="text-brand-contrast">
+                  cura di me stessa come priorità
+                </em>
+                , per vivere in maniera sana ed equilibrata.
+              </p>
+              <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-8">
+                Lavoro da anni{" "}
+                <em className="text-brand-contrast">
+                  nell’ambito del sociale e del benessere,
+                </em>{" "}
+                con passione e dedizione. Credo in un{" "}
+                <em className="text-brand-contrast">approccio integrale</em>, di
+                relazione costante tra{" "}
+                <em className="text-brand-contrast">corpo, mente e spirito</em>,
+                che inizia con un{" "}
+                <em className="text-brand-contrast">ascolto reale</em> della
+                storia, dei bisogni e di ciò che sente chi ho di fronte. Per
+                questo{" "}
+                <em className="text-brand-contrast">
+                  ogni percorso e ogni consulenza sono diversi
+                </em>
+                , così come ogni pratica di gruppo.{" "}
+                <em className="text-brand-contrast">
+                  Nascono come risposta al momento presente
+                </em>
+                , al contesto e al{" "}
+                <em className="text-brand-contrast">dialogo vivo</em> di tutte
+                le parti coinvolte.
               </p>
               <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light">
-                Il mio approccio al benessere non è mai standardizzato, ma nasce
-                da un ascolto profondo di chi ho di fronte. Credo fermamente che
-                ognuno di noi possieda già le risorse per guarire e ritrovare il
-                proprio centro; il mio compito è solo quello di facilitare
-                questo ritorno a casa.
+                Credo che{" "}
+                <em className="text-brand-contrast">
+                  ognuno abbia già le risorse di cui ha bisogno
+                </em>
+                : il mio compito è solo{" "}
+                <em className="text-brand-contrast">
+                  “ricordare” chi siamo e da dove veniamo
+                </em>
+                , offrendo tecniche, strategie e informazioni che facilitino
+                questo{" "}
+                <em className="text-brand-contrast">
+                  “ritorno a casa”, nello spazio del Cuore
+                </em>
+                .
               </p>
             </div>
           </div>
