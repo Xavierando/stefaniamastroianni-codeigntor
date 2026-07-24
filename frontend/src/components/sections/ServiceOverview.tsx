@@ -100,11 +100,11 @@ export function ServiceOverview({
               <Link
                 to={href}
                 onClick={onButtonClick}
-                className="inline-flex w-fit items-center gap-3 text-brand-primary font-medium group"
+                className="inline-flex w-fit items-center gap-3 text-brand-secondary font-medium group"
               >
                 <span className="relative py-1">
                   {ctaText}
-                  <span className="absolute bottom-0 left-0 w-full h-[1px] bg-brand-primary/30 group-hover:bg-brand-primary group-hover:h-[2px] transition-all" />
+                  <span className="absolute bottom-0 left-0 w-full h-[1px] bg-brand-secondary/30 group-hover:bg-brand-secondary group-hover:h-[2px] transition-all" />
                 </span>
                 <ArrowRight
                   size={18}
@@ -114,11 +114,11 @@ export function ServiceOverview({
             ) : (
               <button
                 onClick={onButtonClick}
-                className="inline-flex w-fit items-center gap-3 text-brand-primary font-medium group focus:outline-none"
+                className="inline-flex w-fit items-center gap-3 text-brand-secondary font-medium group focus:outline-none"
               >
                 <span className="relative py-1">
                   {ctaText}
-                  <span className="absolute bottom-0 left-0 w-full h-[1px] bg-brand-primary/30 group-hover:bg-brand-primary group-hover:h-[2px] transition-all" />
+                  <span className="absolute bottom-0 left-0 w-full h-[1px] bg-brand-secondary/30 group-hover:bg-brand-secondary group-hover:h-[2px] transition-all" />
                 </span>
                 <ArrowRight
                   size={18}

@@ -30,7 +30,7 @@ export function Blog() {
     fetchPosts();
   }, []);
 
-  const isHeroLoaded = useImagePreloader("/images/home/slidehome1.webp");
+  const isHeroLoaded = useImagePreloader("/images/blog/blog-hero.webp");
 
   const isReady = !isLoading && isHeroLoaded;
 
@@ -48,7 +48,11 @@ export function Blog() {
       <div
         className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? "opacity-0 h-screen overflow-hidden" : "opacity-100"}`}
       >
-        <Hero imageSrc="/images/home/slidehome1.webp" imagePosition="top" />
+        <Hero
+          imageSrc="/images/blog/blog-hero.webp"
+          imageAlt="Allestimento per una pratica meditativa: fiori di campo, lanterne e cristalli su un tappeto"
+          imagePosition="center"
+        />
 
         <PageIntroduction
           title="Il Blog di Stefania"

@@ -27,7 +27,7 @@ export function PageIntroduction({
   return (
     <section
       className={cn(
-        "w-full pb-24 pt-6 md:py-24 px-4 bg-brand-base text-center relative overflow-hidden",
+        "w-full pt-6 md:pt-24 pb-6 px-4 bg-brand-base text-center relative overflow-hidden",
         showBorder && "border-b border-brand-contrast/5",
         className,
       )}

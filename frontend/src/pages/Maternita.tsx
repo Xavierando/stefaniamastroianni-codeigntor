@@ -58,7 +58,7 @@ export function MaternitaPage() {
   }, []);
 
   const isHeroLoaded = useImagePreloader(
-    "/images/maternita/Servizi-maternita-2.webp",
+    "/images/maternita/hero-maternita.webp",
   );
 
   const isReady = !isLoading && isHeroLoaded;
@@ -86,7 +86,10 @@ export function MaternitaPage() {
       <div
         className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? "opacity-0 h-screen overflow-hidden" : "opacity-100"}`}
       >
-        <Hero imageSrc="/images/maternita/Servizi-maternita-2.webp" />
+        <Hero
+          imageSrc="/images/maternita/hero-maternita.webp"
+          imageAlt="Donna che appoggia il capo sul pancione di una futura mamma in un bosco assolato"
+        />
 
         <PageIntroduction
           title="Maternità Consapevole"

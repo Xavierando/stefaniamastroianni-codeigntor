@@ -140,7 +140,7 @@ export function Home() {
           <ServiceOverview
             title="Maternità"
             description="Un accompagnamento dolce dal preconcepimento al post-parto. Spazi di condivisione, preparazione corporea ed emotiva per vivere la nascita in pienezza."
-            imageSrc="/images/home/Servizi-maternita-1.webp"
+            imageSrc="/images/home/maternita-home.webp"
             href="/maternita"
             ctaText="Scopri i percorsi nascita"
             imagePosition="left"
@@ -164,7 +164,7 @@ export function Home() {
           <ServiceOverview
             title="Yoga e Meditazione"
             description="Pratiche corporee, del respiro e di concentrazione per coltivare la presenza, flessibilità e forza, adattate per ogni livello di esperienza."
-            imageSrc="/images/home/Pratiche-di-Yoga.webp"
+            imageSrc="/images/home/yoga-home.webp"
             href="/yoga-e-meditazione"
             ctaText="Inizia a praticare"
             imagePosition="left"
