@@ -47,6 +47,13 @@ export default defineConfig(({ mode }) => {
     },
   },
   server: {
+    // Docker/Colima volume mounts don't forward FS events into the VM, so
+    // Vite's watcher misses edits. Polling makes HMR fire reliably in the
+    // container (harmless outside it — just a small CPU cost in dev).
+    watch: {
+      usePolling: true,
+      interval: 300,
+    },
     proxy: {
       '/uploads': {
         target: 'http://backend:8080',

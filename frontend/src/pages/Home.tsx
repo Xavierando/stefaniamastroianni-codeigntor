@@ -6,7 +6,7 @@ import { MarqueeGallery } from "@/components/sections/MarqueeGallery";
 import { TestimonialsCarousel } from "@/components/sections/TestimonialsCarousel";
 import { apiFetch } from "@/lib/api";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
-import { PageIntroduction } from "@/components/sections/PageIntroduction";
+import { Link } from "react-router-dom";
 import { SEO } from "@/components/common/SEO";
 import { SITE_URL } from "@/config/site";
 
@@ -96,16 +96,41 @@ export function Home() {
         {/* 1. Hero Section */}
         <Hero imageSrc="/images/home/home-hero-yoga.webp" imagePosition="top" />
 
-        {/* 2. Introduzione (Chi è e Cosa Fa) */}
-        <PageIntroduction
-          as="h1"
-          variant="editorial"
-          showBorder
-          title='"Ogni giorno il nostro corpo ci offre dei messaggi importanti, che ci indicano come stiamo e di cosa abbiamo bisogno"'
-          description="Per tornare lì, all'origine, a quel linguaggio semplice e naturale di relazione tra corpo, mente e emozioni, abbiamo bisogno di uno spazio sicuro, in cui sentirci visti e ascoltati. Attraverso momenti di dialogo, esplorazione, ascolto, movimento, contatto, gioco e tanto altro, sono felice di accompagnarti nel tuo personale viaggio di ri-scoperta e trasformazione, come un'alleata che cresce e cambia con te."
-          ctaText="Scopri di più su di me"
-          ctaHref="/chi-sono"
-        />
+        {/* 2. Introduzione (Benvenuto) */}
+        <section className="w-full pb-24 pt-6 md:py-24 px-4 bg-brand-base text-center relative overflow-hidden border-b border-brand-contrast/5">
+          <div className="container mx-auto flex flex-col items-center max-w-4xl">
+            <h1 className="font-serif mb-8 leading-tight text-4xl lg:text-5xl italic font-semibold text-brand-primary">
+              Benvenuta/o,
+            </h1>
+
+            <div className="text-brand-contrast/80 leading-relaxed font-light text-xl md:text-2xl space-y-6 max-w-3xl">
+              <p>
+                in questo spazio nato da un profondo amore verso la vita, in cui
+                ti propongo{" "}
+                <strong className="font-semibold text-brand-contrast">
+                  momenti di dialogo, esplorazione, movimento e contatto
+                </strong>
+                , che potranno portarti in ascolto di ciò che sei e senti
+                davvero.
+              </p>
+              <p className="italic">
+                Per accendere riflessioni nuove.
+                <br />
+                Per ritrovare il tuo centro.
+              </p>
+              <p className="italic font-semibold text-brand-contrast">
+                Per fiorire...un passo alla volta!
+              </p>
+            </div>
+
+            <Link
+              to="/chi-sono"
+              className="mt-12 inline-flex items-center justify-center rounded-full font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary bg-brand-primary text-white hover:bg-brand-primary/90 h-14 px-10 text-lg shadow-sm"
+            >
+              Scopri di più su di me
+            </Link>
+          </div>
+        </section>
 
         {/* 3. Carosello Eventi */}
         <EventCarousel events={eventsData} className="bg-brand-base" />

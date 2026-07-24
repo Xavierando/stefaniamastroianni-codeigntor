@@ -12,8 +12,8 @@ export function Contatti() {
       />
       <div className="flex flex-col min-h-screen bg-brand-base">
       <Hero
-        imageSrc="/images/contatti/mt-sample-background.webp"
-        
+        imageSrc="/images/contatti/contatti-hero.webp"
+        imageAlt="Due donne in un abbraccio silenzioso attorno a un albero in un bosco autunnale"
       />
 
       <section className="w-full pb-24 pt-6 md:py-24 px-4 bg-brand-base text-center relative overflow-hidden">
@@ -27,17 +27,11 @@ export function Contatti() {
               <strong className="font-semibold text-brand-contrast">
                 Ogni percorso inizia con un incontro gratuito:
               </strong>{" "}
-              uno spazio sicuro, in cui<br />
+              uno spazio sicuro,<br /> in cui {" "}
               <strong className="font-semibold text-brand-contrast">
                 conoscerci e capire insieme di cosa hai bisogno ora
               </strong>
               .
-            </p>
-            <p>
-              Tante possibilità diverse, tra cui sessioni individuali,
-              trattamenti,
-              <br />
-              corsi di yoga, laboratori e tanto altro.
             </p>
             <p>
               Non devi avere le idee chiare. Basta{" "}
@@ -48,21 +42,21 @@ export function Contatti() {
               <br />
               Compila il modulo qui sotto.
             </p>
-            <p className="italic">Grazie</p>
+            <strong className="font-semibold text-brand-contrast"><p className="italic">Grazie</p></strong>
           </div>
 
           <blockquote className="mt-12 max-w-3xl border-l-2 border-brand-secondary/40 pl-6 text-left">
             <p className="font-serif italic font-semibold text-2xl md:text-3xl text-brand-primary leading-snug">
-              «Non siamo fatti per rimanere nella sofferenza.
+              «Non si puo raggiungere l'alba
               <br />
-              Siamo fatti per guarire.»
+             senza passare per i sentieri della notte.»
             </p>
             <footer className="mt-4 text-base md:text-lg text-brand-contrast/70 not-italic">
               —{" "}
               <strong className="font-semibold text-brand-contrast">
-                Clarissa Pinkola Estés
+                Khalil Gibran
               </strong>
-              , scrittrice e psicoanalista messicana
+              , poeta e filosofo Sufi
             </footer>
           </blockquote>
         </div>

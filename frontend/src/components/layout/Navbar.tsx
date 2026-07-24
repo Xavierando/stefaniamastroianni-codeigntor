@@ -46,8 +46,8 @@ export function Navbar() {
         className={cn(
           "relative flex items-center rounded-full transition-all duration-700 ease-in-out overflow-hidden shadow-soft h-14",
           scrolled || isOpen
-            ? "w-full px-6 bg-brand-base/95 backdrop-blur-lg shadow-md border border-brand-contrast/5"
-            : "w-[56px] bg-brand-base/80 backdrop-blur-md border border-transparent xl:w-full xl:px-6 xl:py-2",
+            ? "w-full px-6 bg-brand-secondary/95 backdrop-blur-lg shadow-md border border-white/10"
+            : "w-[56px] bg-brand-secondary/80 backdrop-blur-md border border-transparent xl:w-full xl:px-6 xl:py-2",
         )}
       >
         {/* Logo / Wordmark (Expands behind the bolted hamburger) */}
@@ -62,7 +62,7 @@ export function Navbar() {
         >
           {/* Logo icon */}
           <div
-            className="w-10 h-10 md:w-11 md:h-11 flex-shrink-0 bg-brand-primary"
+            className="w-10 h-10 md:w-11 md:h-11 flex-shrink-0 bg-brand-base"
             style={{
               WebkitMaskImage: "url(/images/logo.webp)",
               WebkitMaskSize: "contain",
@@ -76,10 +76,10 @@ export function Navbar() {
           />
           {/* Wordmark */}
           <div className="flex flex-col items-start justify-center flex-shrink-0">
-            <span className="font-serif text-[1.05rem] md:text-xl leading-none text-brand-primary tracking-wide">
+            <span className="font-serif text-[1.05rem] md:text-xl leading-none text-white tracking-wide">
               Stefania
             </span>
-            <span className="font-sans text-[0.6rem] md:text-xs leading-none text-brand-contrast/60 tracking-[0.25em] mt-1.5 uppercase font-medium">
+            <span className="font-sans text-[0.6rem] md:text-xs leading-none text-white/70 tracking-[0.25em] mt-1.5 uppercase font-medium">
               Mastroianni
             </span>
           </div>
@@ -96,7 +96,7 @@ export function Navbar() {
                 "px-4 py-2.5 rounded-full text-[13px] uppercase tracking-wider font-bold transition-all duration-300",
                 pathname === link.href
                   ? "bg-white shadow-sm text-brand-primary"
-                  : "text-brand-contrast/60 hover:bg-white/50 hover:text-brand-contrast",
+                  : "text-white/70 hover:bg-white/15 hover:text-white",
               )}
             >
               {link.name}
@@ -106,7 +106,7 @@ export function Navbar() {
 
         {/* Mobile menu toggle (Calculated absolute center for 0px shift) */}
         <button
-          className="absolute right-1 top-1 w-12 h-12 flex items-center justify-center text-brand-contrast focus:outline-none hover:bg-white/50 rounded-full transition-colors xl:hidden"
+          className="absolute right-1 top-1 w-12 h-12 flex items-center justify-center text-white focus:outline-none hover:bg-white/15 rounded-full transition-colors xl:hidden"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
         >
@@ -122,7 +122,7 @@ export function Navbar() {
             animate={{ opacity: 1, height: "auto", marginTop: 12 }}
             exit={{ opacity: 0, height: 0, marginTop: 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="absolute top-full left-4 right-4 bg-brand-base/98 backdrop-blur-xl border border-brand-contrast/5 rounded-[2rem] p-6 shadow-xl flex flex-col items-center gap-2 z-50 overflow-hidden"
+            className="absolute top-full left-4 right-4 bg-brand-secondary/98 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 shadow-xl flex flex-col items-center gap-2 z-50 overflow-hidden"
           >
             {NAV_LINKS.map((link) => (
               <Link
@@ -133,7 +133,7 @@ export function Navbar() {
                   "w-full text-center px-6 py-3 rounded-full text-lg font-bold transition-all duration-300",
                   pathname === link.href
                     ? "bg-white text-brand-primary shadow-sm"
-                    : "text-brand-contrast/70 hover:bg-white/50 hover:text-brand-contrast",
+                    : "text-white/70 hover:bg-white/15 hover:text-white",
                 )}
               >
                 {link.name}
@@ -145,3 +145,4 @@ export function Navbar() {
     </header>
   );
 }
+

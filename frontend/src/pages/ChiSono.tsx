@@ -31,7 +31,7 @@ const PRACTICES = [
 ];
 
 export function ChiSono() {
-  const isHeroLoaded = useImagePreloader("/images/chi-sono/IMG_2028.webp");
+  const isHeroLoaded = useImagePreloader("/images/chi-sono/chi-sono-hero.webp");
 
   const isReady = isHeroLoaded;
 
@@ -50,12 +50,16 @@ export function ChiSono() {
         className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? "opacity-0 h-screen overflow-hidden" : "opacity-100"}`}
       >
         {/* 1. Hero Section (Cover Layout) */}
-        <Hero imageSrc="/images/chi-sono/IMG_2028.webp" imagePosition="top" />
+        <Hero
+          imageSrc="/images/chi-sono/chi-sono-hero.webp"
+          imageAlt="Prato di montagna con spighe al vento, baita e vette sullo sfondo"
+          imagePosition="center"
+        />
 
         {/* Sezione Testo Hero */}
         <PageIntroduction
           title="La Mia Storia"
-          description="Un percorso intrecciato tra ascolto, cura e riconnessione profonda con i cicli della natura e della vita."
+          description=""
         />
 
         {/* 2. Introduzione */}
@@ -69,9 +73,6 @@ export function ChiSono() {
               />
             </div>
             <div className="w-full md:w-1/2 flex flex-col justify-center px-4 md:px-0">
-              <h2 className="font-serif text-4xl md:text-5xl text-brand-contrast mb-8 leading-tight">
-                Chi è Stefania?
-              </h2>
               <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-8">
                 <em className="text-brand-contrast">Amo perdermi nei boschi,</em>{" "}
                 ascoltare il suono del vento tra le foglie, osservare la natura
@@ -93,9 +94,8 @@ export function ChiSono() {
                 riportandomi all’<em className="text-brand-contrast">essenziale</em>{" "}
                 e alla{" "}
                 <em className="text-brand-contrast">
-                  cura di me stessa come priorità
+                  cura di me stessa come priorità.
                 </em>
-                , per vivere in maniera sana ed equilibrata.
               </p>
               <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-8">
                 Lavoro da anni{" "}
@@ -113,9 +113,9 @@ export function ChiSono() {
                 <em className="text-brand-contrast">
                   ogni percorso e ogni consulenza sono diversi
                 </em>
-                , così come ogni pratica di gruppo.{" "}
+                , così come ogni pratica di gruppo,{" "}
                 <em className="text-brand-contrast">
-                  Nascono come risposta al momento presente
+                  Perché nascono come risposta al momento presente
                 </em>
                 , al contesto e al{" "}
                 <em className="text-brand-contrast">dialogo vivo</em> di tutte
