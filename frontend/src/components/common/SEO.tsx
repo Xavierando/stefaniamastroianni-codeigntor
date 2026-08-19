@@ -30,6 +30,10 @@ export function SEO({
   const siteDescription =
     description ||
     "Stefania Mastroianni - Percorsi olistici di benessere, yoga e accompagnamento alla maternità ad Aosta.";
+  // Callers may pass `image={post.imageUrl}` where the value is null (default
+  // params only cover `undefined`), so normalize before calling startsWith.
+  const safeImage = image || "/images/og-image-default.webp";
+  const ogImage = safeImage.startsWith("http") ? safeImage : `${url}${safeImage}`;
 
   return (
     <Helmet>
@@ -45,10 +49,7 @@ export function SEO({
       <meta property="og:type" content={type} />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={siteDescription} />
-      <meta
-        property="og:image"
-        content={image.startsWith("http") ? image : `${url}${image}`}
-      />
+      <meta property="og:image" content={ogImage} />
       <meta property="og:url" content={url} />
       <meta property="og:site_name" content={siteName} />
 
@@ -56,10 +57,7 @@ export function SEO({
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={siteDescription} />
-      <meta
-        name="twitter:image"
-        content={image.startsWith("http") ? image : `${url}${image}`}
-      />
+      <meta name="twitter:image" content={ogImage} />
 
       {/* Structured Data */}
       {schema && (

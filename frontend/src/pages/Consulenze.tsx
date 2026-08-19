@@ -111,6 +111,7 @@ export function ConsulenzePage() {
               price={service.price ? parseInt(service.price) : null}
               imagePosition={index % 2 === 0 ? "left" : "right"}
               hideButton={false}
+              blogHref={service.blogPostSlug ? `/blog/${service.blogPostSlug}` : undefined}
               href={whatsappUrl(`Ciao Stefania! Vorrei informazioni sul servizio "${service.title}".`)}
               ctaText="Scrivimi su WhatsApp"
               alternateBackground={index % 2 !== 0}

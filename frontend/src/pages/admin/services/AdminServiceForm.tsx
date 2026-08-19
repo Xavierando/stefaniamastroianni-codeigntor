@@ -22,8 +22,10 @@ export function AdminServiceForm() {
     price: "",
     duration: "",
     is_booking_enabled: "1",
+    blog_post_id: "",
   });
-  
+
+  const [blogPosts, setBlogPosts] = useState<any[]>([]);
   const [image, setImage] = useState<File | null>(null);
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
 
@@ -32,11 +34,17 @@ export function AdminServiceForm() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    apiFetch("posts")
+      .then((res) => setBlogPosts(res || []))
+      .catch((err) => console.error("Failed to load blog posts:", err));
+  }, []);
+
+  useEffect(() => {
     if (isEditing) {
       const fetchService = async () => {
         try {
           const service = await apiFetch(`services/${id}`);
-          
+
           setFormData({
             title: service.title || "",
             category: service.category || "",
@@ -44,6 +52,7 @@ export function AdminServiceForm() {
             price: service.price?.toString() || "",
             duration: service.duration || "",
             is_booking_enabled: service.is_booking_enabled?.toString() ?? "1",
+            blog_post_id: service.blog_post_id?.toString() ?? "",
           });
           
           if (service.imageUrl) {
@@ -250,6 +259,30 @@ export function AdminServiceForm() {
                 Abilita Prenotazioni per questo servizio
               </label>
             </div>
+          </div>
+
+          {/* Optional linked blog article */}
+          <div className="space-y-2">
+            <label htmlFor="blog_post_id" className="block text-sm font-medium text-brand-contrast/80">
+              Articolo del blog collegato (opzionale)
+            </label>
+            <select
+              id="blog_post_id"
+              name="blog_post_id"
+              value={formData.blog_post_id}
+              onChange={handleChange}
+              className="w-full p-3 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50 bg-white"
+            >
+              <option value="">Nessuno</option>
+              {blogPosts.map((post) => (
+                <option key={post.id} value={post.id}>
+                  {post.title}
+                </option>
+              ))}
+            </select>
+            <p className="text-xs text-brand-contrast/50">
+              Se selezionato, sulla scheda del servizio comparirà un link a questo articolo.
+            </p>
           </div>
 
           <div className="flex justify-end pt-4">
