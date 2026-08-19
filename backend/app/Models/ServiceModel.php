@@ -13,8 +13,8 @@ class ServiceModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'id', 'slug', 'title', 'description', 'category', 'price', 
-        'duration', 'imageUrl', 'is_booking_enabled'
+        'id', 'slug', 'title', 'description', 'category', 'price',
+        'duration', 'imageUrl', 'is_booking_enabled', 'blog_post_id'
     ];
 
     protected bool $allowEmptyInserts = false;

@@ -4,6 +4,7 @@ namespace App\Controllers\Api;
 
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\ServiceModel;
+use App\Models\PostModel;
 use App\Controllers\Api\Concerns\HandlesImageUploads;
 use App\Controllers\Api\Concerns\GeneratesSlug;
 
@@ -14,6 +15,45 @@ class ServiceController extends ResourceController
 
     protected $modelName = ServiceModel::class;
     protected $format    = 'json';
+
+    /**
+     * Attach the linked blog post's slug/title to each service so the public
+     * pages can build the article link without an extra round-trip.
+     */
+    private function withBlogPost(array $services): array
+    {
+        $ids = array_values(array_unique(array_filter(array_map(
+            static fn ($s) => $s['blog_post_id'] ?? null,
+            $services
+        ))));
+
+        $map = [];
+        if (!empty($ids)) {
+            $posts = (new PostModel())->select('id, slug, title')->whereIn('id', $ids)->findAll();
+            foreach ($posts as $p) {
+                $map[$p['id']] = $p;
+            }
+        }
+
+        foreach ($services as &$s) {
+            $pid = $s['blog_post_id'] ?? null;
+            $s['blogPostSlug']  = ($pid && isset($map[$pid])) ? $map[$pid]['slug'] : null;
+            $s['blogPostTitle'] = ($pid && isset($map[$pid])) ? $map[$pid]['title'] : null;
+        }
+        unset($s);
+
+        return $services;
+    }
+
+    /** Normalize the optional blog_post_id from form data to int|null. */
+    private function normalizeBlogPostId(array &$data): void
+    {
+        if (array_key_exists('blog_post_id', $data)) {
+            $data['blog_post_id'] = ($data['blog_post_id'] === '' || $data['blog_post_id'] === null)
+                ? null
+                : (int) $data['blog_post_id'];
+        }
+    }
 
     public function index()
     {
@@ -27,10 +67,10 @@ class ServiceController extends ResourceController
         $this->model->orderBy('createdAt', 'DESC');
 
         if ($limit !== null && is_numeric($limit)) {
-            return $this->respond($this->model->findAll((int)$limit));
+            return $this->respond($this->withBlogPost($this->model->findAll((int)$limit)));
         }
 
-        return $this->respond($this->model->findAll());
+        return $this->respond($this->withBlogPost($this->model->findAll()));
     }
 
     public function show($id = null)
@@ -42,7 +82,7 @@ class ServiceController extends ResourceController
         }
 
         if ($service) {
-            return $this->respond($service);
+            return $this->respond($this->withBlogPost([$service])[0]);
         }
 
         return $this->failNotFound('Service not found');
@@ -60,6 +100,7 @@ class ServiceController extends ResourceController
         }
 
         $data['slug'] = $this->uniqueSlug($this->model, $data['title']);
+        $this->normalizeBlogPostId($data);
 
         $upload = $this->storeUploadedImage($this->request->getFile('image'), 'services');
         if (!$upload['ok']) {
@@ -89,6 +130,7 @@ class ServiceController extends ResourceController
         if (isset($data['title'])) {
             $data['slug'] = $this->uniqueSlug($this->model, $data['title'], $id);
         }
+        $this->normalizeBlogPostId($data);
 
         $upload = $this->storeUploadedImage($this->request->getFile('image'), 'services');
         if (!$upload['ok']) {

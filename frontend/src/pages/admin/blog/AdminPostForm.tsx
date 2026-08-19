@@ -62,12 +62,12 @@ export function AdminPostForm() {
         formData.append("image", optimizedFile);
       }
       
-      if (isEditing) {
-        formData.append("_method", "PUT");
-      }
-
+      // The update route is registered as POST (see Routes.php). Do NOT spoof
+      // _method=PUT: CI4 method-spoofing would turn this into a PUT request,
+      // which has no matching route → 404. The service/review forms POST plainly
+      // for the same reason.
       await apiFetch(isEditing ? `/posts/${id}` : "/posts", {
-        method: "POST", // File upload works best with POST (and _method=PUT for CI4)
+        method: "POST",
         body: formData,
       });
 

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, BookOpen } from "lucide-react";
 
 interface OverviewProps {
   id?: string;
@@ -12,6 +12,7 @@ interface OverviewProps {
   ctaText?: string;
   imagePosition?: "left" | "right";
   hideButton?: boolean;
+  blogHref?: string;
   price?: number | null;
   durationMin?: number | null;
   onButtonClick?: () => void;
@@ -29,6 +30,7 @@ export function ServiceOverview({
   ctaText,
   imagePosition = "left",
   hideButton = false,
+  blogHref,
   price,
   durationMin,
   onButtonClick,
@@ -148,6 +150,18 @@ export function ServiceOverview({
                 </Link>
               );
             })()}
+
+          {blogHref && (
+            <Link
+              to={blogHref}
+              className="mt-6 inline-flex w-fit items-center gap-2 text-sm font-medium text-brand-primary/70 hover:text-brand-primary transition-colors group/blog"
+            >
+              <BookOpen size={16} />
+              <span className="border-b border-brand-primary/20 group-hover/blog:border-brand-primary pb-0.5">
+                Approfondisci sul blog
+              </span>
+            </Link>
+          )}
         </motion.div>
       </div>
     </section>
