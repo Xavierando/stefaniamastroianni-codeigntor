@@ -162,11 +162,10 @@ export function ChiSono() {
               size={40}
             />
             <p className="font-serif italic text-2xl md:text-4xl text-brand-primary leading-relaxed md:leading-[1.4]">
-              "La decisione di dedicarmi alla cura degli altri è nata da
-              un'esigenza interiore insopprimibile. Dopo aver attraversato
-              momenti di profondo cambiamento personale, ho compreso che il vero
-              benessere non è l'assenza di dolore, ma la capacità di accoglierlo
-              e trasformarlo."
+              ""Solo nel silenzio che osa ascoltarsi,
+        	l'anima svela le sue ferite: ed è lì, 
+        	nel buio accogliente del sé, 
+        	che il dolore inizia a sciogliersi in luce.""
             </p>
           </div>
         </section>
