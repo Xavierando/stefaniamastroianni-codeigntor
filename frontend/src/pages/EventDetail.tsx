@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { Calendar, MapPin, Tag } from "lucide-react";
 import { ContentDetailLayout } from "@/components/layout/ContentDetailLayout";
 import { SEO } from "@/components/common/SEO";
+import { whatsappUrl } from "@/config/site";
 
 export function EventDetail() {
   const { slug } = useParams();
@@ -127,14 +128,31 @@ export function EventDetail() {
 
       {event.isBookingEnabled && (
         <div className="pt-6 border-t border-brand-primary/10">
-          <Link to={event.isPast ? "/laboratori-eventi" : (event.isFull ? "/contatti" : `/prenota?event_id=${event.id}`)} className="block w-full">
-            <Button variant={event.isFull || event.isPast ? "outline" : "primary"} className="w-full py-6 text-lg shadow-sm hover:translate-y-[-2px] transition-transform">
-              {event.isPast ? "Evento Concluso" : (event.isFull ? "Richiedi lista d'attesa" : "Prenota il tuo posto")}
-            </Button>
-          </Link>
+          {event.isPast ? (
+            <Link to="/laboratori-eventi" className="block w-full">
+              <Button variant="outline" className="w-full py-6 text-lg shadow-sm hover:translate-y-[-2px] transition-transform">
+                Evento Concluso
+              </Button>
+            </Link>
+          ) : (
+            <a
+              href={whatsappUrl(
+                event.isFull
+                  ? `Ciao Stefania! L'evento "${event.title}" risulta al completo: vorrei essere inserita/o in lista d'attesa.`
+                  : `Ciao Stefania! Vorrei prenotare un posto per l'evento "${event.title}".`,
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full"
+            >
+              <Button variant={event.isFull ? "outline" : "primary"} className="w-full py-6 text-lg shadow-sm hover:translate-y-[-2px] transition-transform">
+                {event.isFull ? "Richiedi lista d'attesa" : "Prenota su WhatsApp"}
+              </Button>
+            </a>
+          )}
           {!event.isFull && !event.isPast && (
               <p className="text-center text-sm text-brand-contrast/50 mt-4">
-                La prenotazione non è vincolante ed è soggetta a conferma.
+                Scrivimi su WhatsApp per prenotare il tuo posto.
               </p>
           )}
         </div>

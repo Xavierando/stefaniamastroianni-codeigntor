@@ -6,6 +6,8 @@ import { EventCard } from "@/components/ui/EventCard";
 import { TestimonialsCarousel } from "@/components/sections/TestimonialsCarousel";
 import { apiFetch } from "@/lib/api";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
+import { whatsappUrl } from "@/config/site";
+import { useHashScroll } from "@/hooks/useHashScroll";
 import { PageIntroduction } from "@/components/sections/PageIntroduction";
 
 import { Category } from "../types";
@@ -62,6 +64,7 @@ export function TrattamentiPage() {
   );
 
   const isReady = !isLoading && isHeroLoaded;
+  useHashScroll(isReady);
 
   const reviewsBgClass =
     services.length % 2 !== 0 ? "bg-brand-base" : "bg-white";
@@ -97,6 +100,7 @@ export function TrattamentiPage() {
           {services.map((service, index) => (
             <ServiceOverview
               key={service.id}
+              id={`servizio-${service.slug || service.id}`}
               title={service.title}
               description={service.description}
               imageSrc={
@@ -106,8 +110,8 @@ export function TrattamentiPage() {
               price={service.price ? parseInt(service.price) : null}
               imagePosition={index % 2 === 0 ? "left" : "right"}
               hideButton={false}
-              href={service.is_booking_enabled == 1 ? `/prenota?service_id=${service.id}` : "/contatti"}
-              ctaText={service.is_booking_enabled == 1 ? "Prenota ora" : "Contattami"}
+              href={whatsappUrl(`Ciao Stefania! Vorrei informazioni sul servizio "${service.title}".`)}
+              ctaText="Scrivimi su WhatsApp"
               alternateBackground={index % 2 !== 0}
               alternateColorClass="bg-white"
               backgroundColorClass="bg-brand-base"

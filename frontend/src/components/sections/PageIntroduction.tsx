@@ -1,9 +1,10 @@
+import { type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 interface PageIntroductionProps {
   title: string;
-  description: string;
+  description: ReactNode;
   as?: "h1" | "h2";
   variant?: "default" | "editorial";
   ctaText?: string;
@@ -46,14 +47,25 @@ export function PageIntroduction({
           {title}
         </Tag>
 
-        <p
-          className={cn(
-            "text-brand-contrast/80 leading-relaxed font-light text-xl md:text-2xl",
-            ctaText ? "mb-12" : "",
-          )}
-        >
-          {description}
-        </p>
+        {typeof description === "string" ? (
+          <p
+            className={cn(
+              "text-brand-contrast/80 leading-relaxed font-light text-xl md:text-2xl",
+              ctaText ? "mb-12" : "",
+            )}
+          >
+            {description}
+          </p>
+        ) : (
+          <div
+            className={cn(
+              "text-brand-contrast/80 leading-relaxed font-light text-xl md:text-2xl",
+              ctaText ? "mb-12" : "",
+            )}
+          >
+            {description}
+          </div>
+        )}
 
         {ctaText && ctaHref && (
           <Link

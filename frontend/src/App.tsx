@@ -1,5 +1,5 @@
 import { useEffect, lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { MainLayout } from "./components/layout/MainLayout";
 import { Home } from "./pages/Home";
 import { Contatti } from "./pages/Contatti";
@@ -15,7 +15,6 @@ import { EventDetail } from "./pages/EventDetail";
 import { Blog } from "./pages/Blog";
 import { BlogPost } from "./pages/BlogPost";
 import { Unsubscribe } from "./pages/Unsubscribe";
-import { BookingPage } from "./pages/Booking";
 import { BookingConfirmation } from "./pages/BookingConfirmation";
 import { BookingCancellation } from "./pages/BookingCancellation";
 import { NotFound } from "./pages/NotFound";
@@ -81,7 +80,8 @@ function App() {
             <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="cookie-policy" element={<CookiePolicyPage />} />
             <Route path="unsubscribe" element={<Unsubscribe />} />
-            <Route path="prenota" element={<BookingPage />} />
+            {/* Online booking disabled — funnel to contacts (CTAs now point to WhatsApp). */}
+            <Route path="prenota" element={<Navigate to="/contatti" replace />} />
             <Route path="conferma-prenotazione/:token" element={<BookingConfirmation />} />
             <Route path="cancella-prenotazione/:token" element={<BookingCancellation />} />
             <Route path="*" element={<NotFound />} />
