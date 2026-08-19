@@ -1,8 +1,8 @@
 import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Clock, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { whatsappUrl } from "@/config/site";
 
 interface ServiceCardProps {
   id: string;
@@ -13,7 +13,7 @@ interface ServiceCardProps {
   imageSrc?: string;
 }
 
-export function ServiceCard({ id, title, description, durationMin, price, imageSrc }: ServiceCardProps) {
+export function ServiceCard({ title, description, durationMin, price, imageSrc }: ServiceCardProps) {
   return (
     <motion.div
       whileHover={{ y: -5 }}
@@ -66,15 +66,19 @@ export function ServiceCard({ id, title, description, durationMin, price, imageS
             </p>
           </div>
           
-          <Link to={`/prenota?service_id=${id}`}>
-            <Button 
-              variant="outline" 
+          <a
+            href={whatsappUrl(`Ciao Stefania! Vorrei informazioni sul servizio "${title}".`)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button
+              variant="outline"
               className="w-full sm:w-auto mt-4 group/btn flex items-center gap-2"
             >
-              Prenota Ora
+              Scrivimi su WhatsApp
               <ArrowRight size={18} className="transition-transform group-hover/btn:translate-x-1" />
             </Button>
-          </Link>
+          </a>
         </div>
       </Card>
     </motion.div>

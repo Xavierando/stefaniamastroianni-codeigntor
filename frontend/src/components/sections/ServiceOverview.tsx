@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
 interface OverviewProps {
+  id?: string;
   title: string;
   description: string;
   imageSrc: string;
@@ -20,6 +21,7 @@ interface OverviewProps {
 }
 
 export function ServiceOverview({
+  id,
   title,
   description,
   imageSrc,
@@ -36,8 +38,9 @@ export function ServiceOverview({
 }: OverviewProps) {
   return (
     <section
+      id={id}
       className={cn(
-        "w-full py-24 lg:py-40 px-4 lg:px-8",
+        "w-full py-24 lg:py-40 px-4 lg:px-8 scroll-mt-24",
         alternateBackground ? alternateColorClass : backgroundColorClass,
       )}
     >
@@ -75,7 +78,7 @@ export function ServiceOverview({
           <h2 className="font-serif text-4xl lg:text-5xl text-brand-contrast mb-8 leading-[1.15]">
             {title}
           </h2>
-          <p className="text-xl text-brand-contrast/70 leading-relaxed mb-10 font-light">
+          <p className="text-xl text-brand-contrast/70 leading-relaxed mb-10 font-light text-justify">
             {description}
           </p>
 
@@ -96,36 +99,55 @@ export function ServiceOverview({
 
           {!hideButton &&
             ctaText &&
-            (href ? (
-              <Link
-                to={href}
-                onClick={onButtonClick}
-                className="inline-flex w-fit items-center gap-3 text-brand-secondary font-medium group"
-              >
-                <span className="relative py-1">
-                  {ctaText}
-                  <span className="absolute bottom-0 left-0 w-full h-[1px] bg-brand-secondary/30 group-hover:bg-brand-secondary group-hover:h-[2px] transition-all" />
-                </span>
-                <ArrowRight
-                  size={18}
-                  className="transform group-hover:translate-x-1 transition-transform"
-                />
-              </Link>
-            ) : (
-              <button
-                onClick={onButtonClick}
-                className="inline-flex w-fit items-center gap-3 text-brand-secondary font-medium group focus:outline-none"
-              >
-                <span className="relative py-1">
-                  {ctaText}
-                  <span className="absolute bottom-0 left-0 w-full h-[1px] bg-brand-secondary/30 group-hover:bg-brand-secondary group-hover:h-[2px] transition-all" />
-                </span>
-                <ArrowRight
-                  size={18}
-                  className="transform group-hover:translate-x-1 transition-transform"
-                />
-              </button>
-            ))}
+            (() => {
+              const linkClasses =
+                "inline-flex w-fit items-center gap-3 text-brand-secondary font-medium group";
+              const inner = (
+                <>
+                  <span className="relative py-1">
+                    {ctaText}
+                    <span className="absolute bottom-0 left-0 w-full h-[1px] bg-brand-secondary/30 group-hover:bg-brand-secondary group-hover:h-[2px] transition-all" />
+                  </span>
+                  <ArrowRight
+                    size={18}
+                    className="transform group-hover:translate-x-1 transition-transform"
+                  />
+                </>
+              );
+
+              if (!href) {
+                return (
+                  <button
+                    onClick={onButtonClick}
+                    className={cn(linkClasses, "focus:outline-none")}
+                  >
+                    {inner}
+                  </button>
+                );
+              }
+
+              // External links (e.g. WhatsApp) must use a plain anchor, not the
+              // client-side router Link.
+              if (/^https?:\/\//.test(href)) {
+                return (
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={onButtonClick}
+                    className={linkClasses}
+                  >
+                    {inner}
+                  </a>
+                );
+              }
+
+              return (
+                <Link to={href} onClick={onButtonClick} className={linkClasses}>
+                  {inner}
+                </Link>
+              );
+            })()}
         </motion.div>
       </div>
     </section>

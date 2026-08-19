@@ -1,39 +1,50 @@
+import { useEffect, useState } from "react";
 import { Hero } from "@/components/ui/Hero";
-import { Leaf, Heart, ArrowRight, BookOpen, Sun, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, Sun } from "lucide-react";
 import { SEO } from "@/components/common/SEO";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/Button";
+import { apiFetch } from "@/lib/api";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
 import { PageIntroduction } from "@/components/sections/PageIntroduction";
+import { Category } from "../types";
 
-const PRACTICES = [
-  {
-    icon: <Leaf className="text-accent-green mb-4" size={40} />,
-    title: "Yoga in Gravidanza",
-    description:
-      "Pratiche dolci per accompagnare il corpo che cambia e prepararsi al parto con consapevolezza.",
-    href: "/maternita",
-  },
-  {
-    icon: <Heart className="text-brand-secondary mb-4" size={40} />,
-    title: "Trattamenti Olistici",
-    description:
-      "Massaggi e tecniche riequilibranti per sciogliere tensioni fisiche ed emotive profonde.",
-    href: "/trattamenti",
-  },
-  {
-    icon: <Sparkles className="text-accent-orange mb-4" size={40} />,
-    title: "Riequilibrio Energetico",
-    description:
-      "Percorsi per ritrovare il proprio centro, lavorando sul rilascio dello stress accumulato.",
-    href: "/consulenze",
-  },
-];
+// Each service belongs to a category; the card links to that category page.
+const CATEGORY_ROUTES: Record<string, string> = {
+  [Category.MATERNITA]: "/maternita",
+  [Category.TRATTAMENTI]: "/trattamenti",
+  [Category.CONSULENZE]: "/consulenze",
+  [Category.YOGA]: "/yoga-e-meditazione",
+  [Category.EVENTI]: "/laboratori-eventi",
+  [Category.ALTRI]: "/contatti",
+};
 
 export function ChiSono() {
   const isHeroLoaded = useImagePreloader("/images/chi-sono/chi-sono-hero.webp");
+  const [isPracticesHovered, setIsPracticesHovered] = useState(false);
+  const [services, setServices] = useState<any[]>([]);
 
   const isReady = isHeroLoaded;
+
+  useEffect(() => {
+    let ignore = false;
+    apiFetch("/services")
+      .then((res) => {
+        if (!ignore) setServices(res || []);
+      })
+      .catch((err) => console.error("Failed to fetch services:", err));
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  // Repeat the real services enough to fill wide screens, then duplicate the
+  // whole set so the -50% marquee translation loops seamlessly (same technique
+  // as the home MarqueeGallery).
+  const serviceMultiplier = Math.max(1, Math.ceil(12 / (services.length || 1)));
+  const servicesSet = Array.from({ length: serviceMultiplier }).flatMap(
+    () => services,
+  );
+  const marqueeServices = [...servicesSet, ...servicesSet];
 
   return (
     <>
@@ -59,7 +70,24 @@ export function ChiSono() {
         {/* Sezione Testo Hero */}
         <PageIntroduction
           title="La Mia Storia"
-          description=""
+          description={
+            <div className="space-y-6 max-w-3xl mx-auto">
+              <p>
+                <em className="text-brand-contrast">Amo perdermi nei boschi,</em>{" "}
+                ascoltare il suono del vento tra le foglie, osservare la natura e{" "}
+                <em className="text-brand-contrast">lasciarmi sorprendere</em>{" "}
+                dalla sua saggezza.
+              </p>
+              <p>
+                Sono{" "}
+                <em className="text-brand-contrast">madre di due creature</em>{" "}
+                che, fino ad ora, mi hanno insegnato tanto. Sono{" "}
+                <em className="text-brand-contrast">appassionata di arte</em>,
+                cultura e mistero, di simboli e rituali, di linguaggi e
+                movimento.
+              </p>
+            </div>
+          }
         />
 
         {/* 2. Introduzione */}
@@ -73,21 +101,6 @@ export function ChiSono() {
               />
             </div>
             <div className="w-full md:w-1/2 flex flex-col justify-center px-4 md:px-0">
-              <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-8">
-                <em className="text-brand-contrast">Amo perdermi nei boschi,</em>{" "}
-                ascoltare il suono del vento tra le foglie, osservare la natura
-                e{" "}
-                <em className="text-brand-contrast">lasciarmi sorprendere</em>{" "}
-                dalla sua saggezza.
-              </p>
-              <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-8">
-                Sono{" "}
-                <em className="text-brand-contrast">madre di due creature</em>{" "}
-                che, fino ad ora, mi hanno insegnato tanto. Sono{" "}
-                <em className="text-brand-contrast">appassionata di arte</em>,
-                cultura e mistero, di simboli e rituali, di linguaggi e
-                movimento.
-              </p>
               <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-8">
                 I viaggi oltreoceano mi hanno aperto ad una nuova visione di{" "}
                 <em className="text-brand-contrast">“stare nel presente”</em>,
@@ -223,43 +236,87 @@ export function ChiSono() {
           </div>
         </section>
 
-        {/* 5. Pratiche e CTA */}
-        <section className="w-full py-32 px-4 bg-white border-t border-brand-contrast/5">
-          <div className="container mx-auto max-w-6xl text-center">
-            <h2 className="font-serif text-4xl md:text-5xl text-brand-contrast mb-16">
+        {/* 5. Servizi offerti (scroll orizzontale in stile marquee) */}
+        <section className="w-full py-32 bg-white border-t border-brand-contrast/5 overflow-hidden">
+          <div className="container mx-auto max-w-6xl px-4 text-center mb-16">
+            <h2 className="font-serif text-4xl md:text-5xl text-brand-contrast">
               Di cosa mi occupo
             </h2>
+          </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {PRACTICES.map((practice, idx) => (
-                <div
-                  key={idx}
-                  className="bg-brand-base p-10 rounded-[2.5rem] flex flex-col items-center text-center shadow-sm hover:shadow-soft transition-all duration-500 h-full group"
-                >
-                  <div className="mb-6 transform group-hover:scale-110 transition-transform duration-500">
-                    {practice.icon}
-                  </div>
-                  <h3 className="font-serif text-2xl text-brand-contrast mb-4 group-hover:text-brand-primary transition-colors">
-                    {practice.title}
-                  </h3>
-                  <p className="text-brand-contrast/70 leading-relaxed font-light flex-grow mb-10 text-lg">
-                    {practice.description}
-                  </p>
-                  <Link to={practice.href} className="mt-auto w-full">
-                    <Button
-                      variant="link"
-                      className="w-full group/btn font-semibold text-brand-primary hover:text-brand-primary/80"
+          {services.length > 0 && (
+            <div
+              className="relative flex overflow-x-hidden"
+              onMouseEnter={() => setIsPracticesHovered(true)}
+              onMouseLeave={() => setIsPracticesHovered(false)}
+            >
+              <div
+                className="animate-marquee whitespace-nowrap flex gap-8 px-4 items-stretch"
+                style={{
+                  animationPlayState: isPracticesHovered ? "paused" : "running",
+                }}
+              >
+                {marqueeServices.map((service, idx) => {
+                  const base = CATEGORY_ROUTES[service.category] || "/contatti";
+                  const href = `${base}#servizio-${service.slug || service.id}`;
+                  return (
+                    <Link
+                      key={`${service.id}-${idx}`}
+                      to={href}
+                      className="w-[300px] md:w-[340px] flex-shrink-0 whitespace-normal bg-brand-base rounded-[2.5rem] overflow-hidden flex flex-col shadow-sm hover:shadow-soft transition-all duration-500 group"
                     >
-                      Scopri
-                      <ArrowRight
-                        className="ml-2 group-hover/btn:translate-x-1 transition-transform"
-                        size={18}
-                      />
-                    </Button>
-                  </Link>
-                </div>
-              ))}
+                      <div className="relative aspect-[4/3] overflow-hidden bg-brand-primary/5">
+                        {service.imageUrl ? (
+                          <img
+                            src={service.imageUrl}
+                            alt={service.title}
+                            loading="lazy"
+                            decoding="async"
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center text-brand-primary/20 font-serif text-lg">
+                            Stefania Mastroianni
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-8 flex flex-col flex-grow text-center">
+                        <h3 className="font-serif text-2xl text-brand-contrast mb-4 group-hover:text-brand-primary transition-colors">
+                          {service.title}
+                        </h3>
+                        <p className="text-brand-contrast/70 leading-relaxed font-light flex-grow mb-8 line-clamp-3">
+                          {service.description}
+                        </p>
+                        <span className="mt-auto inline-flex items-center justify-center gap-2 font-semibold text-brand-secondary">
+                          Scopri
+                          <ArrowRight
+                            size={18}
+                            className="transform group-hover:translate-x-1 transition-transform"
+                          />
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
+          )}
+
+          {/* Link opzionale al blog */}
+          <div className="container mx-auto max-w-6xl px-4 text-center mt-16">
+            <Link
+              to="/blog"
+              className="inline-flex items-center gap-2 text-brand-secondary font-medium group"
+            >
+              <span className="relative py-1">
+                Leggi gli approfondimenti sul blog
+                <span className="absolute bottom-0 left-0 w-full h-[1px] bg-brand-secondary/30 group-hover:bg-brand-secondary group-hover:h-[2px] transition-all" />
+              </span>
+              <ArrowRight
+                size={18}
+                className="transform group-hover:translate-x-1 transition-transform"
+              />
+            </Link>
           </div>
         </section>
       </div>
