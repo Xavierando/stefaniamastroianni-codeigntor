@@ -101,7 +101,7 @@ export function ChiSono() {
               />
             </div>
             <div className="w-full md:w-1/2 flex flex-col justify-center px-4 md:px-0">
-              <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-8">
+              <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light text-justify mb-8">
                 I viaggi oltreoceano mi hanno aperto ad una nuova visione di{" "}
                 <em className="text-brand-contrast">“stare nel presente”</em>,
                 riportandomi all’<em className="text-brand-contrast">essenziale</em>{" "}
@@ -110,7 +110,7 @@ export function ChiSono() {
                   cura di me stessa come priorità.
                 </em>
               </p>
-              <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-8">
+              <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light text-justify mb-8">
                 Lavoro da anni{" "}
                 <em className="text-brand-contrast">
                   nell’ambito del sociale e del benessere,
@@ -134,7 +134,7 @@ export function ChiSono() {
                 <em className="text-brand-contrast">dialogo vivo</em> di tutte
                 le parti coinvolte.
               </p>
-              <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light">
+              <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light text-justify">
                 Credo che{" "}
                 <em className="text-brand-contrast">
                   ognuno abbia già le risorse di cui ha bisogno
@@ -283,7 +283,7 @@ export function ChiSono() {
                         <h3 className="font-serif text-2xl text-brand-contrast mb-4 group-hover:text-brand-primary transition-colors">
                           {service.title}
                         </h3>
-                        <p className="text-brand-contrast/70 leading-relaxed font-light flex-grow mb-8 line-clamp-3">
+                        <p className="text-base md:text-lg text-brand-contrast/70 leading-relaxed font-light flex-grow mb-8 line-clamp-3">
                           {service.description}
                         </p>
                         <span className="mt-auto inline-flex items-center justify-center gap-2 font-semibold text-brand-secondary">

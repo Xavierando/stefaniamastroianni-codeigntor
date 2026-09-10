@@ -53,7 +53,7 @@ export function PageIntroduction({
           {typeof description === "string" ? (
             <p
               className={cn(
-                "text-brand-contrast/80 leading-relaxed font-light text-xl md:text-2xl",
+                "text-brand-contrast/80 leading-relaxed font-light text-lg md:text-xl",
                 ctaText ? "mb-12" : "",
               )}
             >
@@ -62,7 +62,7 @@ export function PageIntroduction({
           ) : (
             <div
               className={cn(
-                "text-brand-contrast/80 leading-relaxed font-light text-xl md:text-2xl",
+                "text-brand-contrast/80 leading-relaxed font-light text-lg md:text-xl",
                 ctaText ? "mb-12" : "",
               )}
             >

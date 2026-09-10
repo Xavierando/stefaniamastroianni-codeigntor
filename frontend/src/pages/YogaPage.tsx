@@ -5,6 +5,7 @@ import { ServiceOverview } from "@/components/sections/ServiceOverview";
 import { EventCard } from "@/components/ui/EventCard";
 import { TestimonialsCarousel } from "@/components/sections/TestimonialsCarousel";
 import { apiFetch } from "@/lib/api";
+import { tailBackgrounds } from "@/lib/sectionBackground";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
 import { whatsappUrl } from "@/config/site";
 import { useHashScroll } from "@/hooks/useHashScroll";
@@ -23,7 +24,7 @@ export function YogaPage() {
       try {
         const [servicesRes, eventsRes, reviewsRes] = await Promise.all([
           apiFetch(`/services?category=${Category.YOGA}`),
-          apiFetch(`/events?category=${Category.YOGA}`),
+          apiFetch(`/events?category=${Category.YOGA}&upcoming=1`),
           apiFetch(`/reviews?category=${Category.YOGA}`),
         ]);
 
@@ -44,7 +45,8 @@ export function YogaPage() {
               })
             : "Da definire",
           location: e.location || "Studio Olistico Mastroianni",
-          isFull: e.isFull,
+          isFull: e.is_full,
+          isPast: e.is_past,
           imageSrc: e.imageUrl || undefined,
         }));
 
@@ -64,14 +66,10 @@ export function YogaPage() {
   const isReady = !isLoading && isHeroLoaded;
   useHashScroll(isReady);
 
-  const reviewsBgClass =
-    services.length % 2 !== 0 ? "bg-brand-base" : "bg-white";
-  const eventsBgClass =
-    reviews.length > 0
-      ? services.length % 2 === 0
-        ? "bg-brand-base"
-        : "bg-white"
-      : reviewsBgClass;
+  const { reviewsBgClass, eventsBgClass } = tailBackgrounds(
+    services.length,
+    reviews.length > 0,
+  );
 
   return (
     <>
