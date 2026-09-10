@@ -243,7 +243,7 @@ export function AdminBookingsPage() {
                   <button
                     key={range.id}
                     onClick={() => setFilterRange(range.id as any)}
-                    className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all border ${
+                    className={`px-4 py-1.5 min-h-11 inline-flex items-center rounded-full text-xs font-medium transition-all border ${
                       filterRange === range.id
                         ? "bg-brand-primary text-white border-brand-primary shadow-sm"
                         : "bg-white text-brand-contrast/60 border-brand-primary/10 hover:border-brand-primary/30"
@@ -261,7 +261,7 @@ export function AdminBookingsPage() {
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setSelectedServiceId("all")}
-                  className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all border ${
+                  className={`px-4 py-1.5 min-h-11 inline-flex items-center rounded-full text-xs font-medium transition-all border ${
                     selectedServiceId === "all"
                       ? "bg-brand-secondary text-white border-brand-secondary shadow-sm"
                       : "bg-white text-brand-contrast/60 border-brand-primary/10 hover:border-brand-primary/30"
@@ -274,7 +274,7 @@ export function AdminBookingsPage() {
                 {services.some(s => !s.isEvent) && (
                   <button
                     onClick={() => setSelectedServiceId("services_treatments")}
-                    className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all border ${
+                    className={`px-4 py-1.5 min-h-11 inline-flex items-center rounded-full text-xs font-medium transition-all border ${
                       selectedServiceId === "services_treatments"
                         ? "bg-brand-secondary text-white border-brand-secondary shadow-sm"
                         : "bg-white text-brand-contrast/60 border-brand-primary/10 hover:border-brand-primary/30"
@@ -289,7 +289,7 @@ export function AdminBookingsPage() {
                   <button
                     key={service.id}
                     onClick={() => setSelectedServiceId(String(service.id))}
-                    className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all border ${
+                    className={`px-4 py-1.5 min-h-11 inline-flex items-center rounded-full text-xs font-medium transition-all border ${
                       String(selectedServiceId) === String(service.id)
                         ? "bg-brand-secondary text-white border-brand-secondary shadow-sm"
                         : "bg-white text-brand-contrast/60 border-brand-primary/10 hover:border-brand-primary/30"
@@ -333,7 +333,7 @@ export function AdminBookingsPage() {
                           </span>
                           <button 
                             onClick={() => handleReject(booking.id)}
-                            className="text-[10px] text-red-500 font-bold uppercase tracking-wider"
+                            className="inline-flex items-center min-h-11 px-2 text-[10px] text-red-500 font-bold uppercase tracking-wider"
                           >
                             Cancella
                           </button>

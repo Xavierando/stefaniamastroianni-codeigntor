@@ -111,7 +111,7 @@ export function AdminContactsPage() {
                           <span className="bg-brand-primary text-white text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Nuovo</span>
                         )}
                       </h3>
-                      <a href={`mailto:${contact.email}`} className="text-brand-primary hover:underline text-sm font-medium">
+                      <a href={`mailto:${contact.email}`} className="inline-flex items-center min-h-11 text-brand-primary hover:underline text-sm font-medium">
                         {contact.email}
                       </a>
                     </div>

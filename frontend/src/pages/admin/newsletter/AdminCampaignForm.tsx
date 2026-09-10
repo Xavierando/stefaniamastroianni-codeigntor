@@ -247,7 +247,7 @@ export function AdminCampaignForm() {
       <div className="flex items-center gap-4">
         <button
           onClick={() => navigate("/admin/newsletter")}
-          className="p-2 hover:bg-brand-primary/10 rounded-full transition-colors text-brand-primary"
+          className="p-2 min-h-11 min-w-11 inline-flex items-center justify-center hover:bg-brand-primary/10 rounded-full transition-colors text-brand-primary"
         >
           <ArrowLeft size={24} />
         </button>

@@ -82,11 +82,11 @@ export function AdminEventsPage() {
           <p className="text-brand-contrast/60">Gestisci i tuoi eventi speciali e laboratori programmati.</p>
         </div>
         
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
           <button
             type="button"
             onClick={() => setShowPast((v) => !v)}
-            className="flex items-center gap-2 text-sm text-brand-contrast/60 hover:text-brand-primary transition-colors underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-full px-2 py-1"
+            className="flex items-center justify-center gap-2 min-h-11 text-sm text-brand-contrast/60 hover:text-brand-primary transition-colors underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-full px-2 py-1"
           >
             <History size={16} />
             {showPast ? "Nascondi eventi passati" : "Mostra anche eventi passati"}
@@ -94,7 +94,7 @@ export function AdminEventsPage() {
 
           <Link
             to="/admin/events/new"
-            className="flex items-center gap-2 bg-brand-primary text-white px-6 py-3 rounded-full hover:bg-brand-primary/90 transition-colors font-medium shadow-sm hover:shadow-md"
+            className="flex items-center justify-center gap-2 bg-brand-primary text-white px-6 py-3 rounded-full hover:bg-brand-primary/90 transition-colors font-medium shadow-sm hover:shadow-md"
           >
             <Plus size={20} />
             Nuovo Evento

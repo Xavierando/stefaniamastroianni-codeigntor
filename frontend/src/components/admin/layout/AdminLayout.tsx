@@ -84,7 +84,7 @@ export function AdminLayout() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1">
           {/* Mobile Header */}
           <header className="md:hidden bg-white border-b border-brand-primary/10 p-4 flex justify-between items-center sticky top-0 z-40">
             <div className="flex items-center gap-4">
@@ -100,7 +100,7 @@ export function AdminLayout() {
 
           {/* Mobile Menu Overlay */}
           {isMobileMenuOpen && (
-            <div className="md:hidden fixed inset-0 z-30 bg-white pt-20">
+            <div className="md:hidden fixed inset-0 z-30 bg-white pt-20 overflow-y-auto overscroll-contain">
               <nav className="p-6 flex flex-col gap-4">
                 {ADMIN_LINKS.map(({ path, label, Icon }) => (
                   <Link 

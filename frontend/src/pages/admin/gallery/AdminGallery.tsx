@@ -92,7 +92,7 @@ export function AdminGalleryPage() {
                       <p className="text-white text-xs truncate max-w-[70%]">{image.alt || 'Senza titolo'}</p>
                       <ConfirmDeleteButton 
                         onConfirm={() => handleDelete(image.id)}
-                        className="p-1.5 bg-red-500/80 text-white rounded-md hover:bg-red-500 transition-colors backdrop-blur-sm !bg-red-500/80"
+                        className="p-1.5 min-h-11 min-w-11 inline-flex items-center justify-center bg-red-500/80 text-white rounded-md hover:bg-red-500 transition-colors backdrop-blur-sm !bg-red-500/80"
                         title="Elimina"
                       >
                         <Trash2 size={14} />
