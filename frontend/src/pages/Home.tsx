@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Hero } from "@/components/ui/Hero";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { EventCarousel } from "@/components/sections/EventCarousel";
 import { ServiceOverview } from "@/components/sections/ServiceOverview";
 import { MarqueeGallery } from "@/components/sections/MarqueeGallery";
@@ -103,32 +104,35 @@ export function Home() {
               Benvenuta/o,
             </h1>
 
-            <div className="text-brand-contrast/80 leading-relaxed font-light text-xl md:text-2xl space-y-6 max-w-3xl">
-              <p>
-                in questo spazio nato da un profondo amore verso la vita, in cui
-                ti propongo{" "}
-                <strong className="font-semibold text-brand-contrast">
-                  momenti di dialogo, esplorazione, movimento e contatto
-                </strong>
-                , che potranno portarti in ascolto di ciò che sei e senti
-                davvero.
-              </p>
-              <p className="italic">
-                Per accendere riflessioni nuove.
-                <br />
-                Per ritrovare il tuo centro.
-              </p>
-              <p className="italic font-semibold text-brand-contrast">
-                Per fiorire...un passo alla volta!
-              </p>
-            </div>
+            {/* Su mobile il testo appare allo scroll; il titolo resta visibile */}
+            <RevealOnScroll className="flex flex-col items-center w-full">
+              <div className="text-brand-contrast/80 leading-relaxed font-light text-xl md:text-2xl space-y-6 max-w-3xl">
+                <p>
+                  in questo spazio nato da un profondo amore verso la vita, in cui
+                  ti propongo{" "}
+                  <strong className="font-semibold text-brand-contrast">
+                    momenti di dialogo, esplorazione, movimento e contatto
+                  </strong>
+                  , che potranno portarti in ascolto di ciò che sei e senti
+                  davvero.
+                </p>
+                <p className="italic">
+                  Per accendere riflessioni nuove.
+                  <br />
+                  Per ritrovare il tuo centro.
+                </p>
+                <p className="italic font-semibold text-brand-contrast">
+                  Per fiorire...un passo alla volta!
+                </p>
+              </div>
 
-            <Link
-              to="/chi-sono"
-              className="mt-12 inline-flex items-center justify-center rounded-full font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary bg-brand-primary text-white hover:bg-brand-primary/90 h-14 px-10 text-lg shadow-sm"
-            >
-              Scopri di più su di me
-            </Link>
+              <Link
+                to="/chi-sono"
+                className="mt-12 inline-flex items-center justify-center rounded-full font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary bg-brand-primary text-white hover:bg-brand-primary/90 h-14 px-10 text-lg shadow-sm"
+              >
+                Scopri di più su di me
+              </Link>
+            </RevealOnScroll>
           </div>
         </section>
 
