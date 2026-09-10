@@ -45,7 +45,16 @@ export const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
   if (contentType && contentType.includes('application/json')) {
     const data = await response.json();
     if (!response.ok) {
-      throw new Error(data.message || 'API Error');
+      // Il ResponseTrait di CodeIgniter (fail(), failValidationErrors()) annida
+      // il messaggio vero sotto "messages" invece che sotto "message": senza
+      // questo fallback ogni form admin mostrava il generico "API Error".
+      const backendMessage =
+        data.message ||
+        (typeof data.messages === 'string' ? data.messages : null) ||
+        (data.messages && typeof data.messages === 'object'
+          ? Object.values(data.messages).join(' ')
+          : null);
+      throw new Error(backendMessage || 'API Error');
     }
     return data;
   }
