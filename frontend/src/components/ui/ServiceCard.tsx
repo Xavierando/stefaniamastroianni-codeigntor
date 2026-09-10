@@ -2,7 +2,8 @@ import { Card, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Clock, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { whatsappUrl } from "@/config/site";
+import { useContactCta } from "@/hooks/useContactCta";
+import { Link } from "react-router-dom";
 
 interface ServiceCardProps {
   id: string;
@@ -14,6 +15,21 @@ interface ServiceCardProps {
 }
 
 export function ServiceCard({ title, description, durationMin, price, imageSrc }: ServiceCardProps) {
+  const { whatsappEnabled, contactTarget } = useContactCta();
+  const target = contactTarget(
+    `Ciao Stefania! Vorrei informazioni sul servizio "${title}".`,
+  );
+  const ctaLabel = whatsappEnabled ? "Scrivimi su WhatsApp" : "Richiedi informazioni";
+  const ctaButton = (
+    <Button
+      variant="outline"
+      className="w-full sm:w-auto mt-4 group/btn flex items-center gap-2"
+    >
+      {ctaLabel}
+      <ArrowRight size={18} className="transition-transform group-hover/btn:translate-x-1" />
+    </Button>
+  );
+
   return (
     <motion.div
       whileHover={{ y: -5 }}
@@ -66,19 +82,15 @@ export function ServiceCard({ title, description, durationMin, price, imageSrc }
             </p>
           </div>
           
-          <a
-            href={whatsappUrl(`Ciao Stefania! Vorrei informazioni sul servizio "${title}".`)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button
-              variant="outline"
-              className="w-full sm:w-auto mt-4 group/btn flex items-center gap-2"
-            >
-              Scrivimi su WhatsApp
-              <ArrowRight size={18} className="transition-transform group-hover/btn:translate-x-1" />
-            </Button>
-          </a>
+          {target.external ? (
+            <a href={target.href} target="_blank" rel="noopener noreferrer">
+              {ctaButton}
+            </a>
+          ) : (
+            <Link to={target.href}>
+              {ctaButton}
+            </Link>
+          )}
         </div>
       </Card>
     </motion.div>

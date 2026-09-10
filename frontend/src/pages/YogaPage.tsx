@@ -7,7 +7,7 @@ import { TestimonialsCarousel } from "@/components/sections/TestimonialsCarousel
 import { apiFetch } from "@/lib/api";
 import { tailBackgrounds } from "@/lib/sectionBackground";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
-import { whatsappUrl } from "@/config/site";
+import { useContactCta } from "@/hooks/useContactCta";
 import { useHashScroll } from "@/hooks/useHashScroll";
 import { PageIntroduction } from "@/components/sections/PageIntroduction";
 
@@ -62,6 +62,7 @@ export function YogaPage() {
   }, []);
 
   const isHeroLoaded = useImagePreloader("/images/yoga/hero-yoga.webp");
+  const { whatsappEnabled, contactTarget } = useContactCta();
 
   const isReady = !isLoading && isHeroLoaded;
   useHashScroll(isReady);
@@ -107,8 +108,12 @@ export function YogaPage() {
               imagePosition={index % 2 === 0 ? "left" : "right"}
               hideButton={false}
               blogHref={service.blogPostSlug ? `/blog/${service.blogPostSlug}` : undefined}
-              href={whatsappUrl(`Ciao Stefania! Vorrei informazioni sul servizio "${service.title}".`)}
-              ctaText="Scrivimi su WhatsApp"
+              href={
+                contactTarget(
+                  `Ciao Stefania! Vorrei informazioni sul servizio "${service.title}".`,
+                ).href
+              }
+              ctaText={whatsappEnabled ? "Scrivimi su WhatsApp" : "Richiedi informazioni"}
               alternateBackground={index % 2 !== 0}
               alternateColorClass="bg-white"
               backgroundColorClass="bg-brand-base"

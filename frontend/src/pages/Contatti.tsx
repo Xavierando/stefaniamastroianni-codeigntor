@@ -3,7 +3,9 @@ import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { SEO } from "@/components/common/SEO";
 import { ContactForm } from "@/components/ui/ContactForm";
 import { Mail, MapPin, Instagram, Facebook } from "lucide-react";
-import { whatsappUrl } from "@/config/site";
+import { useContactCta } from "@/hooks/useContactCta";
+import { useHashScroll } from "@/hooks/useHashScroll";
+import { sectionBackground } from "@/lib/sectionBackground";
 
 // lucide-react non include piu le icone dei brand: il glifo WhatsApp e inline.
 function WhatsAppGlyph({ className }: { className?: string }) {
@@ -20,9 +22,17 @@ function WhatsAppGlyph({ className }: { className?: string }) {
 }
 
 export function Contatti() {
+  const { whatsappEnabled, contactTarget } = useContactCta();
+  useHashScroll(true);
+
+  // Le sezioni alternano gli sfondi: senza il blocco WhatsApp, quello dei
+  // contatti scala di una posizione e si riprende il bianco.
+  const contactSectionBg = sectionBackground(whatsappEnabled ? 2 : 1);
+  const formCardBg = whatsappEnabled ? "bg-white" : "bg-brand-base";
+
   return (
     <>
-      <SEO 
+      <SEO
         title="Contatti" 
         description="Contatta Stefania Mastroianni per informazioni su percorsi, trattamenti o workshop. Prenota la tua consulenza o richiedi maggiori dettagli."
       />
@@ -80,31 +90,34 @@ export function Contatti() {
           </RevealOnScroll>
         </div>
       </section>
-      {/* Sezione WhatsApp */}
-      <section className="w-full py-24 px-4 bg-white">
-        <div className="container mx-auto max-w-3xl flex flex-col items-center text-center">
-          <h2 className="font-serif text-3xl md:text-4xl text-brand-primary mb-6">
-            Contattami su WhatsApp
-          </h2>
-          <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-10">
-            Preferisci scrivere due righe invece di compilare un modulo? Mandami
-            un messaggio su WhatsApp: ti rispondo appena mi libero.
-          </p>
-          <a
-            href={whatsappUrl(
-              "Ciao Stefania! Ti scrivo dal sito, vorrei qualche informazione.",
-            )}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-3 rounded-full font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary bg-accent-green-dark text-white hover:bg-accent-green-dark/90 h-14 px-10 text-lg shadow-sm"
-          >
-            <WhatsAppGlyph className="h-6 w-6" />
-            Scrivimi su WhatsApp
-          </a>
-        </div>
-      </section>
+      {whatsappEnabled && (
+        <section className="w-full py-24 px-4 bg-white">
+          <div className="container mx-auto max-w-3xl flex flex-col items-center text-center">
+            <h2 className="font-serif text-3xl md:text-4xl text-brand-primary mb-6">
+              Contattami su WhatsApp
+            </h2>
+            <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-10">
+              Preferisci scrivere due righe invece di compilare un modulo? Mandami
+              un messaggio su WhatsApp: ti rispondo appena mi libero.
+            </p>
+            <a
+              href={
+                contactTarget(
+                  "Ciao Stefania! Ti scrivo dal sito, vorrei qualche informazione.",
+                ).href
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-3 rounded-full font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary bg-accent-green-dark text-white hover:bg-accent-green-dark/90 h-14 px-10 text-lg shadow-sm"
+            >
+              <WhatsAppGlyph className="h-6 w-6" />
+              Scrivimi su WhatsApp
+            </a>
+          </div>
+        </section>
+      )}
 
-      <section className="py-24 px-4 bg-brand-base overflow-hidden relative">
+      <section className={`py-24 px-4 ${contactSectionBg} overflow-hidden relative`}>
         <div className="container mx-auto max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-16">
             {/* Contact Info Side */}
@@ -163,7 +176,10 @@ export function Contatti() {
             </div>
 
             {/* Form Side */}
-            <div className="lg:col-span-3 bg-white p-8 md:p-12 rounded-[2rem] shadow-soft relative overflow-hidden">
+            <div
+              id="modulo"
+              className={`lg:col-span-3 ${formCardBg} p-8 md:p-12 rounded-[2rem] shadow-soft relative overflow-hidden scroll-mt-24`}
+            >
               <div className="absolute top-0 right-0 w-64 h-64 bg-accent-green/10 rounded-full blur-3xl -z-10 translate-x-1/3 -translate-y-1/3" />
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-secondary/5 rounded-full blur-3xl -z-10 -translate-x-1/3 translate-y-1/3" />
 

@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/Button";
 import { Calendar, MapPin, Tag } from "lucide-react";
 import { ContentDetailLayout } from "@/components/layout/ContentDetailLayout";
 import { SEO } from "@/components/common/SEO";
-import { whatsappUrl } from "@/config/site";
+import { useContactCta } from "@/hooks/useContactCta";
 
 export function EventDetail() {
   const { slug } = useParams();
+  const { whatsappEnabled, contactTarget } = useContactCta();
   const [event, setEvent] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -135,24 +136,41 @@ export function EventDetail() {
               </Button>
             </Link>
           ) : (
-            <a
-              href={whatsappUrl(
-                event.isFull
-                  ? `Ciao Stefania! L'evento "${event.title}" risulta al completo: vorrei essere inserita/o in lista d'attesa.`
-                  : `Ciao Stefania! Vorrei prenotare un posto per l'evento "${event.title}".`,
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full"
-            >
-              <Button variant={event.isFull ? "outline" : "primary"} className="w-full py-6 text-lg shadow-sm hover:translate-y-[-2px] transition-transform">
-                {event.isFull ? "Richiedi lista d'attesa" : "Prenota su WhatsApp"}
-              </Button>
-            </a>
+            (() => {
+              const message = event.isFull
+                ? `Ciao Stefania! L'evento "${event.title}" risulta al completo: vorrei essere inserita/o in lista d'attesa.`
+                : `Ciao Stefania! Vorrei prenotare un posto per l'evento "${event.title}".`;
+              const target = contactTarget(message);
+              const label = event.isFull
+                ? "Richiedi lista d'attesa"
+                : whatsappEnabled
+                  ? "Prenota su WhatsApp"
+                  : "Prenota un posto";
+              const button = (
+                <Button
+                  variant={event.isFull ? "outline" : "primary"}
+                  className="w-full py-6 text-lg shadow-sm hover:translate-y-[-2px] transition-transform"
+                >
+                  {label}
+                </Button>
+              );
+
+              return target.external ? (
+                <a href={target.href} target="_blank" rel="noopener noreferrer" className="block w-full">
+                  {button}
+                </a>
+              ) : (
+                <Link to={target.href} className="block w-full">
+                  {button}
+                </Link>
+              );
+            })()
           )}
           {!event.isFull && !event.isPast && (
               <p className="text-center text-sm text-brand-contrast/50 mt-4">
-                Scrivimi su WhatsApp per prenotare il tuo posto.
+                {whatsappEnabled
+                  ? "Scrivimi su WhatsApp per prenotare il tuo posto."
+                  : "Compila il modulo per prenotare il tuo posto."}
               </p>
           )}
         </div>

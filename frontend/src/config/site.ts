@@ -14,16 +14,11 @@ export const SITE_CONFIG = {
 };
 
 /**
- * WhatsApp contact. The online booking flow has been disabled: all "Prenota"
- * CTAs now point here instead. `xprot` is a WhatsApp username (not a phone
- * number) — update WHATSAPP_HANDLE if it changes. wa.me resolves both.
+ * Costruisce un link WhatsApp per un handle, con messaggio precompilato
+ * opzionale. L'handle non e piu una costante compilata: arriva dalle
+ * impostazioni del sito, lette a runtime.
  */
-export const WHATSAPP_HANDLE = "xprot";
-export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_HANDLE}`;
-
-/** Build a WhatsApp deep link, optionally with a pre-filled message. */
-export function whatsappUrl(message?: string): string {
-  return message
-    ? `${WHATSAPP_URL}?text=${encodeURIComponent(message)}`
-    : WHATSAPP_URL;
+export function buildWhatsappUrl(handle: string, message?: string): string {
+  const base = `https://wa.me/${encodeURIComponent(handle)}`;
+  return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }

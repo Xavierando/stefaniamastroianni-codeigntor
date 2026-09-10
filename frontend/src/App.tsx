@@ -18,6 +18,7 @@ import { Unsubscribe } from "./pages/Unsubscribe";
 import { BookingConfirmation } from "./pages/BookingConfirmation";
 import { BookingCancellation } from "./pages/BookingCancellation";
 import { NotFound } from "./pages/NotFound";
+import { SiteSettingsProvider } from "./context/SiteSettingsContext";
 
 // Admin panel is lazy-loaded so the heavy editor (react-quill) and ~20 admin
 // pages are not shipped in the initial bundle to public visitors.
@@ -38,6 +39,7 @@ const AdminPosts = lazy(() => import("./pages/admin/blog/AdminPosts").then((m) =
 const AdminPostForm = lazy(() => import("./pages/admin/blog/AdminPostForm").then((m) => ({ default: m.AdminPostForm })));
 const AdminComments = lazy(() => import("./pages/admin/comments/AdminComments").then((m) => ({ default: m.AdminComments })));
 const AdminBookingsPage = lazy(() => import("./pages/admin/bookings/AdminBookings").then((m) => ({ default: m.AdminBookingsPage })));
+const AdminSettingsPage = lazy(() => import("./pages/admin/settings/AdminSettings").then((m) => ({ default: m.AdminSettingsPage })));
 
 function RouteFallback() {
   return (
@@ -63,6 +65,7 @@ function App() {
   }, []);
 
   return (
+    <SiteSettingsProvider>
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<MainLayout />}>
@@ -108,10 +111,12 @@ function App() {
             <Route path="newsletter/campaigns/new" element={<AdminCampaignForm />} />
             <Route path="newsletter/campaigns/:id/edit" element={<AdminCampaignForm />} />
             <Route path="bookings" element={<AdminBookingsPage />} />
+            <Route path="settings" element={<AdminSettingsPage />} />
           </Route>
           <Route path="/admin/login" element={<AdminLogin />} />
         </Routes>
       </Suspense>
+    </SiteSettingsProvider>
   );
 }
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Plus, Trash2, Calendar, Pencil } from "lucide-react";
+import { Plus, Trash2, Calendar, Pencil, History } from "lucide-react";
 import { Card } from "../../../components/admin/ui/Card";
 import { ConfirmDeleteButton } from "../../../components/admin/ui/ConfirmDeleteButton";
 import { apiFetch } from "../../../lib/api";
@@ -21,6 +21,9 @@ export function AdminEventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const token = useSelector((state: RootState) => state.auth.token);
+  // La pagina riceve gia tutti gli eventi: nascondere i passati e solo un
+  // filtro di comodo, che si puo togliere per rimetterli mano.
+  const [showPast, setShowPast] = useState(false);
 
   const loadEvents = async () => {
     try {
@@ -55,6 +58,7 @@ export function AdminEventsPage() {
 
   const filteredEvents = events.filter(event => {
     if (!event.date) return true;
+    if (showPast) return true;
     const eventDate = new Date(event.date);
     const now = new Date();
     now.setHours(0, 0, 0, 0);
@@ -78,13 +82,24 @@ export function AdminEventsPage() {
           <p className="text-brand-contrast/60">Gestisci i tuoi eventi speciali e laboratori programmati.</p>
         </div>
         
-        <Link 
-          to="/admin/events/new" 
-          className="flex items-center gap-2 bg-brand-primary text-white px-6 py-3 rounded-full hover:bg-brand-primary/90 transition-colors font-medium shadow-sm hover:shadow-md"
-        >
-          <Plus size={20} />
-          Nuovo Evento
-        </Link>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setShowPast((v) => !v)}
+            className="flex items-center gap-2 text-sm text-brand-contrast/60 hover:text-brand-primary transition-colors underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-full px-2 py-1"
+          >
+            <History size={16} />
+            {showPast ? "Nascondi eventi passati" : "Mostra anche eventi passati"}
+          </button>
+
+          <Link
+            to="/admin/events/new"
+            className="flex items-center gap-2 bg-brand-primary text-white px-6 py-3 rounded-full hover:bg-brand-primary/90 transition-colors font-medium shadow-sm hover:shadow-md"
+          >
+            <Plus size={20} />
+            Nuovo Evento
+          </Link>
+        </div>
       </div>
 
       {/* Mobile View (Cards) */}
