@@ -33,13 +33,4 @@ class SiteSettingsModel extends Model
         }
         return $this->insert(['setting_key' => $key, 'setting_value' => $value]);
     }
-
-    public function getAllSettings(): array
-    {
-        $result = [];
-        foreach ($this->findAll() as $setting) {
-            $result[$setting['setting_key']] = $setting['setting_value'];
-        }
-        return $result;
-    }
 }

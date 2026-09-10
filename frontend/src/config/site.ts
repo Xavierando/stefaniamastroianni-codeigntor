@@ -19,6 +19,6 @@ export const SITE_CONFIG = {
  * impostazioni del sito, lette a runtime.
  */
 export function buildWhatsappUrl(handle: string, message?: string): string {
-  const base = `https://wa.me/${handle}`;
+  const base = `https://wa.me/${encodeURIComponent(handle)}`;
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }
