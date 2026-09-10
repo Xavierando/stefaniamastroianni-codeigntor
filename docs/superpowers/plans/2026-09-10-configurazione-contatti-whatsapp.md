@@ -374,17 +374,20 @@ git commit -m "feat(backend): endpoint pubblico e protetto per le impostazioni d
   - `SiteSettingsProvider`, `useSiteSettings(): { whatsappEnabled: boolean; whatsappHandle: string }`, `DEFAULT_SITE_SETTINGS` da `@/context/SiteSettingsContext`.
   - `useContactCta(): { whatsappEnabled: boolean; contactTarget(message: string): { href: string; external: boolean } }` da `@/hooks/useContactCta`.
 
-Nota: questo task **rompe volutamente la compilazione** dei 7 punti che usano `whatsappUrl`. È il modo in cui TypeScript li elenca tutti. I Task 4, 5 e 6 li sistemano; la build torna verde alla fine del Task 5.
+**L'albero resta compilabile a ogni commit.** `whatsappUrl` non viene rimossa qui: resta come ponte `@deprecated` che delega a `buildWhatsappUrl` con l'handle ancora compilato, così i 7 punti di chiamata continuano a funzionare mentre migrano. Il ponte viene eliminato in fondo al Task 5, quando l'ultimo chiamante è convertito.
+
+Motivo: lo stack di sviluppo gira con bind mount e HMR, quindi ogni modifica intermedia è immediatamente visibile nel browser. Un `site.ts` senza `whatsappUrl` mentre 7 moduli lo importano manda in errore l'intero sito, non solo la build.
 
 - [ ] **Step 1: Scrivi la verifica che deve fallire**
 
 ```bash
-cd frontend && npx tsc -b --noEmit 2>&1 | grep -c "whatsappUrl" ; cd ..
+grep -rl "whatsappUrl" frontend/src --include=*.tsx | wc -l
+cd frontend && npx tsc -b --noEmit; echo "tsc exit=$?"; cd ..
 ```
 
 - [ ] **Step 2: Eseguila e verifica lo stato di partenza**
 
-Atteso: `0`. Nessun errore, perché `whatsappUrl` esiste ancora nella vecchia forma. Lo stesso comando allo Step 7 dovrà invece riportarne 7.
+Atteso: `7` moduli che importano `whatsappUrl`, e `tsc exit=0`. Allo Step 7 entrambi i valori devono essere ancora identici: il ponte tiene compilanti i 7 chiamanti mentre l'infrastruttura nuova entra.
 
 - [ ] **Step 3: Cambia la firma in `config/site.ts`**
 
@@ -399,6 +402,19 @@ Sostituisci il blocco da `export const WHATSAPP_HANDLE` fino alla fine del file 
 export function buildWhatsappUrl(handle: string, message?: string): string {
   const base = `https://wa.me/${handle}`;
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
+}
+
+/**
+ * Ponte temporaneo verso la vecchia firma, con l'handle ancora compilato.
+ * Serve solo a tenere il sito in piedi mentre i punti di chiamata migrano a
+ * useContactCta: va rimosso, insieme a questa costante, quando l'ultimo
+ * chiamante e stato convertito.
+ */
+const LEGACY_WHATSAPP_HANDLE = "xprot";
+
+/** @deprecated Usa useContactCta(): l'handle arriva dalle impostazioni. */
+export function whatsappUrl(message?: string): string {
+  return buildWhatsappUrl(LEGACY_WHATSAPP_HANDLE, message);
 }
 ```
 
@@ -523,10 +539,12 @@ E avvolgi il `<Suspense>` del `return`:
 - [ ] **Step 7: Riesegui la verifica dello Step 1**
 
 ```bash
-cd frontend && npx tsc -b --noEmit 2>&1 | grep "whatsappUrl" ; cd ..
+grep -rl "whatsappUrl" frontend/src --include=*.tsx | wc -l
+cd frontend && npx tsc -b --noEmit; echo "tsc exit=$?"; cd ..
+curl -s -o /dev/null -w "sito dev -> %{http_code}\n" http://localhost:81/
 ```
 
-Atteso: **7 errori**, uno per ogni punto di chiamata rimasto (le 4 pagine categoria, `ServiceCard`, `EventDetail`, `Contatti`). È la conferma che l'inventario della spec era completo. Se il numero è diverso, fermati e riconcilia prima di proseguire.
+Atteso: ancora `7` moduli (le 4 pagine categoria, `ServiceCard`, `EventDetail`, `Contatti`), `tsc exit=0`, e il sito di sviluppo che risponde `200`. I 7 moduli sono la conferma che l'inventario della spec era completo: se il numero è diverso, fermati e riconcilia prima di proseguire. **Il sito deve restare funzionante:** questo task non deve mai lasciarlo rotto nel browser.
 
 - [ ] **Step 8: Commit**
 
@@ -798,7 +816,23 @@ E la riga di testo sotto il bottone, che nomina WhatsApp e va cambiata anche lei
 
 `Link` è già importato in `EventDetail.tsx` (lo usa il ramo "Evento Concluso").
 
-- [ ] **Step 4: Verifica che la compilazione torni pulita**
+- [ ] **Step 4: Rimuovi il ponte temporaneo da `config/site.ts`**
+
+Ora che l'ultimo chiamante e migrato, cancella da `frontend/src/config/site.ts`
+il blocco del ponte: la costante `LEGACY_WHATSAPP_HANDLE` e la funzione
+`whatsappUrl` marcata `@deprecated`, con i loro commenti. Resta solo
+`buildWhatsappUrl`.
+
+Verifica che non sia rimasto nessun chiamante:
+
+```bash
+grep -rn "whatsappUrl\|LEGACY_WHATSAPP_HANDLE" frontend/src --include=*.tsx --include=*.ts | grep -v buildWhatsappUrl
+```
+
+Atteso: nessun risultato. Se ne compare uno, quel punto di chiamata non e stato
+migrato: sistemalo prima di proseguire, non rimettere il ponte.
+
+- [ ] **Step 5: Verifica che la compilazione torni pulita**
 
 ```bash
 cd frontend && npx tsc -b --noEmit && echo "TypeScript: pulito" && npm run build 2>&1 | tail -3 && cd ..
@@ -806,7 +840,7 @@ cd frontend && npx tsc -b --noEmit && echo "TypeScript: pulito" && npm run build
 
 Atteso: nessun errore, `prerender complete: 11 routes`. I 7 errori del Task 3 sono tutti risolti.
 
-- [ ] **Step 5: Verifica il comportamento nei due stati**
+- [ ] **Step 6: Verifica il comportamento nei due stati**
 
 Con lo stack Docker attivo e `TOKEN` ottenuto come nel Task 2:
 
@@ -826,11 +860,13 @@ curl -s -X POST http://localhost:8081/api/settings -H "Authorization: Bearer $TO
 
 Ricarica le stesse pagine: i bottoni tornano a "Scrivimi su WhatsApp" e puntano a `wa.me`, la sezione WhatsApp ricompare su sfondo bianco, la sezione contatti passa a crema e la card del modulo a bianco.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
-git add frontend/src/components/ui/ServiceCard.tsx frontend/src/pages/EventDetail.tsx frontend/src/pages/YogaPage.tsx frontend/src/pages/Trattamenti.tsx frontend/src/pages/Maternita.tsx frontend/src/pages/Consulenze.tsx
-git commit -m "feat(frontend): CTA di servizi ed eventi verso WhatsApp o modulo"
+git add frontend/src/config/site.ts frontend/src/components/ui/ServiceCard.tsx frontend/src/pages/EventDetail.tsx frontend/src/pages/YogaPage.tsx frontend/src/pages/Trattamenti.tsx frontend/src/pages/Maternita.tsx frontend/src/pages/Consulenze.tsx
+git commit -m "feat(frontend): CTA di servizi ed eventi verso WhatsApp o modulo
+
+Rimosso il ponte whatsappUrl: nessun chiamante lo usa piu."
 ```
 
 ---
