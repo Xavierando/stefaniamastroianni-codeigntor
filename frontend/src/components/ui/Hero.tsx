@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { ScrollHint } from "@/components/ui/ScrollHint";
 
 interface HeroProps {
   title?: string;
@@ -65,6 +66,8 @@ export function Hero({
           {/* Subtle bottom fade gradient to blend with the next section */}
           <div className="absolute bottom-0 left-0 right-0 h-[30%] bg-gradient-to-t from-brand-base to-transparent z-10 pointer-events-none" />
         </motion.div>
+
+        <ScrollHint />
       </section>
     );
   }
@@ -137,6 +140,8 @@ export function Hero({
           </motion.div>
         </div>
       </div>
+
+      <ScrollHint />
     </section>
   );
 }

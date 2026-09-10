@@ -1,4 +1,5 @@
 import { Hero } from "@/components/ui/Hero";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { SEO } from "@/components/common/SEO";
 import { ContactForm } from "@/components/ui/ContactForm";
 import { Mail, MapPin, Instagram, Facebook } from "lucide-react";
@@ -22,43 +23,46 @@ export function Contatti() {
             Entriamo in contatto
           </h1>
 
-          <div className="text-brand-contrast/80 leading-relaxed font-light text-xl md:text-2xl space-y-6 max-w-4xl">
-            <p>
-              <strong className="font-semibold text-brand-contrast">
-                Ogni percorso inizia con un incontro gratuito:
-              </strong>{" "}
-              uno spazio sicuro,<br /> in cui {" "}
-              <strong className="font-semibold text-brand-contrast">
-                conoscerci e capire insieme di cosa hai bisogno ora
-              </strong>
-              .
-            </p>
-            <p>
-              Non devi avere le idee chiare. Basta{" "}
-              <strong className="font-semibold text-brand-contrast">
-                il desiderio di iniziare
-              </strong>
-              .
-              <br />
-              Compila il modulo qui sotto.
-            </p>
-            <strong className="font-semibold text-brand-contrast"><p className="italic">Grazie</p></strong>
-          </div>
+          {/* Su mobile il testo appare allo scroll; il titolo resta visibile */}
+          <RevealOnScroll className="flex flex-col items-center w-full">
+            <div className="text-brand-contrast/80 leading-relaxed font-light text-xl md:text-2xl space-y-6 max-w-4xl">
+              <p>
+                <strong className="font-semibold text-brand-contrast">
+                  Ogni percorso inizia con un incontro gratuito:
+                </strong>{" "}
+                uno spazio sicuro,<br /> in cui {" "}
+                <strong className="font-semibold text-brand-contrast">
+                  conoscerci e capire insieme di cosa hai bisogno ora
+                </strong>
+                .
+              </p>
+              <p>
+                Non devi avere le idee chiare. Basta{" "}
+                <strong className="font-semibold text-brand-contrast">
+                  il desiderio di iniziare
+                </strong>
+                .
+                <br />
+                Compila il modulo qui sotto.
+              </p>
+              <strong className="font-semibold text-brand-contrast"><p className="italic">Grazie</p></strong>
+            </div>
 
-          <blockquote className="mt-12 max-w-3xl border-l-2 border-brand-secondary/40 pl-6 text-left">
-            <p className="font-serif italic font-semibold text-2xl md:text-3xl text-brand-primary leading-snug">
-              «Non si puo raggiungere l'alba
-              <br />
-             senza passare per i sentieri della notte.»
-            </p>
-            <footer className="mt-4 text-base md:text-lg text-brand-contrast/70 not-italic">
-              —{" "}
-              <strong className="font-semibold text-brand-contrast">
-                Khalil Gibran
-              </strong>
-              , poeta e filosofo Sufi
-            </footer>
-          </blockquote>
+            <blockquote className="mt-12 max-w-3xl border-l-2 border-brand-secondary/40 pl-6 text-left">
+              <p className="font-serif italic font-semibold text-2xl md:text-3xl text-brand-primary leading-snug">
+                «Non si puo raggiungere l'alba
+                <br />
+               senza passare per i sentieri della notte.»
+              </p>
+              <footer className="mt-4 text-base md:text-lg text-brand-contrast/70 not-italic">
+                —{" "}
+                <strong className="font-semibold text-brand-contrast">
+                  Khalil Gibran
+                </strong>
+                , poeta e filosofo Sufi
+              </footer>
+            </blockquote>
+          </RevealOnScroll>
         </div>
       </section>
       <section className="py-24 px-4 bg-white overflow-hidden relative">

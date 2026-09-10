@@ -1,6 +1,7 @@
 import { type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 
 interface PageIntroductionProps {
   title: string;
@@ -47,34 +48,37 @@ export function PageIntroduction({
           {title}
         </Tag>
 
-        {typeof description === "string" ? (
-          <p
-            className={cn(
-              "text-brand-contrast/80 leading-relaxed font-light text-xl md:text-2xl",
-              ctaText ? "mb-12" : "",
-            )}
-          >
-            {description}
-          </p>
-        ) : (
-          <div
-            className={cn(
-              "text-brand-contrast/80 leading-relaxed font-light text-xl md:text-2xl",
-              ctaText ? "mb-12" : "",
-            )}
-          >
-            {description}
-          </div>
-        )}
+        {/* Su mobile il testo appare allo scroll; il titolo resta visibile */}
+        <RevealOnScroll className="flex flex-col items-center w-full">
+          {typeof description === "string" ? (
+            <p
+              className={cn(
+                "text-brand-contrast/80 leading-relaxed font-light text-xl md:text-2xl",
+                ctaText ? "mb-12" : "",
+              )}
+            >
+              {description}
+            </p>
+          ) : (
+            <div
+              className={cn(
+                "text-brand-contrast/80 leading-relaxed font-light text-xl md:text-2xl",
+                ctaText ? "mb-12" : "",
+              )}
+            >
+              {description}
+            </div>
+          )}
 
-        {ctaText && ctaHref && (
-          <Link
-            to={ctaHref}
-            className="inline-flex items-center justify-center rounded-full font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary bg-brand-primary text-white hover:bg-brand-primary/90 h-14 px-10 text-lg shadow-sm"
-          >
-            {ctaText}
-          </Link>
-        )}
+          {ctaText && ctaHref && (
+            <Link
+              to={ctaHref}
+              className="inline-flex items-center justify-center rounded-full font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary bg-brand-primary text-white hover:bg-brand-primary/90 h-14 px-10 text-lg shadow-sm"
+            >
+              {ctaText}
+            </Link>
+          )}
+        </RevealOnScroll>
       </div>
     </section>
   );
