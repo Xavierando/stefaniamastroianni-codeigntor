@@ -22,16 +22,3 @@ export function buildWhatsappUrl(handle: string, message?: string): string {
   const base = `https://wa.me/${handle}`;
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }
-
-/**
- * Ponte temporaneo verso la vecchia firma, con l'handle ancora compilato.
- * Serve solo a tenere il sito in piedi mentre i punti di chiamata migrano a
- * useContactCta: va rimosso, insieme a questa costante, quando l'ultimo
- * chiamante e stato convertito.
- */
-const LEGACY_WHATSAPP_HANDLE = "xprot";
-
-/** @deprecated Usa useContactCta(): l'handle arriva dalle impostazioni. */
-export function whatsappUrl(message?: string): string {
-  return buildWhatsappUrl(LEGACY_WHATSAPP_HANDLE, message);
-}
