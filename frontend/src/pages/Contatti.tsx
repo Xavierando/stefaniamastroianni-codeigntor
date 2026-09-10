@@ -25,7 +25,7 @@ export function Contatti() {
 
           {/* Su mobile il testo appare allo scroll; il titolo resta visibile */}
           <RevealOnScroll className="flex flex-col items-center w-full">
-            <div className="text-brand-contrast/80 leading-relaxed font-light text-xl md:text-2xl space-y-6 max-w-4xl">
+            <div className="text-brand-contrast/80 leading-relaxed font-light text-lg md:text-xl space-y-6 max-w-4xl">
               <p>
                 <strong className="font-semibold text-brand-contrast">
                   Ogni percorso inizia con un incontro gratuito:

@@ -20,7 +20,7 @@ export function Home() {
     async function fetchHomeData() {
       try {
         const [eventsRes, reviewsRes, galleryRes] = await Promise.all([
-          apiFetch("/events?limit=6"),
+          apiFetch("/events?upcoming=1&limit=6"),
           apiFetch("/reviews?limit=8"),
           apiFetch("/gallery?limit=10"),
         ]);
@@ -41,7 +41,8 @@ export function Home() {
               })
             : "Da definire",
           location: e.location || "Studio Olistico Mastroianni",
-          isFull: e.isFull,
+          isFull: e.is_full,
+          isPast: e.is_past,
           imageSrc: e.imageUrl || undefined,
         }));
 
@@ -106,7 +107,7 @@ export function Home() {
 
             {/* Su mobile il testo appare allo scroll; il titolo resta visibile */}
             <RevealOnScroll className="flex flex-col items-center w-full">
-              <div className="text-brand-contrast/80 leading-relaxed font-light text-xl md:text-2xl space-y-6 max-w-3xl">
+              <div className="text-brand-contrast/80 leading-relaxed font-light text-lg md:text-xl space-y-6 max-w-3xl">
                 <p>
                   in questo spazio nato da un profondo amore verso la vita, in cui
                   ti propongo{" "}

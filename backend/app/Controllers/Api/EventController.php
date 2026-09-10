@@ -20,9 +20,21 @@ class EventController extends ResourceController
     {
         $category = $this->request->getGet('category');
         $limit = $this->request->getGet('limit');
+        $upcoming = $this->request->getGet('upcoming');
 
         if ($category !== null && $category !== '') {
             $this->model->where('category', $category);
+        }
+
+        // Il sito pubblico chiede ?upcoming=1 per non mostrare eventi scaduti.
+        // La soglia parte da 3 giorni fa cosi un evento non sparisce mentre e
+        // ancora in corso; gli eventi senza data ("Da definire") restano.
+        // L'admin non passa il parametro e continua a vedere tutto.
+        if ($upcoming !== null && $upcoming !== '' && $upcoming !== '0') {
+            $this->model->groupStart()
+                ->where('date >=', date('Y-m-d H:i:s', strtotime('-3 days')))
+                ->orWhere('date', null)
+                ->groupEnd();
         }
 
         $this->model->orderBy('date', 'ASC');

@@ -80,7 +80,7 @@ export function ServiceOverview({
           <h2 className="font-serif text-4xl lg:text-5xl text-brand-contrast mb-8 leading-[1.15]">
             {title}
           </h2>
-          <p className="text-xl text-brand-contrast/70 leading-relaxed mb-10 font-light text-justify">
+          <p className="text-lg md:text-xl text-brand-contrast/70 leading-relaxed mb-10 font-light md:text-justify">
             {description}
           </p>
 

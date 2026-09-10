@@ -29,7 +29,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
           ),
           p: ({ node, ...props }) => (
             <p
-              className="text-brand-contrast text-lg leading-relaxed mb-6"
+              className="text-brand-contrast text-lg md:text-xl leading-relaxed mb-6"
               {...props}
             />
           ),
@@ -51,20 +51,20 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
           ),
           ul: ({ node, ...props }) => (
             <ul
-              className="list-disc pl-6 text-brand-contrast text-lg mb-6 space-y-2 marker:text-brand-secondary"
+              className="list-disc pl-6 text-brand-contrast text-lg md:text-xl mb-6 space-y-2 marker:text-brand-secondary"
               {...props}
             />
           ),
           ol: ({ node, ...props }) => (
             <ol
-              className="list-decimal pl-6 text-brand-contrast text-lg mb-6 space-y-2 marker:text-brand-secondary"
+              className="list-decimal pl-6 text-brand-contrast text-lg md:text-xl mb-6 space-y-2 marker:text-brand-secondary"
               {...props}
             />
           ),
           li: ({ node, ...props }) => <li className="pl-2" {...props} />,
           blockquote: ({ node, ...props }) => (
             <blockquote
-              className="border-l-4 border-brand-secondary pl-6 py-1 italic text-brand-contrast/80 my-8 text-xl"
+              className="border-l-4 border-brand-secondary pl-6 py-1 italic text-brand-contrast/80 my-8 text-xl md:text-2xl"
               {...props}
             />
           ),

@@ -61,7 +61,7 @@ export function ServiceCard({ title, description, durationMin, price, imageSrc }
             <CardTitle className="text-xl md:text-2xl text-brand-primary mb-4 leading-snug">
               {title}
             </CardTitle>
-            <p className="text-brand-contrast/80 text-sm mb-6 line-clamp-3 leading-relaxed">
+            <p className="text-brand-contrast/80 text-base md:text-lg mb-6 line-clamp-3 leading-relaxed">
               {description}
             </p>
           </div>
