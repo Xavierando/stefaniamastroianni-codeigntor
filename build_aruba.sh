@@ -29,3 +29,18 @@ cp -r backend/writable aruba_deploy/api/
         # to ensure your live config remains exactly as you manually set it on Aruba.
 
 echo "Done! The aruba_deploy folder is ready to be uploaded via FTP."
+echo ""
+echo "=================================================================="
+echo "ATTENZIONE: dopo l'upload via FTP, PRIMA di considerare il sito"
+echo "live, va eseguita la migrazione del database chiamando:"
+echo ""
+echo "  POST https://<dominio>/api/migrations/run"
+echo "  Header: X-Migration-Token: <valore di MIGRATION_TOKEN>"
+echo ""
+echo "MIGRATION_TOKEN e' definito nel file .env sul server (non nel repo)."
+echo "Se la migrazione non viene eseguita, la tabella site_settings non"
+echo "esiste: GET /api/settings va in errore 500 e il frontend, per"
+echo "design, interpreta questo come impostazioni assenti. Risultato:"
+echo "WhatsApp risulta spento su tutto il sito pubblico, senza nessun"
+echo "errore visibile ne' in admin ne' per i visitatori."
+echo "=================================================================="
