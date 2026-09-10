@@ -18,6 +18,7 @@ import { Unsubscribe } from "./pages/Unsubscribe";
 import { BookingConfirmation } from "./pages/BookingConfirmation";
 import { BookingCancellation } from "./pages/BookingCancellation";
 import { NotFound } from "./pages/NotFound";
+import { SiteSettingsProvider } from "./context/SiteSettingsContext";
 
 // Admin panel is lazy-loaded so the heavy editor (react-quill) and ~20 admin
 // pages are not shipped in the initial bundle to public visitors.
@@ -63,6 +64,7 @@ function App() {
   }, []);
 
   return (
+    <SiteSettingsProvider>
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<MainLayout />}>
@@ -112,6 +114,7 @@ function App() {
           <Route path="/admin/login" element={<AdminLogin />} />
         </Routes>
       </Suspense>
+    </SiteSettingsProvider>
   );
 }
 
