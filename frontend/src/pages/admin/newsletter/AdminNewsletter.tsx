@@ -91,7 +91,41 @@ function SubscribersTab() {
   };
 
   return (
-    <Card className="overflow-hidden bg-white border border-brand-primary/10">
+    <>
+      {/* Mobile View (Cards) */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
+        {loading ? (
+          <div className="bg-white p-8 text-center text-brand-contrast/50 rounded-xl border border-brand-primary/10">
+            Caricamento in corso...
+          </div>
+        ) : subscribers.length === 0 ? (
+          <div className="bg-white p-8 text-center text-brand-contrast/50 rounded-xl border border-brand-primary/10">
+            Nessun iscritto alla newsletter.
+          </div>
+        ) : (
+          subscribers.map((subscriber) => (
+            <Card key={subscriber.id} className="p-4 space-y-3 bg-white border border-brand-primary/10 font-sans shadow-sm">
+              <p className="font-medium text-brand-contrast break-all">{subscriber.email}</p>
+              <div className="flex items-center gap-1.5 text-sm text-brand-contrast/60">
+                <Clock size={16} className="text-brand-primary/60" />
+                <span>{new Date(subscriber.createdAt).toLocaleDateString('it-IT')}</span>
+              </div>
+              <div className="pt-2 border-t border-brand-primary/5">
+                <ConfirmDeleteButton
+                  onConfirm={() => handleDelete(subscriber.id)}
+                  className="w-full flex items-center justify-center gap-2 py-2.5 bg-red-50 text-red-500 rounded-xl font-medium transition-colors hover:bg-red-100 !shadow-none border border-red-100 text-sm"
+                >
+                  <Trash2 size={16} />
+                  Elimina
+                </ConfirmDeleteButton>
+              </div>
+            </Card>
+          ))
+        )}
+      </div>
+
+      {/* Desktop View (Table) */}
+      <Card className="overflow-hidden bg-white border border-brand-primary/10 hidden md:block">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
@@ -123,7 +157,7 @@ function SubscribersTab() {
                   <td className="p-4 text-right">
                     <ConfirmDeleteButton 
                       onConfirm={() => handleDelete(subscriber.id)}
-                      className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors !bg-transparent !shadow-none min-w-0"
+                      className="p-2 min-h-11 min-w-11 inline-flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors !bg-transparent !shadow-none"
                       title="Elimina Iscritto"
                     >
                       <Trash2 size={18} />
@@ -135,6 +169,7 @@ function SubscribersTab() {
           </tbody>
         </table>
       </div>
-    </Card>
+      </Card>
+    </>
   );
 }

@@ -60,19 +60,19 @@ export function AdminComments() {
         <div className="flex bg-white rounded-xl border border-brand-primary/10 overflow-hidden shadow-sm">
           <button
             onClick={() => setFilter('pending')}
-            className={`px-4 py-2 text-sm font-medium transition-colors ${filter === 'pending' ? 'bg-brand-primary/10 text-brand-primary' : 'text-brand-contrast/60 hover:bg-brand-primary/5'}`}
+            className={`px-4 py-2 min-h-11 inline-flex items-center text-sm font-medium transition-colors ${filter === 'pending' ? 'bg-brand-primary/10 text-brand-primary' : 'text-brand-contrast/60 hover:bg-brand-primary/5'}`}
           >
             Da Approvare
           </button>
           <button
             onClick={() => setFilter('approved')}
-            className={`px-4 py-2 text-sm font-medium transition-colors border-l border-brand-primary/10 ${filter === 'approved' ? 'bg-brand-primary/10 text-brand-primary' : 'text-brand-contrast/60 hover:bg-brand-primary/5'}`}
+            className={`px-4 py-2 min-h-11 inline-flex items-center text-sm font-medium transition-colors border-l border-brand-primary/10 ${filter === 'approved' ? 'bg-brand-primary/10 text-brand-primary' : 'text-brand-contrast/60 hover:bg-brand-primary/5'}`}
           >
             Approvati
           </button>
           <button
             onClick={() => setFilter('all')}
-            className={`px-4 py-2 text-sm font-medium transition-colors border-l border-brand-primary/10 ${filter === 'all' ? 'bg-brand-primary/10 text-brand-primary' : 'text-brand-contrast/60 hover:bg-brand-primary/5'}`}
+            className={`px-4 py-2 min-h-11 inline-flex items-center text-sm font-medium transition-colors border-l border-brand-primary/10 ${filter === 'all' ? 'bg-brand-primary/10 text-brand-primary' : 'text-brand-contrast/60 hover:bg-brand-primary/5'}`}
           >
             Tutti
           </button>

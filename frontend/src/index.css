@@ -70,3 +70,19 @@
     }
   }
 }
+
+/* La toolbar di Quill nasce con bottoni da 24px: sotto il pollice sono
+   inutilizzabili. Su schermo stretto li portiamo alla stessa soglia di 44px
+   usata dal resto del pannello admin. */
+@media (max-width: 767px) {
+  .ql-toolbar.ql-snow button,
+  .ql-toolbar.ql-snow .ql-picker-label {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+
+  .ql-toolbar.ql-snow button svg {
+    width: 22px;
+    height: 22px;
+  }
+}

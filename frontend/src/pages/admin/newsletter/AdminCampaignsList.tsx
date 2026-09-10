@@ -70,7 +70,56 @@ export function AdminCampaignsList() {
         </button>
       </div>
 
-      <Card className="overflow-hidden bg-white border border-brand-primary/10">
+      {/* Mobile View (Cards) */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
+        {loading ? (
+          <div className="bg-white p-8 text-center text-brand-contrast/50 rounded-xl border border-brand-primary/10">
+            Caricamento in corso...
+          </div>
+        ) : campaigns.length === 0 ? (
+          <div className="bg-white p-8 text-center text-brand-contrast/50 rounded-xl border border-brand-primary/10">
+            Nessuna campagna trovata.
+          </div>
+        ) : (
+          campaigns.map((campaign) => (
+            <Card key={campaign.id} className="p-4 space-y-3 bg-white border border-brand-primary/10 font-sans shadow-sm">
+              <div className="flex justify-between items-start gap-3">
+                <p className="font-medium text-brand-contrast leading-tight">{campaign.subject}</p>
+                <span className={`shrink-0 px-3 py-1 text-xs font-semibold rounded-full ${statusMap[campaign.status].color}`}>
+                  {statusMap[campaign.status].label}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-sm text-brand-contrast/60">
+                <span>{new Date(campaign.created_at).toLocaleDateString('it-IT')}</span>
+                <span>
+                  {campaign.status !== 'draft'
+                    ? `${campaign.sent_count} / ${campaign.total_subscribers}`
+                    : '-'}
+                </span>
+              </div>
+              <div className="flex gap-2 pt-2 border-t border-brand-primary/5">
+                <button
+                  onClick={() => navigate(`/admin/newsletter/campaigns/${campaign.id}/edit`)}
+                  className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-brand-primary/5 text-brand-primary rounded-xl font-medium transition-colors hover:bg-brand-primary/10 border border-brand-primary/10 text-sm"
+                >
+                  <Edit2 size={16} />
+                  Modifica
+                </button>
+                <ConfirmDeleteButton
+                  onConfirm={() => handleDelete(campaign.id)}
+                  className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-red-50 text-red-500 rounded-xl font-medium transition-colors hover:bg-red-100 !shadow-none border border-red-100 text-sm"
+                >
+                  <Trash2 size={16} />
+                  Elimina
+                </ConfirmDeleteButton>
+              </div>
+            </Card>
+          ))
+        )}
+      </div>
+
+      {/* Desktop View (Table) */}
+      <Card className="overflow-hidden bg-white border border-brand-primary/10 hidden md:block">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
