@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Button } from "./Button";
 import { apiFetch } from "@/lib/api";
 
@@ -6,6 +7,11 @@ export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  // I CTA del sito rimandano qui con la stessa frase che avrebbero mandato su
+  // WhatsApp, cosi il contesto di provenienza non si perde.
+  const [searchParams] = useSearchParams();
+  const prefilledMessage = searchParams.get("messaggio") ?? "";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -82,11 +88,13 @@ export function ContactForm() {
 
       <div className="space-y-2">
         <label htmlFor="message" className="text-sm font-medium text-brand-contrast">Come posso aiutarti?</label>
-        <textarea 
+        <textarea
+          key={prefilledMessage}
           id="message"
           name="message"
           required
           rows={5}
+          defaultValue={prefilledMessage}
           className="w-full bg-white/50 border border-brand-contrast/20 rounded-md px-4 py-3 text-brand-contrast focus:outline-none focus:ring-2 focus:ring-brand-primary resize-none"
           placeholder="Scrivi qui il tuo messaggio..."
         />
