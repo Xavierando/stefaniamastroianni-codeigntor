@@ -32,6 +32,7 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->get('posts', 'PostController::index');
     $routes->get('posts/(:segment)', 'PostController::show/$1');
     $routes->get('gallery', 'GalleryController::index');
+    $routes->get('settings', 'SettingsController::index');
 
     // Public comments: list approved + submit (submissions default to unapproved)
     $routes->get('comments', 'CommentController::index');
@@ -80,6 +81,9 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
         $routes->post('posts', 'PostController::create');
         $routes->post('posts/(:segment)', 'PostController::update/$1');
         $routes->delete('posts/(:segment)', 'PostController::delete/$1');
+
+        // Impostazioni del sito
+        $routes->post('settings', 'SettingsController::update');
 
         // Gallery
         $routes->post('gallery', 'GalleryController::create');
