@@ -13,6 +13,8 @@ export const SITE_CONFIG = {
   ogImage: "/images/og-image-default.webp",
 };
 
+export const INSTAGRAM_URL = "https://www.instagram.com/stefania_mastroianni/";
+
 /**
  * Costruisce un link WhatsApp per un handle, con messaggio precompilato
  * opzionale. L'handle non e piu una costante compilata: arriva dalle

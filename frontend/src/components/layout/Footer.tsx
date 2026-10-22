@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Instagram, Mail } from "lucide-react";
 import { useState } from "react";
 import { apiFetch } from "@/lib/api";
+import { INSTAGRAM_URL } from "@/config/site";
 
 export function Footer() {
   const location = useLocation();
@@ -114,7 +115,7 @@ export function Footer() {
                 </a>
                 <div className="flex items-center gap-4 mt-2">
                   <a
-                    href="#"
+                    href={INSTAGRAM_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="opacity-80 hover:opacity-100 transition-opacity"

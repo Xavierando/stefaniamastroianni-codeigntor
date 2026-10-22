@@ -6,6 +6,7 @@ import { Mail, MapPin, Instagram } from "lucide-react";
 import { useContactCta } from "@/hooks/useContactCta";
 import { useHashScroll } from "@/hooks/useHashScroll";
 import { sectionBackground } from "@/lib/sectionBackground";
+import { INSTAGRAM_URL } from "@/config/site";
 
 // lucide-react non include piu le icone dei brand: il glifo WhatsApp e inline.
 function WhatsAppGlyph({ className }: { className?: string }) {
@@ -158,7 +159,9 @@ export function Contatti() {
                 </h4>
                 <div className="flex gap-4">
                   <a
-                    href="#"
+                    href={INSTAGRAM_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="bg-white p-3 rounded-full shadow-sm text-brand-secondary hover:bg-brand-secondary hover:text-white transition-colors"
                     aria-label="Instagram"
                   >
