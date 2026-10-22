@@ -2,7 +2,7 @@ import { Hero } from "@/components/ui/Hero";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { SEO } from "@/components/common/SEO";
 import { ContactForm } from "@/components/ui/ContactForm";
-import { Mail, MapPin, Instagram, Facebook } from "lucide-react";
+import { Mail, MapPin, Instagram } from "lucide-react";
 import { useContactCta } from "@/hooks/useContactCta";
 import { useHashScroll } from "@/hooks/useHashScroll";
 import { sectionBackground } from "@/lib/sectionBackground";
@@ -163,13 +163,6 @@ export function Contatti() {
                     aria-label="Instagram"
                   >
                     <Instagram size={20} />
-                  </a>
-                  <a
-                    href="#"
-                    className="bg-white p-3 rounded-full shadow-sm text-brand-secondary hover:bg-brand-secondary hover:text-white transition-colors"
-                    aria-label="Facebook"
-                  >
-                    <Facebook size={20} />
                   </a>
                 </div>
               </div>
