@@ -7,6 +7,25 @@ import { ContentDetailLayout } from "@/components/layout/ContentDetailLayout";
 import { SEO } from "@/components/common/SEO";
 import { useContactCta } from "@/hooks/useContactCta";
 
+// "Ogni settimana fino al 18 dicembre 2026" per le serie ricorrenti.
+function describeRecurrence(intervalDays: number, endDate: string | null): string {
+  const every =
+    intervalDays === 7
+      ? "Ogni settimana"
+      : intervalDays % 7 === 0
+        ? `Ogni ${intervalDays / 7} settimane`
+        : intervalDays === 1
+          ? "Ogni giorno"
+          : `Ogni ${intervalDays} giorni`;
+  if (!endDate) return every;
+  const until = new Date(`${endDate}T00:00:00`).toLocaleDateString("it-IT", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  return `${every} fino al ${until}`;
+}
+
 export function EventDetail() {
   const { slug } = useParams();
   const { whatsappEnabled, contactTarget } = useContactCta();
@@ -45,6 +64,9 @@ export function EventDetail() {
             isFull: truthy(data.is_full),
             isPast: truthy(data.is_past),
             remainingCapacity: data.remaining_capacity ?? null,
+            recurrence: truthy(data.is_recurring)
+              ? describeRecurrence(Number(data.recurrence_interval_days), data.recurrence_end_date)
+              : null,
           });
         } else {
           setError("Evento non trovato");
@@ -94,8 +116,13 @@ export function EventDetail() {
           <Calendar size={24} />
         </div>
         <div>
-          <p className="text-sm font-bold text-brand-contrast/50 uppercase tracking-wider mb-1">Data e Ora</p>
+          <p className="text-sm font-bold text-brand-contrast/50 uppercase tracking-wider mb-1">
+            {event.recurrence && !event.isPast ? "Prossimo incontro" : "Data e Ora"}
+          </p>
           <p className="text-brand-primary font-medium text-lg">{event.date}</p>
+          {event.recurrence && (
+            <p className="text-sm text-brand-contrast/70 mt-1">{event.recurrence}</p>
+          )}
         </div>
       </div>
 

@@ -3,6 +3,7 @@ import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 const NAV_LINKS = [
   { name: "Home", href: "/" },
@@ -21,6 +22,11 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const pathname = location.pathname;
+  const { hasBlogPosts } = useSiteSettings();
+  // Il blog compare nel menu solo quando c'e almeno un post.
+  const navLinks = NAV_LINKS.filter(
+    (link) => link.href !== "/blog" || hasBlogPosts,
+  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -88,7 +94,7 @@ export function Navbar() {
 
         {/* Desktop Navigation */}
         <nav className="hidden xl:flex items-center gap-1">
-          {NAV_LINKS.map((link) => (
+          {navLinks.map((link) => (
             <Link
               key={link.href}
               to={link.href}
@@ -124,7 +130,7 @@ export function Navbar() {
             transition={{ duration: 0.5, ease: "easeInOut" }}
             className="absolute top-full left-4 right-4 bg-brand-secondary/98 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 shadow-xl flex flex-col items-center gap-2 z-50 overflow-hidden"
           >
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <Link
                 key={link.href}
                 to={link.href}

@@ -27,6 +27,8 @@ export function AdminEventForm() {
     max_capacity: "",
     duration: "60",
     is_booking_enabled: "1",
+    recurrence_interval_days: "",
+    recurrence_end_date: "",
   });
   
   const [image, setImage] = useState<File | null>(null);
@@ -48,12 +50,16 @@ export function AdminEventForm() {
             shortDescription: event.shortDescription || "",
             description: event.description || "",
             price: event.price?.toString() || "",
-            date: event.date ? event.date.substring(0, 16) : "", // Format for datetime-local
+            // Per le serie ricorrenti l'API mette in `date` la prossima occorrenza:
+            // il form modifica la prima data della serie.
+            date: (event.series_start ?? event.date)?.substring(0, 16) ?? "", // Format for datetime-local
             location: event.location || "",
             imagePosition: event.imagePosition || "centrato",
             max_capacity: event.max_capacity?.toString() || "",
             duration: event.duration?.toString() || "60",
             is_booking_enabled: event.is_booking_enabled?.toString() ?? "1",
+            recurrence_interval_days: event.recurrence_interval_days?.toString() ?? "",
+            recurrence_end_date: event.recurrence_end_date ?? "",
           });
           
           if (event.imageUrl) {
@@ -113,6 +119,8 @@ export function AdminEventForm() {
       setIsSubmitting(false);
     }
   };
+
+  const isRecurring = formData.recurrence_interval_days !== "";
 
   if (isLoading) {
     return <div className="p-8 text-center text-brand-contrast">Caricamento in corso...</div>;
@@ -215,7 +223,7 @@ export function AdminEventForm() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-2">
               <label htmlFor="date" className="block text-sm font-medium text-brand-contrast/80">
-                Data e Ora Evento *
+                {isRecurring ? "Prima Data e Ora *" : "Data e Ora Evento *"}
               </label>
               <input
                 type="datetime-local"
@@ -330,6 +338,68 @@ export function AdminEventForm() {
               </select>
               <p className="text-xs text-brand-contrast/50">Controlla la posizione verticale dell'immagine nella sezione hero</p>
             </div>
+          </div>
+
+          <div className="bg-brand-primary/5 p-4 rounded-md border border-brand-primary/10 space-y-4">
+            <div className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                id="is_recurring"
+                checked={isRecurring}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    recurrence_interval_days: e.target.checked ? "7" : "",
+                    recurrence_end_date: e.target.checked ? prev.recurrence_end_date : "",
+                  }))
+                }
+                className="w-5 h-5 text-brand-primary border-brand-primary/20 rounded focus:ring-brand-primary"
+              />
+              <label htmlFor="is_recurring" className="font-medium text-brand-primary">
+                Evento ricorrente
+              </label>
+            </div>
+
+            {isRecurring && (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label htmlFor="recurrence_interval_days" className="block text-sm font-medium text-brand-contrast/80">
+                      Ripeti ogni (giorni) *
+                    </label>
+                    <input
+                      type="number"
+                      id="recurrence_interval_days"
+                      name="recurrence_interval_days"
+                      value={formData.recurrence_interval_days}
+                      onChange={handleChange}
+                      required
+                      min="1"
+                      className="w-full p-3 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50 bg-white"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label htmlFor="recurrence_end_date" className="block text-sm font-medium text-brand-contrast/80">
+                      Data di fine *
+                    </label>
+                    <input
+                      type="date"
+                      id="recurrence_end_date"
+                      name="recurrence_end_date"
+                      value={formData.recurrence_end_date}
+                      onChange={handleChange}
+                      required
+                      min={formData.date ? formData.date.substring(0, 10) : undefined}
+                      className="w-full p-3 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50 bg-white"
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-brand-contrast/50">
+                  Sul sito l'evento mostra sempre la prossima data: passata una data, scatta alla successiva fino alla data di fine. I posti valgono per ogni singola data.
+                </p>
+              </>
+            )}
           </div>
 
           <div className="bg-brand-primary/5 p-4 rounded-md border border-brand-primary/10">

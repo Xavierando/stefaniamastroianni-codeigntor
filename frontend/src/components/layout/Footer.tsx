@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Instagram, Facebook, Mail } from "lucide-react";
+import { Instagram, Mail } from "lucide-react";
 import { useState } from "react";
 import { apiFetch } from "@/lib/api";
 
@@ -79,7 +79,7 @@ export function Footer() {
       </section>
 
       {/* Main Footer Content */}
-      <footer className="bg-brand-primary text-brand-base pt-16 pb-8">
+      <footer className="bg-brand-base text-brand-contrast pt-16 pb-8">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
             {/* Column 1: Brand Info */}
@@ -90,9 +90,13 @@ export function Footer() {
               >
                 Stefania Mastroianni
               </Link>
-              <p className="text-sm opacity-80 mb-4 max-w-xs">
-                Operatrice per la Salute e il Benessere. Ritrova il tuo
-                equilibrio psicofisico attraverso percorsi consapevoli.
+              <ul className="text-sm opacity-80 mb-4 max-w-xs list-disc pl-5 space-y-1">
+                <li>Educatrice professionale</li>
+                <li>Doula gravidanza, parto e post-parto</li>
+                <li>Insegnante di Yoga</li>
+              </ul>
+              <p className="text-xs font-medium tracking-widest opacity-80 mb-4">
+                VALLE D'AOSTA E ONLINE
               </p>
               <p className="text-xs opacity-60">P.IVA: [INSERIRE_PIVA_QUI]</p>
             </div>
@@ -117,15 +121,6 @@ export function Footer() {
                     aria-label="Instagram"
                   >
                     <Instagram size={20} />
-                  </a>
-                  <a
-                    href="#"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="opacity-80 hover:opacity-100 transition-opacity"
-                    aria-label="Facebook"
-                  >
-                    <Facebook size={20} />
                   </a>
                 </div>
               </div>
@@ -171,7 +166,7 @@ export function Footer() {
           </div>
 
           {/* Copyright */}
-          <div className="text-center text-xs opacity-50 pt-8 border-t border-white/10">
+          <div className="text-center text-xs opacity-50 pt-8 border-t border-brand-contrast/15">
             <p>
               &copy; {new Date().getFullYear()} Stefania Mastroianni. Tutti i
               diritti riservati.
