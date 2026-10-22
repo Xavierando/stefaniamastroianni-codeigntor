@@ -2,6 +2,42 @@ import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ArrowRight, BookOpen } from "lucide-react";
+import ReactMarkdown, { type Components } from "react-markdown";
+
+// La descrizione dei servizi accetta markdown: stile compatto, in linea con il
+// paragrafo che c'era prima (niente titoli giganti come nel blog).
+const descriptionComponents: Components = {
+  p: ({ children }) => <p className="md:text-justify">{children}</p>,
+  strong: ({ children }) => (
+    <strong className="font-semibold text-brand-contrast">{children}</strong>
+  ),
+  a: ({ children, href }) => (
+    <a
+      href={href}
+      className="text-brand-secondary underline hover:text-brand-primary transition-colors"
+    >
+      {children}
+    </a>
+  ),
+  ul: ({ children }) => (
+    <ul className="list-disc pl-6 space-y-1 marker:text-brand-secondary">{children}</ul>
+  ),
+  ol: ({ children }) => (
+    <ol className="list-decimal pl-6 space-y-1 marker:text-brand-secondary">{children}</ol>
+  ),
+  h1: ({ children }) => (
+    <h3 className="font-serif text-2xl text-brand-contrast font-normal">{children}</h3>
+  ),
+  h2: ({ children }) => (
+    <h3 className="font-serif text-2xl text-brand-contrast font-normal">{children}</h3>
+  ),
+  h3: ({ children }) => (
+    <h4 className="font-serif text-xl text-brand-contrast font-normal">{children}</h4>
+  ),
+  blockquote: ({ children }) => (
+    <blockquote className="border-l-2 border-brand-secondary pl-4 italic">{children}</blockquote>
+  ),
+};
 
 interface OverviewProps {
   id?: string;
@@ -80,9 +116,11 @@ export function ServiceOverview({
           <h2 className="font-serif text-4xl lg:text-5xl text-brand-contrast mb-8 leading-[1.15]">
             {title}
           </h2>
-          <p className="text-lg md:text-xl text-brand-contrast/70 leading-relaxed mb-10 font-light md:text-justify">
-            {description}
-          </p>
+          <div className="text-lg md:text-xl text-brand-contrast/70 leading-relaxed mb-10 font-light space-y-4">
+            <ReactMarkdown components={descriptionComponents}>
+              {description || ""}
+            </ReactMarkdown>
+          </div>
 
           {(price || durationMin) && (
             <div className="flex gap-4 mb-12 text-[10px] font-bold text-brand-secondary uppercase tracking-[0.2em]">

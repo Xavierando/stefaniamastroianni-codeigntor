@@ -180,8 +180,11 @@ export function AdminServiceForm() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="description" className="block text-sm font-medium text-brand-contrast/80">
-              Descrizione Completa *
+            <label htmlFor="description" className="flex justify-between text-sm font-medium text-brand-contrast/80">
+              <span>Descrizione Completa * (Markdown supportato)</span>
+              <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank" rel="noopener noreferrer" className="text-brand-secondary hover:underline text-xs">
+                Guida al Markdown
+              </a>
             </label>
             <textarea
               id="description"
@@ -191,7 +194,7 @@ export function AdminServiceForm() {
               required
               rows={5}
               className="w-full p-3 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50 resize-y"
-              placeholder="Descrivi di cosa si tratta..."
+              placeholder={"Descrivi di cosa si tratta...\n\n**grassetto**, *corsivo*, - elenchi puntati"}
             />
           </div>
 

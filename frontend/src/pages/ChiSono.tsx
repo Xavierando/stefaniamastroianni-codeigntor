@@ -8,6 +8,7 @@ import { useImagePreloader } from "@/hooks/useImagePreloader";
 import { PageIntroduction } from "@/components/sections/PageIntroduction";
 import { Category } from "../types";
 import { useSiteSettings } from "@/context/SiteSettingsContext";
+import { stripMarkdown } from "@/lib/markdown";
 
 // Each service belongs to a category; the card links to that category page.
 const CATEGORY_ROUTES: Record<string, string> = {
@@ -286,7 +287,7 @@ export function ChiSono() {
                           {service.title}
                         </h3>
                         <p className="text-base md:text-lg text-brand-contrast/70 leading-relaxed font-light flex-grow mb-8 line-clamp-3">
-                          {service.description}
+                          {stripMarkdown(service.description)}
                         </p>
                         <span className="mt-auto inline-flex items-center justify-center gap-2 font-semibold text-brand-secondary">
                           Scopri
