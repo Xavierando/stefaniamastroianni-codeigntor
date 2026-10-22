@@ -66,6 +66,7 @@ class BookingController extends ResourceController
         if ($eventId) {
             $event = $this->eventModel->find($eventId);
             if (!$event) return $this->failNotFound('Event not found');
+            $event = EventModel::resolveOccurrence($event);
             
             $eDate = new DateTime($event['date']);
             $duration = (int)($event['duration'] ?? 60);
@@ -246,6 +247,8 @@ class BookingController extends ResourceController
             if (!$event) {
                 return $this->failNotFound('Evento non trovato.');
             }
+            // Per le serie ricorrenti si prenota la prossima occorrenza.
+            $event = EventModel::resolveOccurrence($event);
             if (isset($event['is_booking_enabled']) && (int)$event['is_booking_enabled'] === 0) {
                 return $this->fail('Questo evento non è prenotabile online.');
             }
@@ -259,7 +262,7 @@ class BookingController extends ResourceController
             $max = (int)($event['max_capacity'] ?? 0);
             if ($max > 0) {
                 $count = $this->applyActiveBookingFilter(
-                    $this->model->where('event_id', $eventId)
+                    $this->scopeToOccurrence($this->model->where('event_id', $eventId), $event)
                 )->countAllResults();
                 if ($count >= $max) {
                     return $this->fail('Questo evento è al completo. Non è possibile accettare altre prenotazioni (alcune richieste sono in attesa di conferma).');
@@ -325,7 +328,7 @@ class BookingController extends ResourceController
                 $max = (int)($event['max_capacity'] ?? 0);
                 if ($max > 0) {
                     $recount = $this->applyActiveBookingFilter(
-                        $this->model->where('event_id', $eventId)
+                        $this->scopeToOccurrence($this->model->where('event_id', $eventId), $event)
                     )->countAllResults();
                     if ($recount >= $max) {
                         $db->transComplete();
@@ -585,6 +588,19 @@ class BookingController extends ResourceController
      * @param  \CodeIgniter\Model $builder a BookingModel query already scoped (e.g. by event_id/date)
      * @return \CodeIgniter\Model
      */
+    /**
+     * Le serie ricorrenti hanno posti separati per ogni occorrenza: conta solo
+     * le prenotazioni con lo stesso orario di inizio.
+     */
+    private function scopeToOccurrence($builder, array $event)
+    {
+        if (!empty($event['is_recurring'])) {
+            $builder->where('start_time', $event['date']);
+        }
+
+        return $builder;
+    }
+
     private function applyActiveBookingFilter($builder)
     {
         $cutoff = date('Y-m-d H:i:s', time() - self::PENDING_TTL_MINUTES * 60);

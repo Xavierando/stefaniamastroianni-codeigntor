@@ -15,6 +15,7 @@ interface Event {
   date?: string;
   location?: string;
   price?: number;
+  is_recurring?: boolean;
 }
 
 export function AdminEventsPage() {
@@ -132,7 +133,7 @@ export function AdminEventsPage() {
               {event.date && (
                 <div className="flex items-center gap-1.5 text-sm text-brand-contrast/60">
                   <Calendar size={16} className="text-brand-primary/60" />
-                  <span>{new Date(event.date).toLocaleDateString('it-IT')}</span>
+                  <span>{new Date(event.date).toLocaleDateString('it-IT')}{event.is_recurring && " · ricorrente"}</span>
                 </div>
               )}
 
@@ -189,7 +190,7 @@ export function AdminEventsPage() {
                       <p className="font-medium text-brand-contrast">{event.title}</p>
                       {event.date && (
                         <p className="flex items-center gap-1 text-sm text-brand-contrast/60 font-medium mt-1">
-                          <Calendar size={14} /> {new Date(event.date).toLocaleDateString('it-IT')}
+                          <Calendar size={14} /> {new Date(event.date).toLocaleDateString('it-IT')}{event.is_recurring && " · ricorrente"}
                         </p>
                       )}
                     </td>
