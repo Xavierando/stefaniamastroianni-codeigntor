@@ -7,6 +7,7 @@ import { apiFetch } from "@/lib/api";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
 import { PageIntroduction } from "@/components/sections/PageIntroduction";
 import { Category } from "../types";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 // Each service belongs to a category; the card links to that category page.
 const CATEGORY_ROUTES: Record<string, string> = {
@@ -24,6 +25,7 @@ export function ChiSono() {
   const [services, setServices] = useState<any[]>([]);
 
   const isReady = isHeroLoaded;
+  const { hasBlogPosts } = useSiteSettings();
 
   useEffect(() => {
     let ignore = false;
@@ -301,22 +303,24 @@ export function ChiSono() {
             </div>
           )}
 
-          {/* Link opzionale al blog */}
-          <div className="container mx-auto max-w-6xl px-4 text-center mt-16">
-            <Link
-              to="/blog"
-              className="inline-flex items-center gap-2 text-brand-secondary font-medium group"
-            >
-              <span className="relative py-1">
-                Leggi gli approfondimenti sul blog
-                <span className="absolute bottom-0 left-0 w-full h-[1px] bg-brand-secondary/30 group-hover:bg-brand-secondary group-hover:h-[2px] transition-all" />
-              </span>
-              <ArrowRight
-                size={18}
-                className="transform group-hover:translate-x-1 transition-transform"
-              />
-            </Link>
-          </div>
+          {/* Link al blog, solo se ci sono post */}
+          {hasBlogPosts && (
+            <div className="container mx-auto max-w-6xl px-4 text-center mt-16">
+              <Link
+                to="/blog"
+                className="inline-flex items-center gap-2 text-brand-secondary font-medium group"
+              >
+                <span className="relative py-1">
+                  Leggi gli approfondimenti sul blog
+                  <span className="absolute bottom-0 left-0 w-full h-[1px] bg-brand-secondary/30 group-hover:bg-brand-secondary group-hover:h-[2px] transition-all" />
+                </span>
+                <ArrowRight
+                  size={18}
+                  className="transform group-hover:translate-x-1 transition-transform"
+                />
+              </Link>
+            </div>
+          )}
         </section>
       </div>
     </>
