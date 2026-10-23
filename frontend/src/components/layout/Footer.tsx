@@ -99,7 +99,7 @@ export function Footer() {
               <p className="text-xs font-medium tracking-widest opacity-80 mb-4">
                 VALLE D'AOSTA E ONLINE
               </p>
-              <p className="text-xs opacity-60">P.IVA: [INSERIRE_PIVA_QUI]</p>
+              <p className="text-xs opacity-60">P.IVA: 01314240076</p>
             </div>
 
             {/* Column 2: Social & Contact */}
