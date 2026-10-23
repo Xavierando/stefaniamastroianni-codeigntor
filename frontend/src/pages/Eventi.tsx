@@ -47,7 +47,7 @@ export function EventiPage() {
   }, []);
 
   const isHeroLoaded = useImagePreloader(
-    "/images/eventi/intermediate-workshop-featured.webp",
+    "/images/eventi/eventi-hero.webp",
   );
 
   const isReady = !isLoading && isHeroLoaded;
@@ -75,7 +75,7 @@ export function EventiPage() {
       <div
         className={`flex flex-col min-h-screen bg-brand-base transition-opacity duration-500 ${!isReady ? "opacity-0 h-screen overflow-hidden" : "opacity-100"}`}
       >
-        <Hero imageSrc="/images/eventi/intermediate-workshop-featured.webp" />
+        <Hero imageSrc="/images/eventi/eventi-hero.webp" />
 
         <PageIntroduction
           title="Laboratori ed Eventi"
