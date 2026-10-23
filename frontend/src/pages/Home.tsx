@@ -157,7 +157,7 @@ export function Home() {
           <ServiceOverview
             title="Trattamenti Olistici"
             description="Massaggi e tecniche manuali per sciogliere le tensioni profonde, riequilibrare il sistema nervoso e favorire il rilassamento rigenerante."
-            imageSrc="/images/home/trattamenti-olistici-1.webp"
+            imageSrc="/images/home/trattamenti-olistici-home.webp"
             href="/trattamenti"
             ctaText="Scopri i trattamenti"
             imagePosition="right"
