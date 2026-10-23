@@ -8,7 +8,7 @@ export function PrivacyPolicyPage() {
           <p>La presente Privacy Policy descrive il modo in cui Stefania Mastroianni (di seguito "Titolare") raccoglie, utilizza e protegge i dati personali degli utenti del sito web.</p>
           
           <h3 className="font-serif text-2xl text-brand-primary mt-12 mb-4">1. Titolare del Trattamento</h3>
-          <p>Stefania Mastroianni<br/>Email: info@stefaniamastroianni.com<br/>P.IVA: [INSERIRE_PIVA]</p>
+          <p>Stefania Mastroianni<br/>Email: info@stefaniamastroianni.com<br/>P.IVA: 01314240076</p>
 
           <h3 className="font-serif text-2xl text-brand-primary mt-12 mb-4">2. Dati Raccolti</h3>
           <p>I dati personali raccolti tramite questo sito (es. tramite il Modulo Contatti o la Newsletter) includono:</p>
