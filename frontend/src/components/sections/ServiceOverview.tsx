@@ -7,7 +7,9 @@ import ReactMarkdown, { type Components } from "react-markdown";
 // La descrizione dei servizi accetta markdown: stile compatto, in linea con il
 // paragrafo che c'era prima (niente titoli giganti come nel blog).
 const descriptionComponents: Components = {
-  p: ({ children }) => <p className="md:text-justify">{children}</p>,
+  p: ({ children }) => (
+    <p className="text-justify hyphens-auto md:hyphens-manual">{children}</p>
+  ),
   strong: ({ children }) => (
     <strong className="font-semibold text-brand-contrast">{children}</strong>
   ),
@@ -78,7 +80,7 @@ export function ServiceOverview({
     <section
       id={id}
       className={cn(
-        "w-full py-24 lg:py-40 px-4 lg:px-8 scroll-mt-24",
+        "w-full py-24 lg:py-40 px-0 sm:px-4 lg:px-8 scroll-mt-24",
         alternateBackground ? alternateColorClass : backgroundColorClass,
       )}
     >

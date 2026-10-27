@@ -76,7 +76,7 @@ export function Contatti() {
 
             <blockquote className="mt-12 max-w-3xl border-l-2 border-brand-secondary/40 pl-6 text-left">
               <p className="font-serif italic font-semibold text-2xl md:text-3xl text-brand-primary leading-snug">
-                «Non si puo raggiungere l'alba
+                «Non si può raggiungere l'alba
                 <br />
                senza passare per i sentieri della notte.»
               </p>

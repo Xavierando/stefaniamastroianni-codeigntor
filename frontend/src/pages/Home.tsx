@@ -109,21 +109,20 @@ export function Home() {
             <RevealOnScroll className="flex flex-col items-center w-full">
               <div className="text-brand-contrast/80 leading-relaxed font-light text-lg md:text-xl space-y-6 max-w-3xl">
                 <p>
-                  in questo spazio nato da un profondo amore verso la vita, in cui
-                  ti propongo{" "}
-                  <strong className="font-semibold text-brand-contrast">
-                    momenti di dialogo, esplorazione, movimento e contatto
-                  </strong>
-                  , che potranno portarti in ascolto di ciò che sei e senti
-                  davvero.
+                  Questo spazio nasce da un profondo amore per la vita. Per la
+                  cura. Per lo scambio gentile.
                 </p>
-                <p className="italic">
-                  Per accendere riflessioni nuove.
-                  <br />
-                  Per ritrovare il tuo centro.
+                <p>
+                  Un luogo sicuro in cui sperimentare momenti di movimento
+                  consapevole, di dialogo, di contatto, di gioco e condivisione.
+                </p>
+                <p>
+                  L'invito è ascoltare il corpo, le emozioni, ciò che abita
+                  dentro.
                 </p>
                 <p className="italic font-semibold text-brand-contrast">
-                  Per fiorire...un passo alla volta!
+                  Per ritrovare il centro, accendere sguardi nuovi e crescere,
+                  con i tuoi tempi.
                 </p>
               </div>
 

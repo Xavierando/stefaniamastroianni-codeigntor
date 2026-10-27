@@ -165,10 +165,10 @@ export function ChiSono() {
               size={40}
             />
             <p className="font-serif italic text-2xl md:text-4xl text-brand-primary leading-relaxed md:leading-[1.4]">
-              ""Solo nel silenzio che osa ascoltarsi,
+              "Solo nel silenzio che osa ascoltarsi,
         	l'anima svela le sue ferite: ed è lì, 
         	nel buio accogliente del sé, 
-        	che il dolore inizia a sciogliersi in luce.""
+        	che il dolore inizia a sciogliersi in luce."
             </p>
           </div>
         </section>
@@ -191,10 +191,26 @@ export function ChiSono() {
                   </div>
                   <div>
                     <h4 className="font-serif text-xl sm:text-2xl text-brand-contrast mb-2">
-                      Insegnante Yoga (RYT 500)
+                      Educatore Professionale
                     </h4>
                     <p className="text-brand-contrast/70 font-light text-base md:text-lg">
-                      Specializzazione in Hatha Vinyasa e Yoga Pre/Post Parto.
+                      Laurea triennale L-19, Master in Educazione Emozionale,
+                      Pedagogia Viva e Comunicazione Non Violenta.
+                    </p>
+                  </div>
+                </li>
+                <li className="flex gap-4 md:gap-6 items-start">
+                  <div className="bg-brand-neutral/30 p-3 rounded-full flex-shrink-0 mt-1">
+                    <Sun className="text-brand-primary" size={24} />
+                  </div>
+                  <div>
+                    <h4 className="font-serif text-xl sm:text-2xl text-brand-contrast mb-2">
+                      Insegnante Yoga (RYT 500+ ore)
+                    </h4>
+                    <p className="text-brand-contrast/70 font-light text-base md:text-lg">
+                      Specializzazione in Hatha Yoga, Meditazione e Yoga Pre/Post
+                      Parto. Intensivi di Yoga Bimbi, Ashtanga Yoga e Yoga
+                      Posturale.
                     </p>
                   </div>
                 </li>
@@ -207,7 +223,8 @@ export function ChiSono() {
                       Trattamenti Olistici
                     </h4>
                     <p className="text-brand-contrast/70 font-light text-base md:text-lg">
-                      Massaggio Ayurvedico, Tecniche di rilascio miofasciale e
+                      Massaggio Addominale, Tecniche Andine del Femminile,
+                      Massaggio Miofasciale, Massaggio con Rebozo, Reiki Base e
                       Riflessologia Plantare.
                     </p>
                   </div>
