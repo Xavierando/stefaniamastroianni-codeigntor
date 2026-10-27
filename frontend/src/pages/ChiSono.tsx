@@ -94,7 +94,7 @@ export function ChiSono() {
         />
 
         {/* 2. Introduzione */}
-        <section className="w-full py-16 md:py-32 px-4 bg-brand-base">
+        <section className="w-full py-16 md:py-32 px-0 sm:px-4 bg-brand-base">
           <div className="container mx-auto max-w-6xl flex flex-col md:flex-row gap-12 md:gap-24 items-center">
             <div className="w-full md:w-1/2 relative aspect-[3/4] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-soft">
               <img
@@ -103,7 +103,7 @@ export function ChiSono() {
                 className="absolute inset-0 w-full h-full object-cover"
               />
             </div>
-            <div className="w-full md:w-1/2 flex flex-col justify-center px-4 md:px-0">
+            <div className="w-full md:w-1/2 flex flex-col justify-center">
               <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light text-justify mb-8">
                 I viaggi oltreoceano mi hanno aperto ad una nuova visione di{" "}
                 <em className="text-brand-contrast">“stare nel presente”</em>,
@@ -158,7 +158,7 @@ export function ChiSono() {
         </section>
 
         {/* 3. La Vocazione (Editorial Quote) */}
-        <section className="w-full py-24 px-4 bg-white border-y border-brand-contrast/5">
+        <section className="w-full py-24 px-0 sm:px-4 bg-white border-y border-brand-contrast/5">
           <div className="container mx-auto max-w-4xl text-center flex flex-col items-center">
             <BookOpen
               className="text-brand-secondary mb-10 opacity-80"
@@ -174,9 +174,9 @@ export function ChiSono() {
         </section>
 
         {/* 4. Il Percorso e la Formazione */}
-        <section className="w-full py-16 md:py-32 px-4 bg-brand-base">
+        <section className="w-full py-16 md:py-32 px-0 sm:px-4 bg-brand-base">
           <div className="container mx-auto max-w-6xl flex flex-col-reverse md:flex-row gap-12 md:gap-24 items-center">
-            <div className="w-full md:w-1/2 flex flex-col justify-center px-4 md:px-0">
+            <div className="w-full md:w-1/2 flex flex-col justify-center">
               <h2 className="font-serif text-3xl md:text-5xl text-brand-contrast mb-8 leading-tight text-center md:text-left">
                 Il Mio Percorso
               </h2>
@@ -186,7 +186,7 @@ export function ChiSono() {
               </p>
               <ul className="space-y-10">
                 <li className="flex gap-4 md:gap-6 items-start">
-                  <div className="bg-brand-neutral/30 p-3 rounded-full flex-shrink-0 mt-1">
+                  <div className="hidden md:block bg-brand-neutral/30 p-3 rounded-full flex-shrink-0 mt-1">
                     <Sun className="text-brand-primary" size={24} />
                   </div>
                   <div>
@@ -200,7 +200,7 @@ export function ChiSono() {
                   </div>
                 </li>
                 <li className="flex gap-4 md:gap-6 items-start">
-                  <div className="bg-brand-neutral/30 p-3 rounded-full flex-shrink-0 mt-1">
+                  <div className="hidden md:block bg-brand-neutral/30 p-3 rounded-full flex-shrink-0 mt-1">
                     <Sun className="text-brand-primary" size={24} />
                   </div>
                   <div>
@@ -215,7 +215,7 @@ export function ChiSono() {
                   </div>
                 </li>
                 <li className="flex gap-4 md:gap-6 items-start">
-                  <div className="bg-brand-neutral/30 p-3 rounded-full flex-shrink-0 mt-1">
+                  <div className="hidden md:block bg-brand-neutral/30 p-3 rounded-full flex-shrink-0 mt-1">
                     <Sun className="text-brand-primary" size={24} />
                   </div>
                   <div>
@@ -230,7 +230,7 @@ export function ChiSono() {
                   </div>
                 </li>
                 <li className="flex gap-4 md:gap-6 items-start">
-                  <div className="bg-brand-neutral/30 p-3 rounded-full flex-shrink-0 mt-1">
+                  <div className="hidden md:block bg-brand-neutral/30 p-3 rounded-full flex-shrink-0 mt-1">
                     <Sun className="text-brand-primary" size={24} />
                   </div>
                   <div>
