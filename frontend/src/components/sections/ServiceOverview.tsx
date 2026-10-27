@@ -8,7 +8,7 @@ import ReactMarkdown, { type Components } from "react-markdown";
 // paragrafo che c'era prima (niente titoli giganti come nel blog).
 const descriptionComponents: Components = {
   p: ({ children }) => (
-    <p className="text-justify hyphens-auto md:hyphens-manual">{children}</p>
+    <p className="text-justify">{children}</p>
   ),
   strong: ({ children }) => (
     <strong className="font-semibold text-brand-contrast">{children}</strong>
