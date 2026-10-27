@@ -18,6 +18,8 @@
 !**/writable/uploads/index.html
 **/writable/debugbar/*
 !**/writable/debugbar/index.html
+# Backup del sito (database + immagini): dati personali, mai nel repo
+**/writable/backups/
 
 # Local Uploads
 backend/public/uploads/*

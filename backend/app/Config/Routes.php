@@ -123,6 +123,14 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
         $routes->post('bookings/settings', 'AdminBookingController::updateSettings');
         $routes->get('bookings/google-auth', 'AdminBookingController::getGoogleAuthUrl');
         $routes->post('bookings/reject/(:num)', 'AdminBookingController::reject/$1');
+
+        // Backup e ripristino (database + immagini caricate)
+        $routes->get('backups', 'BackupController::index');
+        $routes->post('backups', 'BackupController::create');
+        $routes->post('backups/upload', 'BackupController::upload');
+        $routes->get('backups/(:segment)/download', 'BackupController::download/$1');
+        $routes->post('backups/(:segment)/restore', 'BackupController::restore/$1');
+        $routes->delete('backups/(:segment)', 'BackupController::delete/$1');
     });
 
     // Migrations (guarded by its own MIGRATION_TOKEN secret, used by deploy tooling)

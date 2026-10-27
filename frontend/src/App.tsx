@@ -40,6 +40,7 @@ const AdminPostForm = lazy(() => import("./pages/admin/blog/AdminPostForm").then
 const AdminComments = lazy(() => import("./pages/admin/comments/AdminComments").then((m) => ({ default: m.AdminComments })));
 const AdminBookingsPage = lazy(() => import("./pages/admin/bookings/AdminBookings").then((m) => ({ default: m.AdminBookingsPage })));
 const AdminSettingsPage = lazy(() => import("./pages/admin/settings/AdminSettings").then((m) => ({ default: m.AdminSettingsPage })));
+const AdminBackupPage = lazy(() => import("./pages/admin/backup/AdminBackup").then((m) => ({ default: m.AdminBackupPage })));
 
 function RouteFallback() {
   return (
@@ -112,6 +113,7 @@ function App() {
             <Route path="newsletter/campaigns/:id/edit" element={<AdminCampaignForm />} />
             <Route path="bookings" element={<AdminBookingsPage />} />
             <Route path="settings" element={<AdminSettingsPage />} />
+            <Route path="backup" element={<AdminBackupPage />} />
           </Route>
           <Route path="/admin/login" element={<AdminLogin />} />
         </Routes>

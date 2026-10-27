@@ -1,5 +1,5 @@
 import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
-import { LogOut, LayoutDashboard, Calendar, LayoutList, Image as ImageIcon, MessageSquare, Star, Users, Menu, X, Settings } from "lucide-react";
+import { LogOut, LayoutDashboard, Calendar, LayoutList, Image as ImageIcon, MessageSquare, Star, Users, Menu, X, Settings, DatabaseBackup } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../../store";
 import { logout } from "../../../store/slices/authSlice";
@@ -19,6 +19,7 @@ const ADMIN_LINKS = [
   { path: "/admin/newsletter", label: "Newsletter", Icon: Users },
   { path: "/admin/bookings", label: "Prenotazioni", Icon: Calendar },
   { path: "/admin/settings", label: "Impostazioni", Icon: Settings },
+  { path: "/admin/backup", label: "Backup", Icon: DatabaseBackup },
 ];
 
 export function AdminLayout() {
