@@ -43,7 +43,7 @@ export function Contatti() {
         imageAlt="Due donne in un abbraccio silenzioso attorno a un albero in un bosco autunnale"
       />
 
-      <section className="w-full pb-24 pt-6 md:py-24 px-4 bg-brand-base text-center relative overflow-hidden">
+      <section className="w-full pb-24 pt-6 md:py-24 px-0 sm:px-4 bg-brand-base text-center relative overflow-hidden">
         <div className="container mx-auto flex flex-col items-center max-w-6xl">
           <h1 className="font-serif mb-8 leading-tight text-4xl md:text-5xl text-brand-contrast">
             Entriamo in contatto
@@ -92,7 +92,7 @@ export function Contatti() {
         </div>
       </section>
       {whatsappEnabled && (
-        <section className="w-full py-24 px-4 bg-white">
+        <section className="w-full py-24 px-0 sm:px-4 bg-white">
           <div className="container mx-auto max-w-3xl flex flex-col items-center text-center">
             <h2 className="font-serif text-3xl md:text-4xl text-brand-primary mb-6">
               Contattami su WhatsApp
@@ -118,7 +118,7 @@ export function Contatti() {
         </section>
       )}
 
-      <section className={`py-24 px-4 ${contactSectionBg} overflow-hidden relative`}>
+      <section className={`py-24 px-0 sm:px-4 ${contactSectionBg} overflow-hidden relative`}>
         <div className="container mx-auto max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-16">
             {/* Contact Info Side */}

@@ -29,7 +29,7 @@ export function PageIntroduction({
   return (
     <section
       className={cn(
-        "w-full pt-6 md:pt-24 pb-6 px-4 bg-brand-base text-center relative overflow-hidden",
+        "w-full pt-6 md:pt-24 pb-6 px-0 sm:px-4 bg-brand-base text-center relative overflow-hidden",
         showBorder && "border-b border-brand-contrast/5",
         className,
       )}

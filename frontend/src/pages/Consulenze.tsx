@@ -135,7 +135,7 @@ export function ConsulenzePage() {
 
         {/* Sezione Eventi (Se presenti) */}
         {events.length > 0 && (
-          <section className={`py-24 px-4 ${eventsBgClass}`}>
+          <section className={`py-24 px-0 sm:px-4 ${eventsBgClass}`}>
             <div className="container mx-auto max-w-6xl">
               <div className="text-center mb-16">
                 <h2 className="font-serif text-3xl md:text-4xl text-brand-primary mb-6">

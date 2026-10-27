@@ -58,7 +58,7 @@ export function Blog() {
           title="Il Blog di Stefania"
           description="Riflessioni, approfondimenti e consigli sul benessere olistico, la maternità e la crescita personale."
         />
-        <section className="py-24 px-4 bg-brand-base overflow-hidden relative">
+        <section className="py-24 px-0 sm:px-4 bg-brand-base overflow-hidden relative">
           <div className="container mx-auto px-4">
             {isLoading ? (
               <div className="flex justify-center items-center py-20">
