@@ -81,7 +81,7 @@ export function EventiPage() {
           title="Laboratori ed Eventi"
           description="Spazi collettivi dove l'energia del gruppo amplifica l'esperienza individuale. Ritiri, seminari tematici e cerchi di condivisione."
         />
-        <section className="py-24 px-4 bg-white overflow-hidden relative">
+        <section className="py-24 px-0 sm:px-4 bg-white overflow-hidden relative">
           <div className="container mx-auto max-w-4xl text-center mb-16">
             <div className="flex flex-col gap-8 max-w-4xl mx-auto">
               {upcomingEvents.map((event) => (

@@ -103,7 +103,7 @@ export function BookingConfirmation() {
     const bookingDate = booking ? new Date(booking.start.replace(' ', 'T')) : null;
 
     return (
-        <div className="min-h-screen bg-brand-base py-20 px-4 font-sans">
+        <div className="min-h-screen bg-brand-base py-20 px-0 sm:px-4 font-sans">
             <div className="container mx-auto max-w-2xl">
                 <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-soft border border-brand-primary/5 space-y-10">
                     <div className="text-center space-y-4">

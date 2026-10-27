@@ -99,7 +99,7 @@ export function Home() {
         <Hero imageSrc="/images/home/home-hero-yoga.webp" imagePosition="top" />
 
         {/* 2. Introduzione (Benvenuto) */}
-        <section className="w-full pb-24 pt-6 md:py-24 px-4 bg-brand-base text-center relative overflow-hidden border-b border-brand-contrast/5">
+        <section className="w-full pb-24 pt-6 md:py-24 px-0 sm:px-4 bg-brand-base text-center relative overflow-hidden border-b border-brand-contrast/5">
           <div className="container mx-auto flex flex-col items-center max-w-4xl">
             <h1 className="font-serif mb-8 leading-tight text-4xl lg:text-5xl italic font-semibold text-brand-primary">
               Benvenuta/o,

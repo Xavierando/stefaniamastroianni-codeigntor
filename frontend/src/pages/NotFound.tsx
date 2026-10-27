@@ -5,7 +5,7 @@ export function NotFound() {
   return (
     <>
       <SEO title="Pagina non trovata" noindex />
-      <section className="min-h-[70vh] flex flex-col items-center justify-center bg-brand-base text-brand-contrast px-6 text-center">
+      <section className="min-h-[70vh] flex flex-col items-center justify-center bg-brand-base text-brand-contrast px-4 text-center">
         <p className="font-serif text-6xl md:text-7xl mb-4 text-brand-primary">404</p>
         <h1 className="font-serif text-2xl md:text-3xl mb-4">Pagina non trovata</h1>
         <p className="max-w-md mb-8 text-brand-contrast/80">
