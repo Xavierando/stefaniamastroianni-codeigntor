@@ -20,6 +20,7 @@ cp -r backend/app aruba_deploy/api/
 cp -r backend/public aruba_deploy/api/
 cp -r backend/vendor aruba_deploy/api/
 cp -r backend/writable aruba_deploy/api/
+rm -rf aruba_deploy/api/writable/backups # i backup locali non vanno mai sul server
         cp backend/spark aruba_deploy/api/ || true
         
         echo "Patching Routes for Subfolder Deployment..."
