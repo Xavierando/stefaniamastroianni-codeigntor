@@ -48,7 +48,7 @@ caricare `aruba_deploy/` via FTP e poi eseguire il passo 3 sotto a mano.
    "Migrations failed" nei log, esegui la migrazione a mano:
 
    ```
-   curl -X POST https://www.arpelux.it/api/migrations/run \
+   curl -X POST https://www.stefaniamastroianni.com/api/migrations/run \
      -H "X-Migration-Token: <MIGRATION_TOKEN del server>" \
      -H "Content-Type: application/json"
    ```
@@ -57,7 +57,7 @@ caricare `aruba_deploy/` via FTP e poi eseguire il passo 3 sotto a mano.
    (non e' nel repo) e nei secrets del workflow GitHub Actions per il percorso
    automatico.
 3. Verifica che il sito pubblico sia effettivamente a posto, es.
-   `curl https://www.arpelux.it/api/settings` deve rispondere 200 con le
+   `curl https://www.stefaniamastroianni.com/api/settings` deve rispondere 200 con le
    impostazioni attese, non 500.
 
 ATTENZIONE: se il passo 2 viene saltato (o fallisce senza che nessuno se ne

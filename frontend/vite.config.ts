@@ -21,7 +21,7 @@ const routes = [
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
-  const siteUrl = env.VITE_SITE_URL || 'https://www.arpelux.it';
+  const siteUrl = env.VITE_SITE_URL || 'https://www.stefaniamastroianni.com';
 
   return {
     plugins: [
