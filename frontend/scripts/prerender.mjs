@@ -13,7 +13,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const distDir = path.join(root, "dist");
 const serverDir = path.join(distDir, "server");
-const SITE_URL = (process.env.VITE_SITE_URL || "https://www.arpelux.it").replace(/\/$/, "");
+const SITE_URL = (process.env.VITE_SITE_URL || "https://www.stefaniamastroianni.com").replace(/\/$/, "");
 
 // Static public routes (mirrors the sitemap route list).
 const routes = [

@@ -3,7 +3,7 @@
  * This is the single source of truth for the site's base URL and other global metadata.
  */
 
-export const SITE_URL = import.meta.env.VITE_SITE_URL || "https://www.arpelux.it";
+export const SITE_URL = import.meta.env.VITE_SITE_URL || "https://www.stefaniamastroianni.com";
 
 export const SITE_CONFIG = {
   name: "Stefania Mastroianni",

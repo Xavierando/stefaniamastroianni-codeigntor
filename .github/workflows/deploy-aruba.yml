@@ -30,7 +30,7 @@ jobs:
       - name: Build Frontend
         working-directory: ./frontend
         env:
-          VITE_SITE_URL: ${{ vars.SITE_URL || 'https://www.arpelux.it' }}
+          VITE_SITE_URL: ${{ vars.SITE_URL || 'https://www.stefaniamastroianni.com' }}
         run: npm run build
 
       # --- BACKEND BUILD ---
@@ -75,7 +75,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./aruba_deploy/ # The trailing slash is required
-          server-dir: /www.arpelux.it/
+          server-dir: /www.stefaniamastroianni.com/
           state-name: .github-ftp-sync-state.json
           exclude: |
             **/.git*
@@ -88,7 +88,7 @@ jobs:
       - name: Run Database Migrations
         continue-on-error: true
         env:
-          SITE_URL: ${{ vars.SITE_URL || 'https://www.arpelux.it' }}
+          SITE_URL: ${{ vars.SITE_URL || 'https://www.stefaniamastroianni.com' }}
         run: |
           echo "Triggering automated database migrations..."
           TOKEN="${{ secrets.MIGRATION_TOKEN }}"
