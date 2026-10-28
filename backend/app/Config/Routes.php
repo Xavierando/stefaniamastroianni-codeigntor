@@ -84,6 +84,7 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
 
         // Impostazioni del sito
         $routes->post('settings', 'SettingsController::update');
+        $routes->post('settings/maintenance', 'SettingsController::updateMaintenance');
 
         // Gallery
         $routes->post('gallery', 'GalleryController::create');

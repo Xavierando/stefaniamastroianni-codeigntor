@@ -1,5 +1,7 @@
-import { useEffect, lazy, Suspense } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { useEffect, useState, lazy, Suspense } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import type { RootState } from "./store";
 import { MainLayout } from "./components/layout/MainLayout";
 import { Home } from "./pages/Home";
 import { Contatti } from "./pages/Contatti";
@@ -18,7 +20,8 @@ import { Unsubscribe } from "./pages/Unsubscribe";
 import { BookingConfirmation } from "./pages/BookingConfirmation";
 import { BookingCancellation } from "./pages/BookingCancellation";
 import { NotFound } from "./pages/NotFound";
-import { SiteSettingsProvider } from "./context/SiteSettingsContext";
+import { Maintenance } from "./pages/Maintenance";
+import { SiteSettingsProvider, useSiteSettings } from "./context/SiteSettingsContext";
 
 // Admin panel is lazy-loaded so the heavy editor (react-quill) and ~20 admin
 // pages are not shipped in the initial bundle to public visitors.
@@ -50,8 +53,32 @@ function RouteFallback() {
   );
 }
 
-function App() {
+// Tetto all'attesa di /settings prima di togliere il loader iniziale: se l'API
+// e lenta il sito si mostra comunque, al massimo con un cambio di pagina dopo.
+const SETTINGS_WAIT_MS = 1500;
+
+function isAdminPath(pathname: string) {
+  return pathname === "/admin" || pathname.startsWith("/admin/");
+}
+
+function AppRoutes() {
+  const { maintenanceEnabled, settingsLoaded } = useSiteSettings();
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const { pathname } = useLocation();
+  const [waitExpired, setWaitExpired] = useState(false);
+
   useEffect(() => {
+    const timer = setTimeout(() => setWaitExpired(true), SETTINGS_WAIT_MS);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Il loader resta finche non si sa se il sito e in manutenzione: altrimenti
+  // l'HTML prerenderizzato delle pagine comparirebbe per un attimo prima della
+  // pagina di manutenzione.
+  const ready = settingsLoaded || waitExpired;
+
+  useEffect(() => {
+    if (!ready) return;
     // Remove the initial HTML loader smoothly once React is mounted
     const loader = document.getElementById("initial-loader");
     if (loader) {
@@ -63,10 +90,20 @@ function App() {
         }, 800); // Matches CSS transition duration
       }, 100);
     }
-  }, []);
+  }, [ready]);
+
+  // Tutto il sito pubblico e chiuso tranne /admin. Chi ha fatto login in admin
+  // continua a vedere le pagine, con un avviso, per controllarle prima di riaprire.
+  const maintenanceApplies = maintenanceEnabled && !isAdminPath(pathname);
+  if (maintenanceApplies && !isAuthenticated) return <Maintenance />;
 
   return (
-    <SiteSettingsProvider>
+    <>
+      {maintenanceApplies && (
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[100] bg-brand-secondary text-white text-sm px-4 py-2 rounded-full shadow-lg">
+          Manutenzione attiva: i visitatori vedono la pagina di manutenzione
+        </div>
+      )}
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<MainLayout />}>
@@ -118,6 +155,14 @@ function App() {
           <Route path="/admin/login" element={<AdminLogin />} />
         </Routes>
       </Suspense>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <SiteSettingsProvider>
+      <AppRoutes />
     </SiteSettingsProvider>
   );
 }

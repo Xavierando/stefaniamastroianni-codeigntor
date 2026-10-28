@@ -19,9 +19,27 @@ class SettingsController extends ResourceController
         $model = new SiteSettingsModel();
 
         return $this->respond([
-            'whatsappEnabled' => $model->getSetting('whatsapp_enabled', '0') === '1',
-            'whatsappHandle'  => (string) $model->getSetting('whatsapp_handle', ''),
+            'whatsappEnabled'    => $model->getSetting('whatsapp_enabled', '0') === '1',
+            'whatsappHandle'     => (string) $model->getSetting('whatsapp_handle', ''),
+            'maintenanceEnabled' => $model->getSetting('maintenance_enabled', '0') === '1',
         ]);
+    }
+
+    /**
+     * Modalita manutenzione: endpoint separato da update() perche quello
+     * riscrive sempre anche le impostazioni WhatsApp, e accendere la
+     * manutenzione non deve toccarle.
+     */
+    public function updateMaintenance()
+    {
+        $model   = new SiteSettingsModel();
+        $enabled = (bool) $this->request->getJsonVar('maintenanceEnabled');
+
+        if ($model->setSetting('maintenance_enabled', $enabled ? '1' : '0') === false) {
+            return $this->failServerError('Salvataggio impostazioni non riuscito.');
+        }
+
+        return $this->respond(['maintenanceEnabled' => $enabled]);
     }
 
     public function update($id = null)
