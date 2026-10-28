@@ -18,12 +18,16 @@ export function AdminSettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
+  const [maintenanceEnabled, setMaintenanceEnabled] = useState(false);
+  const [maintenanceSaving, setMaintenanceSaving] = useState(false);
+  const [maintenanceFeedback, setMaintenanceFeedback] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
 
   useEffect(() => {
     apiFetch("/settings")
       .then((data) => {
         setWhatsappEnabled(Boolean(data?.whatsappEnabled));
         setWhatsappHandle(typeof data?.whatsappHandle === "string" ? data.whatsappHandle : "");
+        setMaintenanceEnabled(Boolean(data?.maintenanceEnabled));
       })
       .catch(() => setFeedback({ kind: "error", text: "Impossibile caricare le impostazioni." }))
       .finally(() => setLoading(false));
@@ -50,14 +54,81 @@ export function AdminSettingsPage() {
     }
   };
 
+  const handleMaintenanceSave = async () => {
+    setMaintenanceSaving(true);
+    setMaintenanceFeedback(null);
+    try {
+      const saved = await apiFetch("/settings/maintenance", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ maintenanceEnabled }),
+      });
+      const enabled = Boolean(saved?.maintenanceEnabled);
+      setMaintenanceEnabled(enabled);
+      setMaintenanceFeedback({
+        kind: "ok",
+        text: enabled
+          ? "Manutenzione attiva: i visitatori vedono la pagina di manutenzione."
+          : "Manutenzione disattivata: il sito è di nuovo visibile a tutti.",
+      });
+    } catch (error) {
+      setMaintenanceFeedback({
+        kind: "error",
+        text: error instanceof Error ? error.message : "Errore durante il salvataggio.",
+      });
+    } finally {
+      setMaintenanceSaving(false);
+    }
+  };
+
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-serif text-brand-primary mb-2">Impostazioni</h1>
         <p className="text-brand-contrast/60">
-          Configura i canali di contatto mostrati sul sito pubblico.
+          Configura la visibilità del sito e i canali di contatto mostrati sul sito pubblico.
         </p>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Modalità manutenzione</CardTitle>
+          <CardDescription>
+            Con la manutenzione attiva ogni pagina del sito pubblico mostra un avviso
+            di manutenzione al posto dei contenuti. Il pannello admin resta raggiungibile
+            e, con l'accesso effettuato, continui a vedere il sito normalmente per controllarlo.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {loading ? (
+            <p className="text-brand-contrast/50">Caricamento in corso...</p>
+          ) : (
+            <>
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={maintenanceEnabled}
+                  onChange={(e) => setMaintenanceEnabled(e.target.checked)}
+                  className="h-5 w-5 rounded border-brand-contrast/30 accent-brand-primary"
+                />
+                <span className="font-medium text-brand-contrast">
+                  Metti il sito in manutenzione
+                </span>
+              </label>
+
+              {maintenanceFeedback && (
+                <p className={maintenanceFeedback.kind === "ok" ? "text-accent-green-dark" : "text-brand-secondary"}>
+                  {maintenanceFeedback.text}
+                </p>
+              )}
+
+              <Button onClick={handleMaintenanceSave} disabled={maintenanceSaving}>
+                {maintenanceSaving ? "Salvataggio..." : "Salva"}
+              </Button>
+            </>
+          )}
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
