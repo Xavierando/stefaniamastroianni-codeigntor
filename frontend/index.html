@@ -9,6 +9,7 @@
     <title>Stefania Mastroianni | Operatrice per la Salute e il Benessere</title>
     <meta name="description" content="Stefania Mastroianni - Percorsi olistici di benessere, yoga, trattamenti e accompagnamento alla nascita. Ritrova il tuo equilibrio naturale attraverso un ascolto profondo." />
     <meta name="robots" content="index, follow" />
+    <link rel="preload" as="image" href="/images/logo.webp" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
@@ -32,13 +33,30 @@
         z-index: 9999;
         transition: opacity 0.8s ease-in-out;
       }
+      /* Cerchio ampio che gira attorno al logo, fermo al centro. */
+      .loader-wrap {
+        position: relative;
+        width: 140px;
+        height: 140px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
       .loader-spinner {
-        width: 50px;
-        height: 50px;
-        border: 3px solid rgba(110, 77, 71, 0.2);
+        position: absolute;
+        inset: 0;
+        border: 3px solid rgba(110, 77, 71, 0.15);
         border-radius: 50%;
         border-top-color: #6e4d47; /* brand-primary */
-        animation: spin 1s ease-in-out infinite;
+        animation: spin 1.2s ease-in-out infinite;
+      }
+      /* Il logo e bianco su trasparente: usato come maschera prende il colore del brand, come nella Navbar. */
+      .loader-logo {
+        width: 72px;
+        height: 72px;
+        background-color: #6e4d47; /* brand-primary */
+        -webkit-mask: url(/images/logo.webp) center / contain no-repeat;
+        mask: url(/images/logo.webp) center / contain no-repeat;
       }
       @keyframes spin {
         to { transform: rotate(360deg); }
@@ -48,7 +66,10 @@
   <body>
     <!-- Initial Loader -->
     <div id="initial-loader">
-      <div class="loader-spinner"></div>
+      <div class="loader-wrap">
+        <div class="loader-spinner"></div>
+        <div class="loader-logo" role="img" aria-label="Stefania Mastroianni"></div>
+      </div>
     </div>
     
     <div id="root"></div>
