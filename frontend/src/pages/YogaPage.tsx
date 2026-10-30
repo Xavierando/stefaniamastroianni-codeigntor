@@ -12,6 +12,7 @@ import { useHashScroll } from "@/hooks/useHashScroll";
 import { PageIntroduction } from "@/components/sections/PageIntroduction";
 
 import { Category } from "../types";
+import { LogoSpinner } from "@/components/common/LogoSpinner";
 
 export function YogaPage() {
   const [services, setServices] = useState<any[]>([]);
@@ -80,7 +81,7 @@ export function YogaPage() {
       />
       {!isReady && (
         <div className="fixed inset-0 z-[100] flex flex-col bg-brand-base items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
+          <LogoSpinner />
         </div>
       )}
       <div

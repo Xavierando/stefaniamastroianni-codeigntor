@@ -8,6 +8,7 @@ import { CommentForm } from "@/components/comments/CommentForm";
 import { MarkdownRenderer } from "@/components/ui/MarkdownRenderer";
 import { SEO } from "@/components/common/SEO";
 import { SITE_URL } from "@/config/site";
+import { LogoSpinner } from "@/components/common/LogoSpinner";
 
 export function BlogPost() {
   const { slug } = useParams();
@@ -51,7 +52,7 @@ export function BlogPost() {
   if (isLoading) {
     return (
       <div className="flex flex-col min-h-screen bg-brand-base items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
+        <LogoSpinner />
       </div>
     );
   }
