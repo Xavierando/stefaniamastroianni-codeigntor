@@ -22,6 +22,7 @@ import { BookingCancellation } from "./pages/BookingCancellation";
 import { NotFound } from "./pages/NotFound";
 import { Maintenance } from "./pages/Maintenance";
 import { SiteSettingsProvider, useSiteSettings } from "./context/SiteSettingsContext";
+import { LogoSpinner } from "./components/common/LogoSpinner";
 
 // Admin panel is lazy-loaded so the heavy editor (react-quill) and ~20 admin
 // pages are not shipped in the initial bundle to public visitors.
@@ -48,7 +49,7 @@ const AdminBackupPage = lazy(() => import("./pages/admin/backup/AdminBackup").th
 function RouteFallback() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-brand-base">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary" />
+      <LogoSpinner />
     </div>
   );
 }

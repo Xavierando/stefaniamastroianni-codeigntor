@@ -10,6 +10,7 @@ import { useImagePreloader } from "@/hooks/useImagePreloader";
 import { Link } from "react-router-dom";
 import { SEO } from "@/components/common/SEO";
 import { SITE_URL } from "@/config/site";
+import { LogoSpinner } from "@/components/common/LogoSpinner";
 
 export function Home() {
   const [eventsData, setEventsData] = useState([]);
@@ -86,7 +87,7 @@ export function Home() {
     <>
       {!isReady && (
         <div className="fixed inset-0 z-[100] flex flex-col bg-brand-base items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
+          <LogoSpinner />
         </div>
       )}
 

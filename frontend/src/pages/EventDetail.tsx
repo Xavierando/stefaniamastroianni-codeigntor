@@ -6,6 +6,7 @@ import { Calendar, MapPin, Tag } from "lucide-react";
 import { ContentDetailLayout } from "@/components/layout/ContentDetailLayout";
 import { SEO } from "@/components/common/SEO";
 import { useContactCta } from "@/hooks/useContactCta";
+import { LogoSpinner } from "@/components/common/LogoSpinner";
 
 // "Ogni settimana fino al 18 dicembre 2026" per le serie ricorrenti.
 function describeRecurrence(intervalDays: number, endDate: string | null): string {
@@ -91,7 +92,7 @@ export function EventDetail() {
   if (isLoading) {
     return (
       <div className="flex flex-col min-h-screen bg-brand-base items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
+        <LogoSpinner />
       </div>
     );
   }

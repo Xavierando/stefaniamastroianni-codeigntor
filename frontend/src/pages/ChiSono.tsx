@@ -9,6 +9,7 @@ import { PageIntroduction } from "@/components/sections/PageIntroduction";
 import { Category } from "../types";
 import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { stripMarkdown } from "@/lib/markdown";
+import { LogoSpinner } from "@/components/common/LogoSpinner";
 
 // Each service belongs to a category; the card links to that category page.
 const CATEGORY_ROUTES: Record<string, string> = {
@@ -57,7 +58,7 @@ export function ChiSono() {
       />
       {!isReady && (
         <div className="fixed inset-0 z-[100] flex flex-col bg-brand-base items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
+          <LogoSpinner />
         </div>
       )}
       <div
