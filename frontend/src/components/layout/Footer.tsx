@@ -118,10 +118,11 @@ export function Footer() {
                     href={INSTAGRAM_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="opacity-80 hover:opacity-100 transition-opacity"
-                    aria-label="Instagram"
+                    className="flex items-center gap-2 text-sm opacity-80 hover:opacity-100 transition-opacity"
+                    aria-label="Instagram: stefania_mastroianni"
                   >
                     <Instagram size={20} />
+                    stefania_mastroianni
                   </a>
                 </div>
               </div>

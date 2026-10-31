@@ -99,7 +99,7 @@ export function Contatti() {
             </h2>
             <p className="text-lg md:text-xl text-brand-contrast/80 leading-relaxed font-light mb-10">
               Preferisci scrivere due righe invece di compilare un modulo? Mandami
-              un messaggio su WhatsApp: ti rispondo appena mi libero.
+              un messaggio su WhatsApp!
             </p>
             <a
               href={
