@@ -206,7 +206,7 @@ export function ChiSono() {
                   </div>
                   <div>
                     <h4 className="font-serif text-xl sm:text-2xl text-brand-contrast mb-2">
-                      Insegnante Yoga (RYT 500+ ore)
+                      Insegnante Yoga (HTTC +500h)
                     </h4>
                     <p className="text-brand-contrast/70 font-light text-base md:text-lg">
                       Specializzazione in Hatha Yoga, Meditazione e Yoga Pre/Post
