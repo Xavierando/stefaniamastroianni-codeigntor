@@ -91,7 +91,14 @@ export function YogaPage() {
 
         <PageIntroduction
           title="Yoga e Meditazione"
-          description="Riconnettersi al proprio respiro. Pratiche dolci e consapevoli per abitare il corpo con gentilezza, ritrovare fluidità e calmare la mente."
+          description={
+            <>
+              Riconnettersi al proprio respiro. Pratiche dolci e consapevoli per abitare il corpo con gentilezza,
+              {/* A capo voluto solo da tablet in su */}
+              <br className="hidden md:inline" />
+              ritrovare fluidità e calmare la mente.
+            </>
+          }
         />
 
         <div className="flex flex-col w-full">

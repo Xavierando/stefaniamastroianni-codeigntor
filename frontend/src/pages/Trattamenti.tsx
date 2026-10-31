@@ -93,7 +93,14 @@ export function TrattamentiPage() {
 
         <PageIntroduction
           title="Trattamenti Olistici"
-          description="Il tocco che cura. Massaggi e tecniche corporee per sciogliere le tensioni, stimolare le naturali capacità di autoguarigione e ritrovare leggerezza."
+          description={
+            <>
+              Il tocco che cura. Massaggi e tecniche corporee per sciogliere le tensioni,
+              {/* A capo voluto solo da tablet in su */}
+              <br className="hidden md:inline" />
+              stimolare le naturali capacità di autoguarigione e ritrovare leggerezza.
+            </>
+          }
         />
 
         <div className="flex flex-col w-full">

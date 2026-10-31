@@ -75,7 +75,8 @@ export function Contatti() {
             </div>
 
             <blockquote className="mt-12 max-w-3xl border-l-2 border-brand-secondary/40 pl-6 text-left">
-              <p className="font-serif italic font-semibold text-2xl md:text-3xl text-brand-primary leading-snug">
+              {/* Sui telefoni stretti il corpo scala con la viewport così «Non si può raggiungere l'alba» resta su una riga */}
+              <p className="font-serif italic font-semibold text-[clamp(1.125rem,5.7vw,1.5rem)] md:text-3xl text-brand-primary leading-snug">
                 «Non si può raggiungere l'alba
                 <br />
                senza passare per i sentieri della notte.»
