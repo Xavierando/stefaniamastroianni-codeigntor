@@ -162,10 +162,15 @@ export function Contatti() {
                     href={INSTAGRAM_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-white p-3 rounded-full shadow-sm text-brand-secondary hover:bg-brand-secondary hover:text-white transition-colors"
-                    aria-label="Instagram"
+                    className="group flex items-center gap-3 text-brand-contrast"
+                    aria-label="Instagram: stefania_mastroianni"
                   >
-                    <Instagram size={20} />
+                    <span className="bg-white p-3 rounded-full shadow-sm text-brand-secondary group-hover:bg-brand-secondary group-hover:text-white transition-colors">
+                      <Instagram size={20} />
+                    </span>
+                    <span className="opacity-80 group-hover:text-brand-secondary transition-colors">
+                      stefania_mastroianni
+                    </span>
                   </a>
                 </div>
               </div>
