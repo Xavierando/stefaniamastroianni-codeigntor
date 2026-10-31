@@ -7,6 +7,7 @@ import { ContentDetailLayout } from "@/components/layout/ContentDetailLayout";
 import { SEO } from "@/components/common/SEO";
 import { useContactCta } from "@/hooks/useContactCta";
 import { LogoSpinner } from "@/components/common/LogoSpinner";
+import { PosterDownloadLink } from "@/components/ui/PosterDownloadLink";
 
 // "Ogni settimana fino al 18 dicembre 2026" per le serie ricorrenti.
 function describeRecurrence(intervalDays: number, endDate: string | null): string {
@@ -58,6 +59,7 @@ export function EventDetail() {
             date: data.date ? new Date(data.date).toLocaleDateString("it-IT", { day: 'numeric', month: 'long', year: 'numeric' }) : "Da definire",
             location: data.location || "Studio Olistico Mastroianni",
             imageSrc: data.imageUrl || undefined,
+            posterUrl: data.posterUrl || undefined,
             imagePosition: data.imagePosition || 'centrato',
             isBookingEnabled: truthy(data.is_booking_enabled),
             // Backend returns snake_case capacity flags — map them so the CTA,
@@ -137,7 +139,8 @@ export function EventDetail() {
         </div>
       </div>
 
-      {event.price && (
+      {/* Prezzo vuoto o a zero ("0", "0.00"): niente riga invece di "€ 0". */}
+      {event.price && Number(event.price) !== 0 && (
         <div className="flex items-start mb-8">
           <div className="bg-brand-primary/5 p-3 rounded-full mr-4 text-brand-secondary">
             <Tag size={24} />
@@ -147,6 +150,10 @@ export function EventDetail() {
             <p className="text-brand-primary font-medium">€ {event.price}</p>
           </div>
         </div>
+      )}
+
+      {event.posterUrl && (
+        <PosterDownloadLink url={event.posterUrl} slug={event.slug} className="w-full mb-8" />
       )}
 
       {!event.isPast && event.remainingCapacity !== null && event.remainingCapacity > 0 && event.remainingCapacity <= 5 && (
