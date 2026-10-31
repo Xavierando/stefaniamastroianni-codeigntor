@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { Save, ArrowLeft, Loader2 } from "lucide-react";
+import { Save, ArrowLeft, Loader2, FileText } from "lucide-react";
 import { Card } from "../../../components/admin/ui/Card";
 import { apiFetch } from "../../../lib/api";
 import { useSelector } from "react-redux";
@@ -33,6 +33,9 @@ export function AdminEventForm() {
   
   const [image, setImage] = useState<File | null>(null);
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
+  const [poster, setPoster] = useState<File | null>(null);
+  const [currentPosterUrl, setCurrentPosterUrl] = useState<string | null>(null);
+  const [removePoster, setRemovePoster] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(isEditing);
@@ -65,6 +68,9 @@ export function AdminEventForm() {
           if (event.imageUrl) {
             setCurrentImageUrl(event.imageUrl);
           }
+          if (event.posterUrl) {
+            setCurrentPosterUrl(event.posterUrl);
+          }
         } catch (err) {
           setError("Errore nel caricamento dell'evento.");
           console.error(err);
@@ -87,6 +93,13 @@ export function AdminEventForm() {
     }
   };
 
+  const handlePosterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setPoster(e.target.files[0]);
+      setRemovePoster(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -101,6 +114,13 @@ export function AdminEventForm() {
       if (image) {
         const optimizedFile = await ImageOptimizer.optimizeImage(image, 2600, 0.85);
         submitData.append("image", optimizedFile);
+      }
+
+      // La locandina va scaricata e stampata: si carica cosi com'e, senza ottimizzarla.
+      if (poster) {
+        submitData.append("poster", poster);
+      } else if (removePoster) {
+        submitData.append("remove_poster", "1");
       }
 
       await apiFetch(isEditing ? `events/${id}` : "events", {
@@ -338,6 +358,46 @@ export function AdminEventForm() {
               </select>
               <p className="text-xs text-brand-contrast/50">Controlla la posizione verticale dell'immagine nella sezione hero</p>
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="poster" className="block text-sm font-medium text-brand-contrast/80">
+              Locandina (opzionale)
+            </label>
+            {currentPosterUrl && !poster && (
+              <div className="flex flex-wrap items-center gap-4 mb-2">
+                <a
+                  href={currentPosterUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`inline-flex items-center gap-2 text-sm text-brand-primary hover:underline ${removePoster ? "line-through opacity-50" : ""}`}
+                >
+                  <FileText size={18} />
+                  Locandina attuale
+                </a>
+                <label className="inline-flex items-center gap-2 text-sm text-brand-contrast/70">
+                  <input
+                    type="checkbox"
+                    checked={removePoster}
+                    onChange={(e) => setRemovePoster(e.target.checked)}
+                    className="w-4 h-4 text-brand-primary border-brand-primary/20 rounded focus:ring-brand-primary"
+                  />
+                  Rimuovi locandina
+                </label>
+              </div>
+            )}
+            <input
+              type="file"
+              id="poster"
+              name="poster"
+              accept="application/pdf,image/jpeg,image/png,image/webp"
+              onChange={handlePosterChange}
+              className="w-full p-2 border border-brand-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary/50 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-primary/10 file:text-brand-primary hover:file:bg-brand-primary/20"
+            />
+            <p className="text-xs text-brand-contrast/50">
+              PDF o immagine (JPEG, PNG, WebP), massimo 10 MB. Se presente, sul sito compare il pulsante "Scarica locandina".
+              {currentPosterUrl && " Caricando un nuovo file sostituisci quella attuale."}
+            </p>
           </div>
 
           <div className="bg-brand-primary/5 p-4 rounded-md border border-brand-primary/10 space-y-4">

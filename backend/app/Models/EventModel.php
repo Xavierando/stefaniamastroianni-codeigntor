@@ -15,7 +15,7 @@ class EventModel extends Model
     protected $allowedFields    = [
         'title', 'description', 'shortDescription', 'slug', 'category', 'date', 
         'location', 'price', 'imageUrl', 'imagePosition', 'duration', 'max_capacity',
-        'is_booking_enabled', 'recurrence_interval_days', 'recurrence_end_date'
+        'is_booking_enabled', 'recurrence_interval_days', 'recurrence_end_date', 'posterUrl'
     ];
 
     protected bool $allowEmptyInserts = false;

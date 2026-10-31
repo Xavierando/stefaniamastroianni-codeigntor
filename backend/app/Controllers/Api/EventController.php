@@ -6,11 +6,13 @@ use CodeIgniter\RESTful\ResourceController;
 use App\Models\EventModel;
 use App\Models\BookingModel;
 use App\Controllers\Api\Concerns\HandlesImageUploads;
+use App\Controllers\Api\Concerns\HandlesPosterUploads;
 use App\Controllers\Api\Concerns\GeneratesSlug;
 
 class EventController extends ResourceController
 {
     use HandlesImageUploads;
+    use HandlesPosterUploads;
     use GeneratesSlug;
 
     protected $modelName = EventModel::class;
@@ -140,6 +142,11 @@ class EventController extends ResourceController
             $data['imageUrl'] = $upload['url'];
         }
 
+        $posterError = $this->applyPoster($data);
+        if ($posterError !== null) {
+            return $this->failValidationErrors(['poster' => $posterError]);
+        }
+
         if ($this->model->insert($data)) {
             return $this->respondCreated(['success' => true, 'data' => $data]);
         }
@@ -174,6 +181,11 @@ class EventController extends ResourceController
             $data['imageUrl'] = $upload['url'];
         }
 
+        $posterError = $this->applyPoster($data);
+        if ($posterError !== null) {
+            return $this->failValidationErrors(['poster' => $posterError]);
+        }
+
         if ($this->model->update($id, $data)) {
             return $this->respond(['success' => true]);
         }
@@ -188,6 +200,29 @@ class EventController extends ResourceController
         }
 
         return $this->failNotFound('Event not found');
+    }
+
+    /**
+     * Locandina: un nuovo file sostituisce quella attuale, `remove_poster`
+     * la toglie. Senza nessuno dei due la locandina resta com'e.
+     */
+    private function applyPoster(array &$data): ?string
+    {
+        $remove = ($data['remove_poster'] ?? '') === '1';
+        unset($data['remove_poster'], $data['posterUrl']);
+
+        $upload = $this->storeUploadedPoster($this->request->getFile('poster'), 'events/posters');
+        if (!$upload['ok']) {
+            return $upload['error'];
+        }
+
+        if ($upload['url'] !== null) {
+            $data['posterUrl'] = $upload['url'];
+        } elseif ($remove) {
+            $data['posterUrl'] = null;
+        }
+
+        return null;
     }
 
     /**

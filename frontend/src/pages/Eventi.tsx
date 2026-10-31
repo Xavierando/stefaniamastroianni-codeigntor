@@ -34,6 +34,7 @@ export function EventiPage() {
           isFull: e.is_full,
           isPast: e.is_past,
           imageSrc: e.imageUrl || undefined,
+          posterUrl: e.posterUrl || undefined,
           timestamp: e.date ? new Date(e.date).getTime() : null,
         }));
 

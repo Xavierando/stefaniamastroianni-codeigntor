@@ -14,7 +14,7 @@ use ZipArchive;
  *   - manifest.json  metadati (data, numero di tabelle e immagini)
  *   - database.sql   dump generato in PHP (niente mysqldump, che su Aruba
  *                    non e disponibile), importabile anche da phpMyAdmin
- *   - uploads/...    copia di public/uploads, solo file immagine
+ *   - uploads/...    copia di public/uploads, solo immagini e locandine PDF
  *
  * Gli zip stanno in writable/backups, che non e raggiungibile dal web: i nomi
  * contengono comunque una parte casuale e la cartella riceve un proprio
@@ -29,8 +29,8 @@ class BackupManager
 
     private const NAME_PATTERN = '/^(backup|pre-ripristino|caricato)-(\d{8})-(\d{6})-[a-f0-9]{12}\.zip$/';
 
-    /** Estensioni ripristinabili dentro uploads/: le stesse ammesse da HandlesImageUploads. */
-    private const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+    /** Estensioni ripristinabili dentro uploads/: quelle ammesse da HandlesImageUploads e HandlesPosterUploads. */
+    private const UPLOAD_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'pdf'];
 
     /** Le uniche istruzioni SQL eseguite in un ripristino. */
     private const ALLOWED_STATEMENTS = '/^(SET\s+(NAMES|FOREIGN_KEY_CHECKS)\b|DROP\s+TABLE\s|CREATE\s+TABLE\s|INSERT\s+INTO\s)/i';
@@ -274,7 +274,7 @@ class BackupManager
             new \RecursiveDirectoryIterator($this->uploadsDir, \FilesystemIterator::SKIP_DOTS)
         );
         foreach ($iterator as $file) {
-            if (! $file->isFile() || ! $this->isImageName($file->getFilename())) {
+            if (! $file->isFile() || ! $this->isUploadName($file->getFilename())) {
                 continue;
             }
             $relative = substr($file->getPathname(), strlen($this->uploadsDir));
@@ -379,7 +379,7 @@ class BackupManager
      * Copia le immagini del backup in public/uploads, sovrascrivendo quelle con
      * lo stesso nome. Le immagini presenti ma assenti dal backup restano: il
      * database ripristinato non le referenzia e non fanno danno. Si estraggono
-     * solo file immagine con nomi semplici, mai percorsi con "..".
+     * solo immagini e PDF con nomi semplici, mai percorsi con "..".
      */
     private function restoreUploads(string $zipPath): int
     {
@@ -403,7 +403,7 @@ class BackupManager
                         continue 2;
                     }
                 }
-                if (! $this->isImageName(end($segments))) {
+                if (! $this->isUploadName(end($segments))) {
                     continue;
                 }
 
@@ -490,9 +490,9 @@ class BackupManager
         return $value === null ? 'NULL' : (string) $this->db->escape((string) $value);
     }
 
-    private function isImageName(string $filename): bool
+    private function isUploadName(string $filename): bool
     {
-        return in_array(strtolower(pathinfo($filename, PATHINFO_EXTENSION)), self::IMAGE_EXTENSIONS, true);
+        return in_array(strtolower(pathinfo($filename, PATHINFO_EXTENSION)), self::UPLOAD_EXTENSIONS, true);
     }
 
     private function newName(string $kind): string

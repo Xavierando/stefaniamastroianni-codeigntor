@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/Button";
 import { Calendar, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { PosterDownloadLink } from "@/components/ui/PosterDownloadLink";
 
 export interface EventProps {
   id: string;
@@ -14,6 +15,7 @@ export interface EventProps {
   isFull: boolean;
   category: string;
   imageSrc?: string;
+  posterUrl?: string;
   slug: string;
   isPast: boolean;
 }
@@ -79,14 +81,19 @@ export function EventCard({ event }: { event: EventProps }) {
             </div>
           </div>
           
-          <Link to={`/laboratori-eventi/${event.slug}`}>
-            <Button 
-              variant={event.isFull || event.isPast ? "outline" : "primary"} 
-              className="w-full sm:w-auto"
-            >
-              {event.isPast ? "Vedi dettagli" : (event.isFull ? "Al Completo - Scopri di più" : "Scopri di più")}
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
+            <Link to={`/laboratori-eventi/${event.slug}`}>
+              <Button 
+                variant={event.isFull || event.isPast ? "outline" : "primary"} 
+                className="w-full sm:w-auto"
+              >
+                {event.isPast ? "Vedi dettagli" : (event.isFull ? "Al Completo - Scopri di più" : "Scopri di più")}
+              </Button>
+            </Link>
+            {event.posterUrl && (
+              <PosterDownloadLink url={event.posterUrl} slug={event.slug} className="w-full sm:w-auto" />
+            )}
+          </div>
         </div>
       </Card>
     </motion.div>
