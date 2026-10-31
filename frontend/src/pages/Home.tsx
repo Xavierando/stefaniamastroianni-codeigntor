@@ -110,20 +110,29 @@ export function Home() {
             <RevealOnScroll className="flex flex-col items-center w-full">
               <div className="text-brand-contrast/80 leading-relaxed font-light text-lg md:text-xl space-y-6 max-w-3xl">
                 <p>
-                  Questo spazio nasce da un profondo amore per la vita. Per la
-                  cura. Per lo scambio gentile.
+                  Questo spazio nasce{" "}
+                  <strong className="font-semibold text-brand-contrast">
+                    da un profondo amore per la vita. Per la cura. Per lo
+                    scambio gentile.
+                  </strong>
                 </p>
                 <p>
-                  Un luogo sicuro in cui sperimentare momenti di movimento
-                  consapevole, di dialogo, di contatto, di gioco e condivisione.
+                  Un luogo sicuro in cui sperimentare{" "}
+                  <strong className="font-semibold text-brand-contrast">
+                    momenti di movimento consapevole, di dialogo, di contatto,
+                    di gioco e condivisione.
+                  </strong>
                 </p>
-                <p>
+                <p className="italic">
                   L'invito è ascoltare il corpo, le emozioni, ciò che abita
                   dentro.
                 </p>
-                <p className="italic font-semibold text-brand-contrast">
-                  Per ritrovare il centro, accendere sguardi nuovi e crescere,
-                  con i tuoi tempi.
+                <p>
+                  Per{" "}
+                  <strong className="font-semibold text-brand-contrast">
+                    ritrovare il centro, accendere sguardi nuovi e trasformare
+                  </strong>{" "}
+                  seguendo i tuoi tempi.
                 </p>
               </div>
 
