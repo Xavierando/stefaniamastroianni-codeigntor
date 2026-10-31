@@ -108,7 +108,7 @@ export function Home() {
 
             {/* Su mobile il testo appare allo scroll; il titolo resta visibile */}
             <RevealOnScroll className="flex flex-col items-center w-full">
-              <div className="text-brand-contrast/80 leading-relaxed font-light text-lg md:text-xl space-y-6 max-w-3xl">
+              <div className="text-brand-contrast/80 leading-relaxed font-light text-lg md:text-xl space-y-6 max-w-4xl">
                 <p>
                   Questo spazio nasce{" "}
                   <strong className="font-semibold text-brand-contrast">
@@ -119,8 +119,10 @@ export function Home() {
                 <p>
                   Un luogo sicuro in cui sperimentare{" "}
                   <strong className="font-semibold text-brand-contrast">
-                    momenti di movimento consapevole, di dialogo, di contatto,
-                    di gioco e condivisione.
+                    momenti di movimento consapevole,
+                    {/* A capo voluto solo da tablet in su; su mobile va a capo da sé */}
+                    <br className="hidden md:inline" />
+                    di dialogo, di contatto, di gioco e condivisione.
                   </strong>
                 </p>
                 <p className="italic">
