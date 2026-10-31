@@ -96,7 +96,14 @@ export function MaternitaPage() {
 
         <PageIntroduction
           title="Maternità Consapevole"
-          description="Sostegno emotivo, corporeo e pratico dal concepimento al puerperio. Un faro per navigare i cambiamenti della maternità sentendoti accolta e mai sola."
+          description={
+            <>
+              Sostegno emotivo, corporeo e pratico dal concepimento al puerperio.
+              {/* A capo voluto solo da tablet in su */}
+              <br className="hidden md:inline" />
+              Un faro per navigare i cambiamenti della maternità sentendoti accolta e mai sola.
+            </>
+          }
         />
 
         <div className="flex flex-col w-full">

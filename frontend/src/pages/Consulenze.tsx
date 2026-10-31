@@ -96,7 +96,14 @@ export function ConsulenzePage() {
 
         <PageIntroduction
           title="Consulenze e Percorsi"
-          description="Spazi di parola e ascolto profondo. Insieme tracciamo la mappa per il tuo benessere psicofisico, rispettando i tuoi tempi e la tua unicità."
+          description={
+            <>
+              Spazi di parola e ascolto profondo. Insieme tracciamo la mappa per il tuo benessere psicofisico,
+              {/* A capo voluto solo da tablet in su */}
+              <br className="hidden md:inline" />
+              rispettando i tuoi tempi e la tua unicità.
+            </>
+          }
         />
 
         <div className="flex flex-col w-full">
