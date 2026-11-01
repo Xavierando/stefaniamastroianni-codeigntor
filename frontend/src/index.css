@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/* Font ospitati sul sito (Fontsource): nessun IP dei visitatori inviato a Google. */
+@import "@fontsource-variable/inter/opsz.css";
+@import "@fontsource-variable/inter/opsz-italic.css";
+@import "@fontsource-variable/lora/wght.css";
+@import "@fontsource-variable/lora/wght-italic.css";
+
 @theme {
   --color-brand-base: #f1e5cb;
   --color-brand-contrast: #6e4d47;
@@ -17,8 +23,8 @@
   --color-background: var(--color-brand-base);
   --color-foreground: var(--color-brand-contrast);
 
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-serif: "Lora", serif;
+  --font-sans: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Lora Variable", "Lora", serif;
 
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
